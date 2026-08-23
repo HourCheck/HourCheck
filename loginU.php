@@ -182,7 +182,7 @@ if (isset($_POST['login'])) {
             <div class="card-body p-0">
                 
                 <div class="d-flex align-items-start mb-4">
-                    <a href="perfil.php" class="btn-back me-3 flex-shrink-0" aria-label="Volver">
+                    <a href="index.php" class="btn-back me-3 flex-shrink-0" aria-label="Volver">
                         <i class="bi bi-arrow-left fs-5"></i>
                     </a>
                     <div>
