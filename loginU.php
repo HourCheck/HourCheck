@@ -1,10 +1,19 @@
 <?php
+session_start();
+include_once("conexion.php");
+
+$mensaje = "";
+
 if (isset($_POST['login'])) {
     if (!empty($_POST['correo']) && !empty($_POST['password'])) {
         $email    = trim($_POST['correo']);
         $password = trim($_POST['password']);
 
-        // Uso de `contraseña` con comillas invertidas para evitar errores con la 'ñ'
+       
+        if (!isset($conex) || !$conex) {
+            die("Error: La conexión a la base de datos no está disponible.");
+        }
+
         $query_est  = "SELECT * FROM estudiantes WHERE email = '$email' AND `contraseña` = '$password'";
         $res_est    = mysqli_query($conex, $query_est);
 
