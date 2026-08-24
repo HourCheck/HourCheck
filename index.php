@@ -136,7 +136,25 @@
         </p>
 
     </div>
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
 
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyCfVFTKiKSpNrfOVjIPxy2T-GAMuonYwYo",
+    authDomain: "pruebafirebase-e4550.firebaseapp.com",
+    projectId: "pruebafirebase-e4550",
+    storageBucket: "pruebafirebase-e4550.firebasestorage.app",
+    messagingSenderId: "415001098422",
+    appId: "1:415001098422:web:f16f3ef27eb3b6e25a0e17"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+</script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
