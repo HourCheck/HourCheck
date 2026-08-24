@@ -4,9 +4,9 @@ include("conexion.php");
 $mensaje = "";
 
 if (isset($_POST['send'])) {
-   
     $tipo = isset($_POST['tipo_usuario']) ? trim($_POST['tipo_usuario']) : '';
 
+   
     if ($tipo == "estudiante" || $tipo == "docente") {
         if (
             !empty($_POST['nombre']) &&
@@ -22,7 +22,7 @@ if (isset($_POST['send'])) {
             $tabla = ($tipo == "estudiante") ? "estudiantes" : "docentes";
 
           
-            $sql = "INSERT INTO $tabla (nombre, institucion, email, `contraseña`) VALUES (?, ?, ?, ?)";
+            $sql  = "INSERT INTO $tabla (nombre, institucion, email, `contraseña`) VALUES (?, ?, ?, ?)";
             $stmt = mysqli_prepare($conex, $sql);
 
             if ($stmt) {
@@ -42,7 +42,6 @@ if (isset($_POST['send'])) {
             $mensaje = '<div class="alert alert-warning text-center mt-3" role="alert">Llena todos los campos del formulario</div>';
         }
 
-    // CASO 2: Institución
     } else if ($tipo == "institucion") {
         if (
             !empty($_POST['nombre_institucion']) &&
@@ -57,7 +56,8 @@ if (isset($_POST['send'])) {
             $email       = trim($_POST['correo']);
             $password    = trim($_POST['password']);
 
-            $sql = "INSERT INTO institucion (nombre, codigo, director, email, `contraseña`) VALUES (?, ?, ?, ?, ?)";
+            
+            $sql  = "INSERT INTO institucion (nombre, codigo, director, email, `contraseña`) VALUES (?, ?, ?, ?, ?)";
             $stmt = mysqli_prepare($conex, $sql);
 
             if ($stmt) {
