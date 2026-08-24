@@ -13,14 +13,21 @@ if (isset($_POST['login'])) {
             die("Error: La conexión a la base de datos no está disponible.");
         }
 
-        // Consultas usando la columna 'password'
-        $query_est  = "SELECT * FROM estudiantes WHERE email = '$email' AND password = '$password'";
+       
+        $col_pass = "password";
+        $check_col = mysqli_query($conex, "SHOW COLUMNS FROM estudiantes LIKE 'password'");
+        if ($check_col && mysqli_num_rows($check_col) == 0) {
+            $col_pass = "`contraseña`";
+        }
+
+      
+        $query_est  = "SELECT * FROM estudiantes WHERE email = '$email' AND $col_pass = '$password'";
         $res_est    = mysqli_query($conex, $query_est);
 
-        $query_doc  = "SELECT * FROM docentes WHERE email = '$email' AND password = '$password'";
+        $query_doc  = "SELECT * FROM docentes WHERE email = '$email' AND $col_pass = '$password'";
         $res_doc    = mysqli_query($conex, $query_doc);
 
-        $query_inst = "SELECT * FROM institucion WHERE email = '$email' AND password = '$password'";
+        $query_inst = "SELECT * FROM institucion WHERE email = '$email' AND $col_pass = '$password'";
         $res_inst   = mysqli_query($conex, $query_inst);
 
         if ($res_est && mysqli_num_rows($res_est) > 0) {

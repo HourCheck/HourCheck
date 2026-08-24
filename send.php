@@ -6,7 +6,18 @@ $mensaje = "";
 if (isset($_POST['send'])) {
     $tipo = isset($_POST['tipo_usuario']) ? trim($_POST['tipo_usuario']) : '';
 
-   
+    if (!isset($conex) || !$conex) {
+        die("Error: La conexión a la base de datos no está disponible.");
+    }
+
+    // Detectar dinámicamente si la columna es 'password' o 'contraseña'
+    $col_pass = "password";
+    $check_col = mysqli_query($conex, "SHOW COLUMNS FROM estudiantes LIKE 'password'");
+    if ($check_col && mysqli_num_rows($check_col) == 0) {
+        $col_pass = "`contraseña`";
+    }
+
+    // CASO 1: Estudiante o Docente
     if ($tipo == "estudiante" || $tipo == "docente") {
         if (
             !empty($_POST['nombre']) &&
@@ -21,8 +32,7 @@ if (isset($_POST['send'])) {
 
             $tabla = ($tipo == "estudiante") ? "estudiantes" : "docentes";
 
-         
-            $sql  = "INSERT INTO $tabla (nombre, institucion, email, password) VALUES (?, ?, ?, ?)";
+            $sql  = "INSERT INTO $tabla (nombre, institucion, email, $col_pass) VALUES (?, ?, ?, ?)";
             $stmt = mysqli_prepare($conex, $sql);
 
             if ($stmt) {
@@ -42,7 +52,7 @@ if (isset($_POST['send'])) {
             $mensaje = '<div class="alert alert-warning text-center mt-3" role="alert">Llena todos los campos del formulario</div>';
         }
 
-  
+    // CASO 2: Institución
     } else if ($tipo == "institucion") {
         if (
             !empty($_POST['nombre_institucion']) &&
@@ -57,8 +67,7 @@ if (isset($_POST['send'])) {
             $email       = trim($_POST['correo']);
             $password    = trim($_POST['password']);
 
-          
-            $sql  = "INSERT INTO institucion (nombre, codigo, director, email, password) VALUES (?, ?, ?, ?, ?)";
+            $sql  = "INSERT INTO institucion (nombre, codigo, director, email, $col_pass) VALUES (?, ?, ?, ?, ?)";
             $stmt = mysqli_prepare($conex, $sql);
 
             if ($stmt) {
