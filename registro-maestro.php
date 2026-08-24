@@ -160,7 +160,7 @@
                     </div>
                 </form>
 
-                <?php include("send.php"); ?>
+               
 
             </div>
         </div>

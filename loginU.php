@@ -1,64 +1,70 @@
-<?php
-session_start();
-include_once("conexion.php");
+<script>
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-$mensaje = "";
+// Tu configuración de Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
+  authDomain: "hourcheckt.firebaseapp.com",
+  projectId: "hourcheckt",
+  storageBucket: "hourcheckt.firebasestorage.app",
+  messagingSenderId: "83459752453",
+  appId: "1:83459752453:web:1b81724c28973bf567126c"
+};
 
-if (isset($_POST['login'])) {
-    if (!empty($_POST['correo']) && !empty($_POST['password'])) {
-        $email    = trim($_POST['correo']);
-        $password = trim($_POST['password']);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-        if (!isset($conex) || !$conex) {
-            die("Error: La conexión a la base de datos no está disponible.");
-        }
 
-       
-        $col_pass = "password";
-        $check_col = mysqli_query($conex, "SHOW COLUMNS FROM estudiantes LIKE 'password'");
-        if ($check_col && mysqli_num_rows($check_col) == 0) {
-            $col_pass = "`contraseña`";
-        }
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
 
-      
-        $query_est  = "SELECT * FROM estudiantes WHERE email = '$email' AND $col_pass = '$password'";
-        $res_est    = mysqli_query($conex, $query_est);
+  const email = document.getElementById('correo').value.trim();
+  const password = document.getElementById('password').value.trim();
+  const mensajeDiv = document.getElementById('mensaje');
 
-        $query_doc  = "SELECT * FROM docentes WHERE email = '$email' AND $col_pass = '$password'";
-        $res_doc    = mysqli_query($conex, $query_doc);
+  if (!email || !password) {
+    mensajeDiv.innerHTML = '<div class="alert alert-warning text-center mt-3 p-2 small" role="alert">Por favor, completa todos los campos</div>';
+    return;
+  }
 
-        $query_inst = "SELECT * FROM institucion WHERE email = '$email' AND $col_pass = '$password'";
-        $res_inst   = mysqli_query($conex, $query_inst);
+  try {
+    
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
 
-        if ($res_est && mysqli_num_rows($res_est) > 0) {
-            $usuario = mysqli_fetch_assoc($res_est);
-            $_SESSION['usuario_id'] = $usuario['id'];
-            $_SESSION['rol']        = 'estudiante';
-            header("Location: mainPE.php");
-            exit();
+   
+    const userDocRef = doc(db, "usuarios", user.uid);
+    const userDoc = await getDoc(userDocRef);
 
-        } else if ($res_doc && mysqli_num_rows($res_doc) > 0) {
-            $usuario = mysqli_fetch_assoc($res_doc);
-            $_SESSION['usuario_id'] = $usuario['id'];
-            $_SESSION['rol']        = 'docente';
-            header("Location: mainPD.php");
-            exit();
+    if (userDoc.exists()) {
+      const rol = userDoc.data().rol;
 
-        } else if ($res_inst && mysqli_num_rows($res_inst) > 0) {
-            $usuario = mysqli_fetch_assoc($res_inst);
-            $_SESSION['usuario_id'] = $usuario['id'];
-            $_SESSION['rol']        = 'institucion';
-            header("Location: mainPI.php");
-            exit();
-
-        } else {
-            $mensaje = '<div class="alert alert-danger text-center mt-3 p-2 small" role="alert">Correo o contraseña incorrectos</div>';
-        }
+      switch (rol) {
+        case 'estudiante':
+          window.location.href = "mainPE.php";
+          break;
+        case 'docente':
+          window.location.href = "mainPD.php";
+          break;
+        case 'institucion':
+          window.location.href = "mainPI.php";
+          break;
+        default:
+          mensajeDiv.innerHTML = '<div class="alert alert-danger text-center mt-3 p-2 small" role="alert">Rol de usuario no reconocido</div>';
+      }
     } else {
-        $mensaje = '<div class="alert alert-warning text-center mt-3 p-2 small" role="alert">Por favor, completa todos los campos</div>';
+      mensajeDiv.innerHTML = '<div class="alert alert-danger text-center mt-3 p-2 small" role="alert">No se encontró información del perfil del usuario</div>';
     }
-}
-?>
+
+  } catch (error) {
+    console.error("Error al iniciar sesión:", error);
+    mensajeDiv.innerHTML = '<div class="alert alert-danger text-center mt-3 p-2 small" role="alert">Correo o contraseña incorrectos</div>';
+  }
+});
+</script>
 <!DOCTYPE html>
 <html lang="es">
 <head>
