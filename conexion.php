@@ -1,15 +1,14 @@
 <?php
-// Lee las variables de entorno configuradas en Render o el servidor
-$host     = getenv('DB_HOST');
-$user     = getenv('DB_USER');
-$password = getenv('DB_PASS');
-$database = getenv('DB_NAME');
-$port     = getenv('DB_PORT');
+$host     = getenv('DB_HOST')     ?: 'mysql-143672f9-aslicvd09-f409.i.aivencloud.com';
+$user     = getenv('DB_USER')     ?: 'avnadmin';
+$password = getenv('DB_PASS')     ?: 'AVNS_PuVvsawjq4xpduyda42';
+$database = getenv('DB_NAME')     ?: 'defaultdb';
+$port     = getenv('DB_PORT')     ?: 27037;
 
 $conex = mysqli_connect($host, $user, $password, $database, $port);
 
 if (!$conex) {
-    die("Error de conexión a la base de datos: " . mysqli_connect_error());
+    die("Error de conexión: " . mysqli_connect_error());
 }
 
 mysqli_set_charset($conex, "utf8mb4");
