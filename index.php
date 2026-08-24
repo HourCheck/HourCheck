@@ -139,22 +139,27 @@
 <script type="module">
   // Import the functions you need from the SDKs you need
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-analytics.js";
   // TODO: Add SDKs for Firebase products that you want to use
   // https://firebase.google.com/docs/web/setup#available-libraries
 
   // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
   const firebaseConfig = {
-    apiKey: "AIzaSyCfVFTKiKSpNrfOVjIPxy2T-GAMuonYwYo",
-    authDomain: "pruebafirebase-e4550.firebaseapp.com",
-    projectId: "pruebafirebase-e4550",
-    storageBucket: "pruebafirebase-e4550.firebasestorage.app",
-    messagingSenderId: "415001098422",
-    appId: "1:415001098422:web:f16f3ef27eb3b6e25a0e17"
+    apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
+    authDomain: "hourcheckt.firebaseapp.com",
+    projectId: "hourcheckt",
+    storageBucket: "hourcheckt.firebasestorage.app",
+    messagingSenderId: "83459752453",
+    appId: "1:83459752453:web:1b81724c28973bf567126c",
+    measurementId: "G-95286SR8NZ"
   };
 
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
 </script>
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
