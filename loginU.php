@@ -9,18 +9,18 @@ if (isset($_POST['login'])) {
         $email    = trim($_POST['correo']);
         $password = trim($_POST['password']);
 
-       
         if (!isset($conex) || !$conex) {
             die("Error: La conexión a la base de datos no está disponible.");
         }
 
-        $query_est  = "SELECT * FROM estudiantes WHERE email = '$email' AND `contraseña` = '$password'";
+        // Consultas usando la columna 'password'
+        $query_est  = "SELECT * FROM estudiantes WHERE email = '$email' AND password = '$password'";
         $res_est    = mysqli_query($conex, $query_est);
 
-        $query_doc  = "SELECT * FROM docentes WHERE email = '$email' AND `contraseña` = '$password'";
+        $query_doc  = "SELECT * FROM docentes WHERE email = '$email' AND password = '$password'";
         $res_doc    = mysqli_query($conex, $query_doc);
 
-        $query_inst = "SELECT * FROM institucion WHERE email = '$email' AND `contraseña` = '$password'";
+        $query_inst = "SELECT * FROM institucion WHERE email = '$email' AND password = '$password'";
         $res_inst   = mysqli_query($conex, $query_inst);
 
         if ($res_est && mysqli_num_rows($res_est) > 0) {
@@ -210,8 +210,7 @@ if (isset($_POST['login'])) {
                         <a href="#" class="text-link-blue small fw-semibold">¿Olvidaste tu contraseña?</a>
                     </div>
 
-                  
-                   
+                    <?php echo $mensaje; ?>
 
                     <button type="submit" name="login" class="btn btn-orange w-100 mb-3 mt-2">Iniciar sesión</button>
                 </form>

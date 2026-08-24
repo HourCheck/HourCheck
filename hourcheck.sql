@@ -32,14 +32,14 @@ CREATE TABLE `docentes` (
   `nombre` varchar(50) NOT NULL,
   `institucion` varchar(50) NOT NULL,
   `email` varchar(50) NOT NULL,
-  `contraseña` int(50) NOT NULL
+  `password` int(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `docentes`
 --
 
-INSERT INTO `docentes` (`id`, `nombre`, `institucion`, `email`, `contraseña`) VALUES
+INSERT INTO `docentes` (`id`, `nombre`, `institucion`, `email`, `password`) VALUES
 (1, 'chepe', 'Ofelia Herrera', 'chepito@clases.edu.sv', 12345678),
 (2, 'test4', 'Ofelia Herrera', 'test4@clases.edu.sv', 12345678);
 
@@ -54,14 +54,14 @@ CREATE TABLE `estudiantes` (
   `nombre` varchar(50) NOT NULL,
   `institucion` varchar(50) NOT NULL,
   `email` varchar(50) NOT NULL,
-  `contraseña` int(20) NOT NULL
+  `password` int(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `estudiantes`
 --
 
-INSERT INTO `estudiantes` (`id`, `nombre`, `institucion`, `email`, `contraseña`) VALUES
+INSERT INTO `estudiantes` (`id`, `nombre`, `institucion`, `email`, `password`) VALUES
 (1, 'test1', 'Federación Suiza', 'h@clases.edu.sv', 12344566),
 (2, 'test2', 'Ofelia Herrera', 'test2@clases.edu.sv', 1234567),
 (3, 'Ashley Gomez', 'Ofelia Herrera', '6871089@clases.edu.sv', 123456789),
@@ -80,14 +80,14 @@ CREATE TABLE `institucion` (
   `codigo` varchar(50) NOT NULL,
   `director` varchar(50) NOT NULL,
   `email` varchar(20) NOT NULL,
-  `contraseña` varchar(50) NOT NULL
+  `password` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `institucion`
 --
 
-INSERT INTO `institucion` (`id`, `nombre`, `codigo`, `director`, `email`, `contraseña`) VALUES
+INSERT INTO `institucion` (`id`, `nombre`, `codigo`, `director`, `email`, `password`) VALUES
 (1, 'ceoh', '1389', 'pepe', 'pepe@clases.edu.sv', '1234567'),
 (2, 'CEOH', '1382', 'mario', 'mario@clases.edu.sv', '12345678'),
 (3, 'CEOH', '1382', 'mario', 'mario@clases.edu.sv', '12345678'),
