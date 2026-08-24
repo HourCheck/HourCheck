@@ -4,10 +4,9 @@ include("conexion.php");
 $mensaje = "";
 
 if (isset($_POST['send'])) {
-    // Verificar si se especificó un tipo de usuario
-    $tipo = isset($_POST['tipo_usuario']) ? $_POST['tipo_usuario'] : '';
+   
+    $tipo = isset($_POST['tipo_usuario']) ? trim($_POST['tipo_usuario']) : '';
 
-    // CASO 1: Estudiante o Docente
     if ($tipo == "estudiante" || $tipo == "docente") {
         if (
             !empty($_POST['nombre']) &&
@@ -20,20 +19,24 @@ if (isset($_POST['send'])) {
             $email       = trim($_POST['correo']);
             $password    = trim($_POST['password']);
 
-            if ($tipo == "estudiante") {
-                $consulta = "INSERT INTO estudiantes (nombre, institucion, email, contraseña) 
-                             VALUES ('$name', '$institucion', '$email', '$password')";
-            } else {
-                $consulta = "INSERT INTO docentes (nombre, institucion, email, contraseña) 
-                             VALUES ('$name', '$institucion', '$email', '$password')";
-            }
+            $tabla = ($tipo == "estudiante") ? "estudiantes" : "docentes";
 
-            $resultado = mysqli_query($conex, $consulta);
+          
+            $sql = "INSERT INTO $tabla (nombre, institucion, email, `contraseña`) VALUES (?, ?, ?, ?)";
+            $stmt = mysqli_prepare($conex, $sql);
 
-            if ($resultado) {
-                $mensaje = '<div class="alert alert-success text-center mt-3" role="alert">Registro completado con éxito</div>';
+            if ($stmt) {
+                mysqli_stmt_bind_param($stmt, "ssss", $name, $institucion, $email, $password);
+                $resultado = mysqli_stmt_execute($stmt);
+
+                if ($resultado) {
+                    $mensaje = '<div class="alert alert-success text-center mt-3" role="alert">Registro completado con éxito</div>';
+                } else {
+                    $mensaje = '<div class="alert alert-danger text-center mt-3" role="alert">Error al registrar: ' . mysqli_stmt_error($stmt) . '</div>';
+                }
+                mysqli_stmt_close($stmt);
             } else {
-                $mensaje = '<div class="alert alert-danger text-center mt-3" role="alert">Error en MySQL: ' . mysqli_error($conex) . '</div>';
+                $mensaje = '<div class="alert alert-danger text-center mt-3" role="alert">Error en la consulta: ' . mysqli_error($conex) . '</div>';
             }
         } else {
             $mensaje = '<div class="alert alert-warning text-center mt-3" role="alert">Llena todos los campos del formulario</div>';
@@ -54,15 +57,21 @@ if (isset($_POST['send'])) {
             $email       = trim($_POST['correo']);
             $password    = trim($_POST['password']);
 
-            $consulta = "INSERT INTO institucion (nombre, codigo, director, email, contraseña) 
-                         VALUES ('$nombre_inst', '$codigo_inst', '$nombre_dir', '$email', '$password')";
+            $sql = "INSERT INTO institucion (nombre, codigo, director, email, `contraseña`) VALUES (?, ?, ?, ?, ?)";
+            $stmt = mysqli_prepare($conex, $sql);
 
-            $resultado = mysqli_query($conex, $consulta);
+            if ($stmt) {
+                mysqli_stmt_bind_param($stmt, "sssss", $nombre_inst, $codigo_inst, $nombre_dir, $email, $password);
+                $resultado = mysqli_stmt_execute($stmt);
 
-            if ($resultado) {
-                $mensaje = '<div class="alert alert-success text-center mt-3" role="alert">Registro completado con éxito</div>';
+                if ($resultado) {
+                    $mensaje = '<div class="alert alert-success text-center mt-3" role="alert">Registro completado con éxito</div>';
+                } else {
+                    $mensaje = '<div class="alert alert-danger text-center mt-3" role="alert">Error al registrar: ' . mysqli_stmt_error($stmt) . '</div>';
+                }
+                mysqli_stmt_close($stmt);
             } else {
-                $mensaje = '<div class="alert alert-danger text-center mt-3" role="alert">Error en MySQL: ' . mysqli_error($conex) . '</div>';
+                $mensaje = '<div class="alert alert-danger text-center mt-3" role="alert">Error en la consulta: ' . mysqli_error($conex) . '</div>';
             }
         } else {
             $mensaje = '<div class="alert alert-warning text-center mt-3" role="alert">Llena todos los campos de la institución</div>';

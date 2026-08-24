@@ -9,15 +9,14 @@ if (isset($_POST['login'])) {
         $email    = trim($_POST['correo']);
         $password = trim($_POST['password']);
 
-        $query_est = "SELECT * FROM estudiantes WHERE email = '$email' AND contraseña = '$password'";
-        $res_est   = mysqli_query($conex, $query_est);
+        // Cambia 'password' por el nombre exacto de la columna en tu BD (ej. clave, pass, password)
+        $query_est  = "SELECT * FROM estudiantes WHERE email = '$email' AND password = '$password'";
+        $res_est    = mysqli_query($conex, $query_est);
 
-       
-        $query_doc = "SELECT * FROM docentes WHERE email = '$email' AND contraseña = '$password'";
-        $res_doc   = mysqli_query($conex, $query_doc);
+        $query_doc  = "SELECT * FROM docentes WHERE email = '$email' AND password = '$password'";
+        $res_doc    = mysqli_query($conex, $query_doc);
 
- 
-        $query_inst = "SELECT * FROM institucion WHERE email = '$email' AND contraseña = '$password'";
+        $query_inst = "SELECT * FROM institucion WHERE email = '$email' AND password = '$password'";
         $res_inst   = mysqli_query($conex, $query_inst);
 
         if ($res_est && mysqli_num_rows($res_est) > 0) {
