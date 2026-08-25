@@ -285,86 +285,109 @@
     </div>
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+ <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
-      authDomain: "hourcheckt.firebaseapp.com",
-      projectId: "hourcheckt",
-      storageBucket: "hourcheckt.firebasestorage.app",
-      messagingSenderId: "83459752453",
-      appId: "1:83459752453:web:1b81724c28973bf567126c"
+  const firebaseConfig = {
+    apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
+    authDomain: "hourcheckt.firebaseapp.com",
+    projectId: "hourcheckt",
+    storageBucket: "hourcheckt.firebasestorage.app",
+    messagingSenderId: "83459752453",
+    appId: "1:83459752453:web:1b81724c28973bf567126c"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  // 1. Obtener el parámetro 'perfil' de la URL (ej: login.html?perfil=estudiante)
+  const urlParams = new URLSearchParams(window.location.search);
+  const perfil = urlParams.get('perfil') || 'estudiante'; // Por defecto 'estudiante'
+
+  // 2. Configurar el enlace de registro según el perfil
+  const linkRegistro = document.getElementById('linkRegistro');
+  if (linkRegistro) {
+    const paginasRegistro = {
+      'institucion': 'registro-institucion.html',
+      'maestro': 'registro-maestro.html',
+      'docente': 'registro-maestro.html',
+      'estudiante': 'registro-estudiante.html'
     };
+    linkRegistro.href = paginasRegistro[perfil] || 'registro-estudiante.html';
+  }
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+  // Mapeo entre el 'perfil' de la URL, la Colección de Firestore y la Página Principal
+  const mapaPerfil = {
+    'estudiante': {
+      coleccion: 'Estudiantes',
+      destino: 'mainPE.php'
+    },
+    'maestro': {
+      coleccion: 'Docentes',
+      destino: 'mainPD.php'
+    },
+    'docente': {
+      coleccion: 'Docentes',
+      destino: 'mainPD.php'
+    },
+    'institucion': {
+      coleccion: 'Institucion',
+      destino: 'mainPI.php'
+    }
+  };
 
-   
-    document.addEventListener("DOMContentLoaded", function() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const perfil = urlParams.get('perfil');
-      const linkRegistro = document.getElementById('linkRegistro');
+  // 3. Manejo del inicio de sesión
+  const loginForm = document.getElementById('loginForm');
 
-      const paginasRegistro = {
-        'institucion': 'registro-institucion.html',
-        'maestro': 'registro-maestro.html',
-        'estudiante': 'registro-estudiante.html'
-      };
-
-      linkRegistro.href = paginasRegistro[perfil] || 'registro-estudiante.html';
-    });
-
-
-    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  if (loginForm) {
+    loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      const email = document.getElementById('correo').value.trim();
-      const password = document.getElementById('password').value.trim();
+      const email = document.getElementById('correo')?.value.trim();
+      const password = document.getElementById('password')?.value.trim();
       const mensajeDiv = document.getElementById('mensaje');
 
       if (!email || !password) {
-        mensajeDiv.innerHTML = '<div class="alert-msg alert-warning">Por favor, completa todos los campos</div>';
+        if (mensajeDiv) mensajeDiv.innerHTML = '<div class="alert-msg alert-warning">Por favor, completa todos los campos</div>';
+        return;
+      }
+
+      // Validar si el perfil especificado existe en nuestro mapeo
+      const configPerfil = mapaPerfil[perfil];
+      if (!configPerfil) {
+        if (mensajeDiv) mensajeDiv.innerHTML = '<div class="alert-msg alert-danger">Perfil no válido en la URL</div>';
         return;
       }
 
       try {
+        // 1. Autenticar en Firebase Auth
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
+        const uid = userCredential.user.uid;
 
-        const userDocRef = doc(db, "usuarios", user.uid);
+        // 2. Buscar ÚNICAMENTE en la colección correspondiente al perfil actual
+        const userDocRef = doc(db, configPerfil.coleccion, uid);
         const userDoc = await getDoc(userDocRef);
 
         if (userDoc.exists()) {
-          const rol = userDoc.data().rol;
-
-          switch (rol) {
-            case 'estudiante':
-              window.location.href = "mainPE.php";
-              break;
-            case 'docente':
-            case 'maestro':
-              window.location.href = "mainPD.php";
-              break;
-            case 'institucion':
-              window.location.href = "mainPI.php";
-              break;
-            default:
-              mensajeDiv.innerHTML = '<div class="alert-msg alert-danger">Rol de usuario no reconocido</div>';
-          }
+          // 3. Si existe en esa colección, redirigir a su página principal
+          window.location.href = configPerfil.destino;
         } else {
-          mensajeDiv.innerHTML = '<div class="alert-msg alert-danger">No se encontró información del perfil del usuario</div>';
+          // Si el usuario se autenticó pero no pertenece a esta colección especifica
+          if (mensajeDiv) {
+            mensajeDiv.innerHTML = `<div class="alert-msg alert-danger">Esta cuenta no pertenece al perfil de ${perfil.toUpperCase()}</div>`;
+          }
         }
 
       } catch (error) {
         console.error("Error al iniciar sesión:", error);
-        mensajeDiv.innerHTML = '<div class="alert-msg alert-danger">Correo o contraseña incorrectos</div>';
+        if (mensajeDiv) mensajeDiv.innerHTML = '<div class="alert-msg alert-danger">Correo o contraseña incorrectos</div>';
       }
     });
-  </script>
+  }
+</script>
 
  
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
