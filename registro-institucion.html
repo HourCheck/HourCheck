@@ -1,231 +1,316 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Institución</title>
-    
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <style>
-        :root {
-            --bs-primary-blue: #0047E0;
-            --bs-primary-orange: #FF6B00;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro de Institución - HourCheck</title>
+  
+  <!-- Materialize CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <!-- Material Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-        body {
-            background-color: #F4F4F4;
-            min-height: 100vh;
-        }
-
-        .sidebar-left {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 100vh;
-            width: 18vw;
-            display: flex;
-            z-index: 1;
-        }
-
-        .stripe-blue {
-            background-color: var(--bs-primary-blue);
-            width: 50%;
-            height: 100%;
-        }
-
-        .stripe-orange {
-            background-color: var(--bs-primary-orange);
-            width: 50%;
-            height: 100%;
-        }
-
-        .brand-logo {
-            position: fixed;
-            top: 2rem;
-            right: 2.5rem;
-            z-index: 10;
-        }
-
-        .register-card {
-            border-radius: 2.5rem;
-            box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.08);
-            max-width: 480px;
-            width: 100%;
-            z-index: 2;
-        }
-
-        .btn-back {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            border: 2px solid #212529;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: #212529;
-            text-decoration: none;
-            transition: all 0.2s ease;
-        }
-
-        .btn-back:hover {
-            background-color: #212529;
-            color: #fff;
-        }
-
-        .form-control-custom {
-            border-radius: 0.8rem;
-            padding: 0.55rem 1rem;
-            border: 1.5px solid #E5E5EA;
-            font-size: 0.95rem;
-        }
-
-        .form-control-custom::placeholder {
-            color: #C7C7CC;
-        }
-
-        .form-control-custom:focus {
-            border-color: #33A1FD;
-            box-shadow: 0 0 0 0.25rem rgba(51, 161, 253, 0.15);
-        }
-
-        .btn-orange {
-            background-color: var(--bs-primary-orange);
-            color: #fff;
-            border-radius: 2rem;
-            padding: 0.8rem 3rem;
-            font-weight: 700;
-            font-size: 1.3rem;
-            border: none;
-            transition: opacity 0.2s ease;
-        }
-
-        .btn-orange:hover {
-            background-color: #e56000;
-            color: #fff;
-        }
-    </style>
-</head>
-<body class="d-flex flex-column align-items-center justify-content-center position-relative py-5">
-
-    <div class="sidebar-left">
-        <div class="stripe-blue"></div>
-        <div class="stripe-orange"></div>
-    </div>
-
-    <div class="brand-logo text-center">
-        <img src="Transparente (1).png" alt="Logo" style="width: 200px; height: 200px;">
-    </div>
-
-    <h1 class="fw-bold text-dark display-6 mb-4 text-center" style="z-index: 2;">Registro de Institución</h1>
-
-    <div class="container d-flex flex-column align-items-center">
-        <div class="card register-card border-0 bg-white p-4 p-sm-4 mb-4">
-            <div class="card-body p-2">
-                
-                <form id="institutionForm" method="POST" action="" autocomplete="off">
-                  
-                    <input type="hidden" name="tipo_usuario" value="institucion">
-
-                    <div class="mb-3">
-                        <div class="d-flex align-items-center mb-2">
-                            <a href="loginU.html" class="btn-back me-3 flex-shrink-0" aria-label="Volver">
-                                <i class="bi bi-arrow-left fs-5"></i>
-                            </a>
-                            <label for="nombreInstitucion" class="form-label fw-bold text-dark m-0">Nombre de la institución</label>
-                        </div>
-                        <input type="text" name="nombre_institucion" class="form-control form-control-custom ms-auto" id="nombreInstitucion" placeholder="ej. Ofelia Herrera" style="max-width: 80%;" required>
-                    </div>
-
-                    <div class="mb-3 ms-auto" style="max-width: 80%;">
-                        <label for="codigoInstitucion" class="form-label fw-bold text-dark mb-1">Código institución</label>
-                        <input type="text" name="codigo_institucion" class="form-control form-control-custom" id="codigoInstitucion" placeholder="ej. 1382" required>
-                    </div>
-
-                    <div class="mb-3 ms-auto" style="max-width: 80%;">
-                        <label for="nombreDirector" class="form-label fw-bold text-dark mb-1">Nombre del director</label>
-                        <input type="text" name="nombre_director" class="form-control form-control-custom" id="nombreDirector" placeholder="ej. Juan Pérez" required>
-                    </div>
-
-                    <div class="mb-3 ms-auto" style="max-width: 80%;">
-                        <label for="correo" class="form-label fw-bold text-dark mb-1">Correo institucional</label>
-                        <input type="email" name="correo" class="form-control form-control-custom" id="correo" placeholder="ej. pedro@clases.edu.sv" required>
-                    </div>
-
-                    <div class="mb-2 ms-auto" style="max-width: 80%;">
-                        <label for="password" class="form-label fw-bold text-dark mb-1">Contraseña</label>
-                        <input type="password" name="password" class="form-control form-control-custom" id="password" placeholder="Crea tu contraseña" required>
-                    </div>
-
-                 
-                </form>
-
-            </div>
-        </div>
-
-        <div style="z-index: 2;" class="w-100 text-center">
-            <button type="submit" name="send" form="institutionForm" class="btn btn-orange col-11 col-sm-6 col-md-4">Registrarse</button>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
- <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-  // Configuración del proyecto Firebase
-  const firebaseConfig = {
-    apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
-    authDomain: "hourcheckt.firebaseapp.com",
-    projectId: "hourcheckt",
-    storageBucket: "hourcheckt.firebasestorage.app",
-    messagingSenderId: "83459752453",
-    appId: "1:83459752453:web:1b81724c28973bf567126c"
-  };
-
-  // Inicializar Firebase
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-
-  // Referencias a los elementos del DOM
-  const registroForm = document.getElementById("institutionForm");
-  const btnRegistrar = document.getElementById("btnRegistrar");
-
-  registroForm.addEventListener("submit", async (e) => {
-    e.preventDefault(); // Evita recargar la página
-
-    // Deshabilitar botón mientras procesa
-    btnRegistrar.disabled = true;
-    btnRegistrar.textContent = "Registrando...";
-
-    // Obtener valores de los inputs del formulario
-    const nombreInstitucion = document.getElementById("nombreInstitucion").value;
-    const codigoInstitucion = document.getElementById("codigoInstitucion").value;
-    const nombreDirector = document.getElementById("nombreDirector").value;
-    const correo = document.getElementById("correo").value;
-    const password = document.getElementById("password").value;
-
-    try {
-      // Guardar en la colección 'Instituciones' con los nombres de campos exactos
-      const docRef = await addDoc(collection(db, "Institucion"), {
-        CodigoInf: codigoInstitucion,
-        CorreoInst: correo,
-        NameDirector: nombreDirector,
-        NameInst: nombreInstitucion,
-        Password: password
-      });
-
-      alert("Institución registrada exitosamente.");
-      registroForm.reset();
-    } catch (error) {
-      console.error("Error al registrar la institución:", error);
-      alert("Ocurrió un error al guardar los datos.");
-    } finally {
-      btnRegistrar.disabled = false;
-      btnRegistrar.textContent = "Registrarse";
+  <style>
+    body, html {
+      height: 100%;
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      background-color: #f8f9fa;
     }
-  });
-</script>
+
+    .main-container {
+      display: flex;
+      min-height: 100vh;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .layout-wrapper {
+      display: flex;
+      width: 100%;
+      max-width: 1100px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 40px;
+    }
+
+    /* Columna Izquierda: Título y Logo */
+    .brand-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .main-title {
+      font-size: 3.2rem;
+      font-weight: 800;
+      color: #000000;
+      line-height: 1.1;
+      margin-bottom: 30px;
+    }
+
+    .brand-logo-img {
+      width: 260px;
+      height: auto;
+      object-fit: contain;
+    }
+
+    /* Columna Derecha: Tarjeta de Registro */
+    .card-section {
+      flex: 1.1;
+      display: flex;
+      justify-content: center;
+    }
+
+    .register-card {
+      background: #ffffff;
+      border-radius: 35px;
+      padding: 40px 45px;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.06), 0 5px 15px rgba(0, 0, 0, 0.04);
+    }
+
+    /* Cabecera (Botón atrás + primer input alineado) */
+    .header-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border: 2px solid #000000;
+      border-radius: 50%;
+      color: #000000;
+      text-decoration: none;
+      transition: background-color 0.2s, transform 0.2s;
+      flex-shrink: 0;
+      margin-top: 5px;
+    }
+
+    .btn-back:hover {
+      background-color: #f0f0f0;
+      transform: scale(1.05);
+    }
+
+    .btn-back i {
+      font-size: 24px;
+    }
+
+    .flex-grow-input {
+      flex-grow: 1;
+    }
+
+    /* Estilos para etiquetas e inputs */
+    .input-label {
+      font-weight: 700;
+      color: #000000;
+      font-size: 1.05rem;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .custom-input {
+      background-color: #ffffff !important;
+      border: 1.5px solid #e0e0e0 !important;
+      border-radius: 20px !important;
+      height: 44px !important;
+      padding: 0 18px !important;
+      box-sizing: border-box !important;
+      font-size: 0.95rem !important;
+      color: #333333 !important;
+      margin-bottom: 16px !important;
+      box-shadow: none !important;
+      transition: border-color 0.2s, box-shadow 0.2s !important;
+    }
+
+    .custom-input::placeholder {
+      color: #cccccc;
+    }
+
+    .custom-input:focus {
+      border-color: #ff5500 !important;
+      box-shadow: 0 0 0 2px rgba(255, 85, 0, 0.15) !important;
+    }
+
+    /* Botón Naranja de Registro */
+    .btn-orange-submit {
+      background-color: #ff5500 !important;
+      color: #ffffff !important;
+      font-size: 1.3rem !important;
+      font-weight: 700 !important;
+      text-transform: none !important;
+      border-radius: 30px !important;
+      height: 52px !important;
+      line-height: 52px !important;
+      width: 100% !important;
+      box-shadow: 0 4px 14px rgba(255, 85, 0, 0.3) !important;
+      transition: background-color 0.2s, transform 0.1s !important;
+      border: none;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .btn-orange-submit:hover {
+      background-color: #e64d00 !important;
+    }
+
+    .btn-orange-submit:disabled {
+      background-color: #ffaa80 !important;
+      cursor: not-allowed;
+    }
+
+    /* Adaptación Responsiva */
+    @media (max-width: 900px) {
+      .layout-wrapper {
+        flex-direction: column;
+        gap: 25px;
+      }
+      .main-title {
+        font-size: 2.3rem;
+        margin-bottom: 15px;
+      }
+      .brand-logo-img {
+        width: 160px;
+      }
+      .register-card {
+        padding: 30px 25px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="main-container">
+    <div class="layout-wrapper">
+      
+      <!-- Lado Izquierdo: Título y Branding -->
+      <div class="brand-section">
+        <h1 class="main-title">Registro de<br>Institución</h1>
+        <img src="Transparente (1).png" alt="HourCheck Logo" class="brand-logo-img">
+      </div>
+
+      <!-- Lado Derecho: Formulario de Registro -->
+      <div class="card-section">
+        <div class="register-card">
+          
+          <form id="institutionForm" autocomplete="off">
+            <input type="hidden" id="tipoUsuario" name="tipo_usuario" value="institucion">
+
+            <!-- Fila superior: Botón de regresar + Nombre Institución -->
+            <div class="header-row">
+              <a href="loginU.html" class="btn-back waves-effect waves-light" title="Volver">
+                <i class="material-icons">arrow_back</i>
+              </a>
+              <div class="flex-grow-input">
+                <label for="nombreInstitucion" class="input-label">Nombre de la institución</label>
+                <input type="text" id="nombreInstitucion" class="custom-input" placeholder="ej. Ofelia Herrera" required>
+              </div>
+            </div>
+
+            <!-- Código Institución -->
+            <div>
+              <label for="codigoInstitucion" class="input-label">Codigo institución</label>
+              <input type="text" id="codigoInstitucion" class="custom-input" placeholder="ej. 1382" required>
+            </div>
+
+            <!-- Nombre del Director -->
+            <div>
+              <label for="nombreDirector" class="input-label">Nombre del director</label>
+              <input type="text" id="nombreDirector" class="custom-input" placeholder="ej. Juan Perez" required>
+            </div>
+
+            <!-- Correo -->
+            <div>
+              <label for="correo" class="input-label">Correo</label>
+              <input type="email" id="correo" class="custom-input" placeholder="Ingresa tu correo" required>
+            </div>
+
+            <!-- Contraseña -->
+            <div>
+              <label for="password" class="input-label">Contraseña</label>
+              <input type="password" id="password" class="custom-input" placeholder="Crea tu contraseña" required autocomplete="new-password">
+            </div>
+
+            <!-- Botón de Registro -->
+            <button type="submit" id="btnRegistrar" class="btn btn-orange-submit waves-effect waves-light">
+              Registrarse
+            </button>
+
+          </form>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Script Modular de Firebase -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // Configuración del proyecto Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
+      authDomain: "hourcheckt.firebaseapp.com",
+      projectId: "hourcheckt",
+      storageBucket: "hourcheckt.firebasestorage.app",
+      messagingSenderId: "83459752453",
+      appId: "1:83459752453:web:1b81724c28973bf567126c"
+    };
+
+    // Inicializar Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Referencias al DOM
+    const registroForm = document.getElementById("institutionForm");
+    const btnRegistrar = document.getElementById("btnRegistrar");
+
+    registroForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      btnRegistrar.disabled = true;
+      btnRegistrar.textContent = "Registrando...";
+
+      const nombreInstitucion = document.getElementById("nombreInstitucion").value.trim();
+      const codigoInstitucion = document.getElementById("codigoInstitucion").value.trim();
+      const nombreDirector = document.getElementById("nombreDirector").value.trim();
+      const correo = document.getElementById("correo").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      try {
+        await addDoc(collection(db, "Institucion"), {
+          CodigoInf: codigoInstitucion,
+          CorreoInst: correo,
+          NameDirector: nombreDirector,
+          NameInst: nombreInstitucion,
+          Password: password
+        });
+
+        M.toast({html: 'Institución registrada exitosamente', classes: 'green rounded'});
+        registroForm.reset();
+      } catch (error) {
+        console.error("Error al registrar la institución:", error);
+        M.toast({html: 'Error al guardar los datos: ' + error.message, classes: 'red rounded'});
+      } finally {
+        btnRegistrar.disabled = false;
+        btnRegistrar.textContent = "Registrarse";
+      }
+    });
+  </script>
+
+  <!-- Materialize JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
 </html>
