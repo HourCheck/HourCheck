@@ -198,7 +198,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
             <div class="card-body p-0">
                 
                 <div class="d-flex align-items-start mb-4">
-                    <a href="index.php" class="btn-back me-3 flex-shrink-0" aria-label="Volver">
+                    <a href="index.html" class="btn-back me-3 flex-shrink-0" aria-label="Volver">
                         <i class="bi bi-arrow-left fs-5"></i>
                     </a>
                     <div>
@@ -246,12 +246,12 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
         const linkRegistro = document.getElementById('linkRegistro');
 
         const paginasRegistro = {
-            'institucion': 'registro-institucion.php',
-            'maestro': 'registro-maestro.php',
-            'estudiante': 'registro-estudiante.php'
+            'institucion': 'registro-institucion.html',
+            'maestro': 'registro-maestro.html',
+            'estudiante': 'registro-estudiante.html'
         };
 
-        linkRegistro.href = paginasRegistro[perfil] || 'registro-estudiante.php';
+        linkRegistro.href = paginasRegistro[perfil] || 'registro-estudiante.html';
     });
     </script>
 </body>
