@@ -170,5 +170,62 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+ <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+  // Configuración del proyecto Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
+    authDomain: "hourcheckt.firebaseapp.com",
+    projectId: "hourcheckt",
+    storageBucket: "hourcheckt.firebasestorage.app",
+    messagingSenderId: "83459752453",
+    appId: "1:83459752453:web:1b81724c28973bf567126c"
+  };
+
+  // Inicializar Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // Referencias a los elementos del DOM
+  const registroForm = document.getElementById("institutionForm");
+  const btnRegistrar = document.getElementById("btnRegistrar");
+
+  registroForm.addEventListener("submit", async (e) => {
+    e.preventDefault(); // Evita recargar la página
+
+    // Deshabilitar botón mientras procesa
+    btnRegistrar.disabled = true;
+    btnRegistrar.textContent = "Registrando...";
+
+    // Obtener valores de los inputs del formulario
+    const nombreInstitucion = document.getElementById("nombreInstitucion").value;
+    const codigoInstitucion = document.getElementById("codigoInstitucion").value;
+    const nombreDirector = document.getElementById("nombreDirector").value;
+    const correo = document.getElementById("correo").value;
+    const password = document.getElementById("password").value;
+
+    try {
+      // Guardar en la colección 'Instituciones' con los nombres de campos exactos
+      const docRef = await addDoc(collection(db, "Institucion"), {
+        CodigoInf: codigoInstitucion,
+        CorreoInst: correo,
+        NameDirector: nombreDirector,
+        NameInst: nombreInstitucion,
+        Password: password
+      });
+
+      alert("Institución registrada exitosamente.");
+      registroForm.reset();
+    } catch (error) {
+      console.error("Error al registrar la institución:", error);
+      alert("Ocurrió un error al guardar los datos.");
+    } finally {
+      btnRegistrar.disabled = false;
+      btnRegistrar.textContent = "Registrarse";
+    }
+  });
+</script>
 </body>
 </html>
