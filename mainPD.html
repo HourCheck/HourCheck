@@ -5,9 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Inicio Docente - HourCheck</title>
   
-  
+  <!-- Materialize CSS CDN -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
   <style>
@@ -75,6 +74,7 @@
       align-items: center;
       gap: 10px;
       cursor: pointer;
+      text-decoration: none;
     }
 
     .avatar {
@@ -105,7 +105,6 @@
       color: #666;
     }
 
-    
     .sidenav {
       width: 300px;
       border-top-right-radius: 20px;
@@ -267,14 +266,14 @@
 </head>
 <body>
 
-  
+  <!-- Sidenav -->
   <ul id="slide-out" class="sidenav">
     <li>
       <div class="user-view">
         <div class="background" style="background-color: #1557d0;"></div>
-        <a href="#user"><div class="avatar"><i class="material-icons">person</i></div></a>
-        <a href="#name"><span class="white-text name" style="font-weight:700;">Maria Pérez</span></a>
-        <a href="#email"><span class="white-text email">maria.perez@clases.edu.sv</span></a>
+        <a href="perfilD.html"><div class="avatar"><i class="material-icons">person</i></div></a>
+        <a href="perfilD.html"><span class="white-text name" style="font-weight:700;">Cargando...</span></a>
+        <a href="perfilD.html"><span class="white-text email">Cargando...</span></a>
       </div>
     </li>
     
@@ -293,7 +292,7 @@
   <!-- CONTENIDO PRINCIPAL -->
   <div class="dashboard-container">
     
-    <!-- Encabezado Superior -->
+   <!-- Encabezado Superior -->
     <header class="top-header">
       <div class="header-left">
         <!-- Botón de Hamburguesa con trigger hacia el Sidenav -->
@@ -302,27 +301,30 @@
         </a>
         <h1 class="header-title">Inicio</h1>
       </div>
+      
       <div class="header-right">
-        <div class="icon-btn">
-          <i class="material-icons" href="notiD.html">notifications_none</i>
-        </div>
-        <div class="user-profile">
+        <!-- Ícono de Notificaciones redireccionando a notiD.html -->
+        <a href="notiD.html" class="icon-btn">
+          <i class="material-icons">notifications_none</i>
+        </a>
+        
+        <!-- Perfil completo (Foto + Nombre) redireccionando a perfilD.html -->
+        <a href="perfilD.html" class="user-profile">
           <div class="avatar">
-            <i class="material-icons" href="perfilD.html">person</i>
+            <i class="material-icons">person</i>
           </div>
           <div class="user-info">
-            <span class="user-name">Maria Pérez</span>
+            <span class="user-name">Cargando...</span>
             <span class="user-role">Docente</span>
           </div>
           <i class="material-icons">keyboard_arrow_down</i>
-        </div>
+        </a>
       </div>
     </header>
-
     <!-- Banner Principal -->
     <section class="welcome-banner">
       <div class="banner-content">
-        <h2 class="banner-title">¡Bienvenida, Maria!</h2>
+        <h2 class="banner-title">¡Bienvenida!</h2>
         <p class="banner-text">Supervisa y registra el progreso de tus estudiantes, controla sus horas de servicio social y verifica sus actividades y evidencias.</p>
       </div>
       <img src="https://cdni.iconscout.com/illustration/premium/thumb/woman-working-on-laptop-4268388-3561001.png" alt="Ilustración Trabajo" class="banner-illustration">
@@ -338,7 +340,7 @@
         <div class="card-info">
           <h3 class="card-title">Jornadas de<br>limpieza</h3>
           <span class="card-status">20/45</span>
-          <a href="#" class="card-link">Ver mas</a>
+          <a href="#" class="card-link">Ver más</a>
         </div>
       </div>
 
@@ -347,21 +349,20 @@
           <img src="https://cdn-icons-png.flaticon.com/512/3389/3389081.png" alt="Tutorías de inglés">
         </div>
         <div class="card-info">
-          <h3 class="card-title">Tutorias de ingles</h3>
+          <h3 class="card-title">Tutorías de inglés</h3>
           <span class="card-status">5/10 realizadas</span>
-          <a href="#" class="card-link">Ver mas</a>
+          <a href="#" class="card-link">Ver más</a>
         </div>
       </div>
 
-   
       <div class="project-card">
         <div class="card-icon-wrapper">
           <img src="https://cdn-icons-png.flaticon.com/512/2942/2942924.png" alt="Tutorías primera infancia">
         </div>
         <div class="card-info">
-          <h3 class="card-title">Tutorias en<br>primera infancia</h3>
+          <h3 class="card-title">Tutorías en<br>primera infancia</h3>
           <span class="card-status">10/10 realizadas</span>
-          <a href="#" class="card-link">Ver mas</a>
+          <a href="#" class="card-link">Ver más</a>
         </div>
       </div>
 
@@ -372,113 +373,84 @@
   <!-- Materialize JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
-  <!-- Inicialización de Materialize Sidenav -->
-  <script>
+  <!-- Script Firebase y Manejo de Sesión -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // 1. Configuración de Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
+      authDomain: "hourcheckt.firebaseapp.com",
+      projectId: "hourcheckt",
+      storageBucket: "hourcheckt.firebasestorage.app",
+      messagingSenderId: "83459752453",
+      appId: "1:83459752453:web:1b81724c28973bf567126c"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // 2. Inicializar Sidenav de Materialize
     document.addEventListener('DOMContentLoaded', function() {
       var elems = document.querySelectorAll('.sidenav');
-      var instances = M.Sidenav.init(elems, {
-        edge: 'left', // Se desliza desde la izquierda
-        draggable: true // Permite arrastrar en dispositivos táctiles
+      M.Sidenav.init(elems, {
+        edge: 'left',
+        draggable: true
       });
     });
 
-  const app = initializeApp(firebaseConfig);
+    // 3. Comprobar la sesión activa al cargar la página
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        let nombreUsuario = user.displayName;
+        let correoUsuario = user.email;
 
-  const auth = getAuth(app);
+        if (!nombreUsuario) {
+          try {
+            // Intentar buscar en la colección Docentes
+            let docRef = doc(db, "Docentes", user.uid);
+            let docSnap = await getDoc(docRef);
 
-  const db = getFirestore(app);
-
-
-
-  // Comprobar la sesión activa al cargar la página
-
-  onAuthStateChanged(auth, async (user) => {
-
-    if (user) {
-
-      let nombreUsuario = user.displayName;
-
-      let correoUsuario = user.email;
-
-
-
-      // Si el nombre no está en Auth, lo buscamos en Firestore en la colección "Estudiantes"
-
-      if (!nombreUsuario) {
-
-        try {
-
-          const docRef = doc(db, "Estudiantes", user.uid);
-
-          const docSnap = await getDoc(docRef);
-
-
-
-          if (docSnap.exists()) {
-
-            nombreUsuario = docSnap.data().nombre;
-
+            if (docSnap.exists()) {
+              nombreUsuario = docSnap.data().nombre;
+            } else {
+              // Si no existe en Docentes, buscar en Estudiantes
+              docRef = doc(db, "Estudiantes", user.uid);
+              docSnap = await getDoc(docRef);
+              if (docSnap.exists()) {
+                nombreUsuario = docSnap.data().nombre;
+              }
+            }
+          } catch (error) {
+            console.error("Error al obtener los datos del usuario:", error);
           }
-
-        } catch (error) {
-
-          console.error("Error al obtener los datos del estudiante:", error);
-
         }
 
+        actualizarInterfaz(nombreUsuario || "Docente", correoUsuario);
+      } else {
+        window.location.href = "loginU.html";
       }
+    });
 
+    function actualizarInterfaz(nombre, correo) {
+      // Banner
+      const bannerTitle = document.querySelector(".banner-title");
+      if (bannerTitle) bannerTitle.textContent = `¡Bienvenida, ${nombre}!`;
 
+      // Header superior
+      const userNameHeader = document.querySelector(".user-name");
+      if (userNameHeader) userNameHeader.textContent = nombre;
 
-      // Actualizamos la interfaz gráfica con el nombre real
+      // Menú Lateral
+      const sidenavName = document.querySelector(".sidenav .name");
+      const sidenavEmail = document.querySelector(".sidenav .email");
 
-      actualizarInterfaz(nombreUsuario || "Estudiante", correoUsuario);
-
-    } else {
-
-      // Si no hay sesión iniciada, redirige al login
-
-      window.location.href = "loginU.html";
-
+      if (sidenavName) sidenavName.textContent = nombre;
+      if (sidenavEmail) sidenavEmail.textContent = correo;
     }
-
-  });
-
-
-
-  function actualizarInterfaz(nombre, correo) {
-
-    // 1. Título del Banner de bienvenida
-
-    const bannerTitle = document.querySelector(".banner-title");
-
-    if (bannerTitle) bannerTitle.textContent = `¡Bienvenido/a, ${nombre}!`;
-
-
-
-    // 2. Nombre en la esquina superior derecha
-
-    const userNameHeader = document.querySelector(".user-name");
-
-    if (userNameHeader) userNameHeader.textContent = nombre;
-
-
-
-    // 3. Nombre y correo dentro del Menú Desplegable (Sidenav)
-
-    const sidenavName = document.querySelector(".sidenav .name");
-
-    const sidenavEmail = document.querySelector(".sidenav .email");
-
-
-
-    if (sidenavName) sidenavName.textContent = nombre;
-
-    if (sidenavEmail) sidenavEmail.textContent = correo;
-
-  }
-
-
   </script>
 </body>
 </html>
