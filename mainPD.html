@@ -1,1 +1,322 @@
-asli work
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>pagina</title>
+  
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <style>
+    body {
+      background-color: #f4f6f9;
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .dashboard-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Navbar superior */
+    .top-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0 20px 0;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .header-left i {
+      font-size: 28px;
+      cursor: pointer;
+      color: #333;
+    }
+
+    .header-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #000;
+      margin: 0;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .icon-btn {
+      position: relative;
+      cursor: pointer;
+      color: #333;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      background-color: #2979ff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+
+    .user-info {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+    }
+
+    .user-name {
+      font-weight: 700;
+      color: #000;
+      font-size: 0.95rem;
+    }
+
+    .user-role {
+      font-size: 0.8rem;
+      color: #666;
+    }
+
+    /* Banner de Bienvenida */
+    .welcome-banner {
+      background-color: #1557d0;
+      border-radius: 25px;
+      padding: 35px 40px;
+      color: #ffffff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 35px;
+      box-shadow: 0 10px 20px rgba(21, 87, 208, 0.15);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .banner-content {
+      max-width: 550px;
+      z-index: 2;
+    }
+
+    .banner-title {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin: 0 0 12px 0;
+    }
+
+    .banner-text {
+      font-size: 1rem;
+      line-height: 1.4;
+      opacity: 0.9;
+      margin: 0;
+    }
+
+    .banner-illustration {
+      width: 280px;
+      height: auto;
+      z-index: 2;
+    }
+
+    /* Grid de Tarjetas de Proyectos */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 25px;
+    }
+
+    .project-card {
+      background: #ffffff;
+      border-radius: 25px;
+      padding: 25px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.03);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .project-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.06);
+    }
+
+    .card-icon-wrapper {
+      width: 90px;
+      height: 90px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card-icon-wrapper img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .card-info {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #000;
+      margin: 0 0 12px 0;
+      line-height: 1.2;
+    }
+
+    .card-status {
+      font-size: 0.95rem;
+      color: #555;
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+
+    .card-link {
+      color: #0047e0;
+      font-weight: 700;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .card-link:hover {
+      color: #002ca3;
+    }
+
+    /* Ajustes Adaptables */
+    @media (max-width: 768px) {
+      .welcome-banner {
+        flex-direction: column;
+        text-align: center;
+        padding: 30px 20px;
+      }
+      .banner-illustration {
+        margin-top: 20px;
+        width: 200px;
+      }
+      .projects-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="dashboard-container">
+    
+    
+    <header class="top-header">
+      <div class="header-left">
+        <i class="material-icons">menu</i>
+        <h1 class="header-title">Inicio</h1>
+      </div>
+      <div class="header-right">
+        <div class="icon-btn">
+          <i class="material-icons">notifications_none</i>
+        </div>
+        <div class="user-profile">
+          <div class="avatar">
+            <i class="material-icons">person</i>
+          </div>
+          <div class="user-info">
+            <span class="user-name">Maria Pérez</span>
+            <span class="user-role">Docente</span>
+          </div>
+          <i class="material-icons">keyboard_arrow_down</i>
+        </div>
+      </div>
+    </header>
+
+    <!-- Banner Principal -->
+    <section class="welcome-banner">
+      <div class="banner-content">
+        <h2 class="banner-title">¡Bienvenida, Maria!</h2>
+        <p class="banner-text">Supervisa y registra el progreso de tus estudiantes, controla sus horas de servicio social y verifica sus actividades y evidencias.</p>
+      </div>
+     
+      <img src="https://cdni.iconscout.com/illustration/premium/thumb/woman-working-on-laptop-4268388-3561001.png" alt="Ilustración Trabajo" class="banner-illustration">
+    </section>
+
+    
+    <main class="projects-grid">
+      
+     
+      <div class="project-card">
+        <div class="card-icon-wrapper">
+          <img src="https://cdn-icons-png.flaticon.com/512/995/995053.png" alt="Proyectos de Limpieza">
+        </div>
+        <div class="card-info">
+          <h3 class="card-title">proyectos de<br>limpieza</h3>
+          <span class="card-status">20/45</span>
+          <a href="#" class="card-link">Ver mas</a>
+        </div>
+      </div>
+
+      
+      <div class="project-card">
+        <div class="card-icon-wrapper">
+          <img src="https://cdn-icons-png.flaticon.com/512/3389/3389081.png" alt="Tutorías de inglés">
+        </div>
+        <div class="card-info">
+          <h3 class="card-title">Tutorias de ingles</h3>
+          <span class="card-status">5/10 realizadas</span>
+          <a href="#" class="card-link">Ver mas</a>
+        </div>
+      </div>
+
+    
+      <div class="project-card">
+        <div class="card-icon-wrapper">
+          <img src="https://cdn-icons-png.flaticon.com/512/2954/2954894.png" alt="Mantenimiento de baños">
+        </div>
+        <div class="card-info">
+          <h3 class="card-title">Mantenimiento de<br>los baños</h3>
+          <span class="card-status">30/35 realizadas</span>
+          <a href="#" class="card-link">Ver mas</a>
+        </div>
+      </div>
+
+      
+      <div class="project-card">
+        <div class="card-icon-wrapper">
+          <img src="https://cdn-icons-png.flaticon.com/512/2942/2942924.png" alt="Tutorías primera infancia">
+        </div>
+        <div class="card-info">
+          <h3 class="card-title">Tutorias en<br>primera infancia</h3>
+          <span class="card-status">10/10 realizadas</span>
+          <a href="#" class="card-link">Ver mas</a>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>
