@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HourCheck</title>
+  <title>login universal</title>
   
-
+  
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-
+ 
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
   <style>
@@ -23,14 +23,12 @@
       min-height: 100vh;
     }
 
-   
     .sidebar-blue {
       background-color: #0052cc;
       width: 120px;
       flex-shrink: 0;
     }
 
-  
     .content-area {
       flex-grow: 1;
       padding: 40px 60px;
@@ -40,7 +38,6 @@
       align-items: center;
     }
 
-  
     .brand-logo-container {
       position: absolute;
       top: 40px;
@@ -54,7 +51,6 @@
       object-fit: contain;
     }
 
-  
     .login-card {
       background: #ffffff;
       border-radius: 35px;
@@ -65,7 +61,6 @@
       position: relative;
     }
 
-   
     .login-header {
       display: flex;
       align-items: center;
@@ -103,7 +98,6 @@
       margin: 0;
     }
 
-  
     .input-label {
       font-weight: 700;
       color: #000000;
@@ -135,7 +129,6 @@
       box-shadow: 0 0 0 2px rgba(255, 85, 0, 0.2) !important;
     }
 
-  
     .forgot-password-container {
       text-align: center;
       margin-bottom: 25px;
@@ -152,7 +145,6 @@
       text-decoration: underline;
     }
 
-  
     .btn-login {
       background-color: #ff5500 !important;
       color: #ffffff !important;
@@ -173,7 +165,6 @@
       background-color: #e64d00 !important;
     }
 
-    /* Enlace de registro */
     .register-container {
       text-align: center;
       margin-top: 25px;
@@ -192,7 +183,6 @@
       text-decoration: underline;
     }
 
-    
     .alert-msg {
       padding: 10px;
       border-radius: 12px;
@@ -225,171 +215,167 @@
 <body>
 
   <div class="main-container">
-   
     <div class="sidebar-blue hide-on-small-only"></div>
 
-  
     <div class="content-area">
-      
-      
       <div class="brand-logo-container">
         <img src="Transparente (1).png" alt="HourCheck Logo">
       </div>
 
-    
       <div class="login-card">
-        
-       
         <div class="login-header">
-          <a href="index.html" class="btn-back waves-effect waves-light" title="Volver">
+          <a href="index.html" class="btn-back waves-effect waves-light" title="Volver a Perfiles">
             <i class="material-icons">arrow_back</i>
           </a>
           <h2 class="login-title">Inicio de sesión</h2>
         </div>
 
-      
         <form id="loginForm">
-          
-          
           <div>
             <label for="correo" class="input-label">Correo Electrónico</label>
             <input id="correo" type="email" class="custom-input" placeholder="Ingresa tu correo" required autocomplete="email">
           </div>
 
-      
           <div>
             <label for="password" class="input-label">Contraseña</label>
             <input id="password" type="password" class="custom-input" placeholder="Ingresa tu contraseña" required autocomplete="current-password">
           </div>
 
-          
           <div class="forgot-password-container">
             <a href="#" class="forgot-password-link">¿Olvidaste tu contraseña?</a>
           </div>
 
-      
           <div id="mensaje"></div>
 
-          <button type="submit" class="btn btn-login waves-effect waves-light">
+          <button type="submit" id="btnLogin" class="btn btn-login waves-effect waves-light">
             Iniciar sesión
           </button>
 
-         
           <div class="register-container">
             ¿No tienes cuenta? <a href="#" id="linkRegistro" class="register-link">Regístrate aquí</a>
           </div>
-
         </form>
       </div>
 
     </div>
   </div>
 
- <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
-    authDomain: "hourcheckt.firebaseapp.com",
-    projectId: "hourcheckt",
-    storageBucket: "hourcheckt.firebasestorage.app",
-    messagingSenderId: "83459752453",
-    appId: "1:83459752453:web:1b81724c28973bf567126c"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-
-  // 1. Obtener el parámetro 'perfil' de la URL (ej: login.html?perfil=estudiante)
-  const urlParams = new URLSearchParams(window.location.search);
-  const perfil = urlParams.get('perfil') || 'estudiante'; // Por defecto 'estudiante'
-
-  // 2. Configurar el enlace de registro según el perfil
-  const linkRegistro = document.getElementById('linkRegistro');
-  if (linkRegistro) {
-    const paginasRegistro = {
-      'institucion': 'registro-institucion.html',
-      'maestro': 'registro-maestro.html',
-      'docente': 'registro-maestro.html',
-      'estudiante': 'registro-estudiante.html'
+    const firebaseConfig = {
+      apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
+      authDomain: "hourcheckt.firebaseapp.com",
+      projectId: "hourcheckt",
+      storageBucket: "hourcheckt.firebasestorage.app",
+      messagingSenderId: "83459752453",
+      appId: "1:83459752453:web:1b81724c28973bf567126c"
     };
-    linkRegistro.href = paginasRegistro[perfil] || 'registro-estudiante.html';
-  }
 
-  // Mapeo entre el 'perfil' de la URL, la Colección de Firestore y la Página Principal
-  const mapaPerfil = {
-    'estudiante': {
-      coleccion: 'Estudiantes',
-      destino: 'mainPE.php'
-    },
-    'maestro': {
-      coleccion: 'Docentes',
-      destino: 'mainPD.php'
-    },
-    'docente': {
-      coleccion: 'Docentes',
-      destino: 'mainPD.php'
-    },
-    'institucion': {
-      coleccion: 'Institucion',
-      destino: 'mainPI.php'
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const perfilActual = urlParams.get('perfil') || 'estudiante';
+
+   
+    const linkRegistro = document.getElementById('linkRegistro');
+    if (linkRegistro) {
+      const paginasRegistro = {
+        'institucion': 'registro-institucion.html',
+        'maestro': 'registro-maestro.html',
+        'docente': 'registro-maestro.html',
+        'estudiante': 'registro-estudiante.html'
+      };
+      linkRegistro.href = paginasRegistro[perfilActual] || 'registro-estudiante.html';
     }
-  };
 
-  // 3. Manejo del inicio de sesión
-  const loginForm = document.getElementById('loginForm');
+  
+    const mapaPerfil = {
+      'estudiante': { coleccion: 'Estudiantes', destino: 'mainPE.php' },
+      'maestro':    { coleccion: 'Docentes',    destino: 'mainPD.php' },
+      'docente':    { coleccion: 'Docentes',    destino: 'mainPD.php' },
+      'institucion':{ coleccion: 'Institucion', destino: 'mainPI.php' }
+    };
 
-  if (loginForm) {
-    loginForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
+   
+    const loginForm = document.getElementById('loginForm');
+    const btnLogin = document.getElementById('btnLogin');
+    const mensajeDiv = document.getElementById('mensaje');
 
-      const email = document.getElementById('correo')?.value.trim();
-      const password = document.getElementById('password')?.value.trim();
-      const mensajeDiv = document.getElementById('mensaje');
+    if (loginForm) {
+      loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-      if (!email || !password) {
-        if (mensajeDiv) mensajeDiv.innerHTML = '<div class="alert-msg alert-warning">Por favor, completa todos los campos</div>';
-        return;
-      }
+        const email = document.getElementById('correo')?.value.trim();
+        const password = document.getElementById('password')?.value.trim();
 
-      // Validar si el perfil especificado existe en nuestro mapeo
-      const configPerfil = mapaPerfil[perfil];
-      if (!configPerfil) {
-        if (mensajeDiv) mensajeDiv.innerHTML = '<div class="alert-msg alert-danger">Perfil no válido en la URL</div>';
-        return;
-      }
-
-      try {
-        // 1. Autenticar en Firebase Auth
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        const uid = userCredential.user.uid;
-
-        // 2. Buscar ÚNICAMENTE en la colección correspondiente al perfil actual
-        const userDocRef = doc(db, configPerfil.coleccion, uid);
-        const userDoc = await getDoc(userDocRef);
-
-        if (userDoc.exists()) {
-          // 3. Si existe en esa colección, redirigir a su página principal
-          window.location.href = configPerfil.destino;
-        } else {
-          // Si el usuario se autenticó pero no pertenece a esta colección especifica
-          if (mensajeDiv) {
-            mensajeDiv.innerHTML = `<div class="alert-msg alert-danger">Esta cuenta no pertenece al perfil de ${perfil.toUpperCase()}</div>`;
-          }
+        if (!email || !password) {
+          mensajeDiv.innerHTML = '<div class="alert-msg alert-warning">Por favor, completa todos los campos</div>';
+          return;
         }
 
-      } catch (error) {
-        console.error("Error al iniciar sesión:", error);
-        if (mensajeDiv) mensajeDiv.innerHTML = '<div class="alert-msg alert-danger">Correo o contraseña incorrectos</div>';
-      }
-    });
-  }
-</script>
+        const configPerfil = mapaPerfil[perfilActual];
+        if (!configPerfil) {
+          mensajeDiv.innerHTML = '<div class="alert-msg alert-danger">Perfil no válido en la URL</div>';
+          return;
+        }
 
- 
+      
+        btnLogin.disabled = true;
+        btnLogin.textContent = "Verificando...";
+        mensajeDiv.innerHTML = "";
+
+        try {
+          
+          const userCredential = await signInWithEmailAndPassword(auth, email, password);
+          const uid = userCredential.user.uid;
+
+          const docRefActual = doc(db, configPerfil.coleccion, uid);
+          const docSnapActual = await getDoc(docRefActual);
+
+          if (docSnapActual.exists()) {
+          
+            window.location.href = configPerfil.destino;
+          } else {
+           
+            let perfilEncontrado = null;
+            for (const key in mapaPerfil) {
+              if (key === perfilActual) continue;
+              const testDocRef = doc(db, mapaPerfil[key].coleccion, uid);
+              const testSnap = await getDoc(testDocRef);
+              if (testSnap.exists()) {
+                perfilEncontrado = key;
+                break;
+              }
+            }
+
+            if (perfilEncontrado) {
+              mensajeDiv.innerHTML = `<div class="alert-msg alert-warning">Esta cuenta pertenece al perfil de <strong>${perfilEncontrado.toUpperCase()}</strong>. Selecciona el perfil correcto.</div>`;
+            } else {
+              mensajeDiv.innerHTML = `<div class="alert-msg alert-danger">No se encontró información del perfil para esta cuenta.</div>`;
+            }
+          }
+
+        } catch (error) {
+          console.error("Error al iniciar sesión:", error);
+          let errorText = "Correo o contraseña incorrectos.";
+          if (error.code === 'auth/invalid-credential') {
+            errorText = "Credenciales inválidas. Revisa tu correo y contraseña.";
+          }
+          mensajeDiv.innerHTML = `<div class="alert-msg alert-danger">${errorText}</div>`;
+        } finally {
+          btnLogin.disabled = false;
+          btnLogin.textContent = "Iniciar sesión";
+        }
+      });
+    }
+  </script>
+
+  
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
 </html>
