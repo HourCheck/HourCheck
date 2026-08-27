@@ -381,6 +381,22 @@
         draggable: true // Permite arrastrar en dispositivos táctiles
       });
     });
+
+    document.addEventListener("DOMContentLoaded", () => {
+  // Leer los datos guardados
+  const nombre = localStorage.getItem("nombreUsuario") || "Usuario";
+  const correo = localStorage.getItem("correoUsuario") || "correo@ejemplo.com";
+
+  // Reemplazar textos en el HTML
+  document.querySelector(".banner-title").textContent = `¡Bienvenido/a, ${nombre}!`;
+  document.querySelector(".user-name").textContent = nombre;
+  
+  const sidenavName = document.querySelector(".sidenav .name");
+  const sidenavEmail = document.querySelector(".sidenav .email");
+  
+  if (sidenavName) sidenavName.textContent = nombre;
+  if (sidenavEmail) sidenavEmail.textContent = correo;
+});
   </script>
 </body>
 </html>
