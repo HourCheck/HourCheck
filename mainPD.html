@@ -3,44 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HourCheck - pagina principal de docentes</title>
+  <title>Inicio - HourCheck</title>
   
-
+  <!-- Materialize CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-  
+  <!-- Material Icons -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
   <style>
-    .sidenav .user-view {
-      padding: 32px 32px 10px 32px;
-    }
-
-    .sidenav li > a {
-      font-weight: 600;
-      color: #333333;
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      font-size: 0.95rem;
-    }
-
-    .sidenav li > a > i.material-icons {
-      margin: 0;
-      color: #ff5500;
-    }
-
-    .sidenav .subheader {
-      font-weight: 700;
-      color: #9e9e9e;
-      text-transform: uppercase;
-      font-size: 0.75rem;
-      letter-spacing: 0.8px;
-    }
-    .sidenav {
-      width: 300px;
-      border-top-right-radius: 20px;
-      border-bottom-right-radius: 20px;
-    }
     body {
       background-color: #f4f6f9;
       font-family: 'Roboto', sans-serif;
@@ -67,10 +37,18 @@
       gap: 15px;
     }
 
-    .header-left i {
-      font-size: 28px;
+    .btn-menu-trigger {
+      background: none;
+      border: none;
       cursor: pointer;
       color: #333;
+      padding: 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .btn-menu-trigger i {
+      font-size: 30px;
     }
 
     .header-title {
@@ -125,6 +103,39 @@
     .user-role {
       font-size: 0.8rem;
       color: #666;
+    }
+
+    /* Personalización del Menú Lateral (Sidenav) */
+    .sidenav {
+      width: 300px;
+      border-top-right-radius: 20px;
+      border-bottom-right-radius: 20px;
+    }
+
+    .sidenav .user-view {
+      padding: 32px 32px 10px 32px;
+    }
+
+    .sidenav li > a {
+      font-weight: 600;
+      color: #333333;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      font-size: 0.95rem;
+    }
+
+    .sidenav li > a > i.material-icons {
+      margin: 0;
+      color: #ff5500;
+    }
+
+    .sidenav .subheader {
+      font-weight: 700;
+      color: #9e9e9e;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.8px;
     }
 
     /* Banner de Bienvenida */
@@ -237,7 +248,7 @@
       color: #002ca3;
     }
 
-    /* Ajustes Adaptables */
+    /* Adaptación Responsiva */
     @media (max-width: 768px) {
       .welcome-banner {
         flex-direction: column;
@@ -256,12 +267,39 @@
 </head>
 <body>
 
+  <!-- MENÚ DESPLEGABLE LATERAL (SIDENAV) -->
+  <ul id="slide-out" class="sidenav">
+    <li>
+      <div class="user-view">
+        <div class="background" style="background-color: #1557d0;"></div>
+        <a href="#user"><div class="avatar"><i class="material-icons">person</i></div></a>
+        <a href="#name"><span class="white-text name" style="font-weight:700;">Maria Pérez</span></a>
+        <a href="#email"><span class="white-text email">maria.perez@clases.edu.sv</span></a>
+      </div>
+    </li>
+    
+    <!-- Apartados del menú -->
+    <li><a href="#perfil" class="waves-effect"><i class="material-icons">account_circle</i>Perfil</a></li>
+    <li><a href="#notificaciones" class="waves-effect"><i class="material-icons">notifications</i>Notificaciones</a></li>
+    
+    <li><div class="divider"></div></li>
+    <li><a class="subheader">Proyectos y Actividades</a></li>
+    
+    <li><a href="#limpieza" class="waves-effect"><i class="material-icons">cleaning_services</i>Jornadas de limpieza</a></li>
+    <li><a href="#ingles" class="waves-effect"><i class="material-icons">translate</i>Tutorías de inglés</a></li>
+    <li><a href="#infancia" class="waves-effect"><i class="material-icons">child_care</i>Tutorías primera infancia</a></li>
+  </ul>
+
+  <!-- CONTENIDO PRINCIPAL -->
   <div class="dashboard-container">
     
-    
+    <!-- Encabezado Superior -->
     <header class="top-header">
       <div class="header-left">
-        <i class="material-icons">menu</i>
+        <!-- Botón de Hamburguesa con trigger hacia el Sidenav -->
+        <a href="#" data-target="slide-out" class="sidenav-trigger btn-menu-trigger">
+          <i class="material-icons">menu</i>
+        </a>
         <h1 class="header-title">Inicio</h1>
       </div>
       <div class="header-right">
@@ -287,14 +325,12 @@
         <h2 class="banner-title">¡Bienvenida, Maria!</h2>
         <p class="banner-text">Supervisa y registra el progreso de tus estudiantes, controla sus horas de servicio social y verifica sus actividades y evidencias.</p>
       </div>
-     
       <img src="https://cdni.iconscout.com/illustration/premium/thumb/woman-working-on-laptop-4268388-3561001.png" alt="Ilustración Trabajo" class="banner-illustration">
     </section>
 
-    
+    <!-- Sección de Proyectos -->
     <main class="projects-grid">
       
-     
       <div class="project-card">
         <div class="card-icon-wrapper">
           <img src="https://cdn-icons-png.flaticon.com/512/995/995053.png" alt="Proyectos de Limpieza">
@@ -306,7 +342,6 @@
         </div>
       </div>
 
-      
       <div class="project-card">
         <div class="card-icon-wrapper">
           <img src="https://cdn-icons-png.flaticon.com/512/3389/3389081.png" alt="Tutorías de inglés">
@@ -314,6 +349,17 @@
         <div class="card-info">
           <h3 class="card-title">Tutorias de ingles</h3>
           <span class="card-status">5/10 realizadas</span>
+          <a href="#" class="card-link">Ver mas</a>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="card-icon-wrapper">
+          <img src="https://cdn-icons-png.flaticon.com/512/2954/2954894.png" alt="Mantenimiento de baños">
+        </div>
+        <div class="card-info">
+          <h3 class="card-title">Mantenimiento de<br>los baños</h3>
+          <span class="card-status">30/35 realizadas</span>
           <a href="#" class="card-link">Ver mas</a>
         </div>
       </div>
@@ -333,7 +379,18 @@
 
   </div>
 
-  
+  <!-- Materialize JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+  <!-- Inicialización de Materialize Sidenav -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var elems = document.querySelectorAll('.sidenav');
+      var instances = M.Sidenav.init(elems, {
+        edge: 'left', // Se desliza desde la izquierda
+        draggable: true // Permite arrastrar en dispositivos táctiles
+      });
+    });
+  </script>
 </body>
 </html>
