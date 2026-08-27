@@ -321,6 +321,7 @@
         </a>
       </div>
     </header>
+
     <!-- Banner Principal -->
     <section class="welcome-banner">
       <div class="banner-content">
@@ -436,15 +437,15 @@
     });
 
     function actualizarInterfaz(nombre, correo) {
-      // Banner
+      // 1. Banner de bienvenida
       const bannerTitle = document.querySelector(".banner-title");
       if (bannerTitle) bannerTitle.textContent = `¡Bienvenida, ${nombre}!`;
 
-      // Header superior
-      const userNameHeader = document.querySelector(".user-name");
+      // 2. Nombre de la barra superior (Header) - Especificando la clase exact para no borrar la clase user-role
+      const userNameHeader = document.querySelector(".top-header .user-name");
       if (userNameHeader) userNameHeader.textContent = nombre;
 
-      // Menú Lateral
+      // 3. Menú Lateral (Sidenav)
       const sidenavName = document.querySelector(".sidenav .name");
       const sidenavEmail = document.querySelector(".sidenav .email");
 
