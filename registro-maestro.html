@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Registro de Estudiante - HourCheck</title>
+  <title>Registro de Docente - HourCheck</title>
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -82,10 +82,7 @@
       flex-shrink: 0;
       margin-top: 5px;
     }
-    .btn-back:hover {
-      background-color: #f0f0f0;
-      transform: scale(1.05);
-    }
+    .btn-back:hover { background-color: #f0f0f0; transform: scale(1.05); }
     .btn-back i { font-size: 24px; }
     .flex-grow-input { flex-grow: 1; }
     .input-label {
@@ -147,22 +144,22 @@
   <div class="main-container">
     <div class="layout-wrapper">
       <div class="brand-section">
-        <h1 class="main-title">Registro de<br>Estudiante</h1>
+        <h1 class="main-title">Registro de<br>Docente</h1>
         <img src="Transparente (1).png" alt="HourCheck Logo" class="brand-logo-img">
       </div>
 
       <div class="card-section">
         <div class="register-card">
-          <form id="registroForm" autocomplete="off">
-            <input type="hidden" id="tipo_usuario" name="tipo_usuario" value="estudiante">
+          <form id="teacherForm" autocomplete="off">
+            <input type="hidden" id="tipoUsuario" name="tipo_usuario" value="docente">
 
             <div class="header-row">
-              <a href="loginU.html?perfil=estudiante" class="btn-back waves-effect waves-light" title="Volver">
+              <a href="loginU.html?perfil=maestro" class="btn-back waves-effect waves-light" title="Volver">
                 <i class="material-icons">arrow_back</i>
               </a>
               <div class="flex-grow-input">
-                <label for="nombre" class="input-label">Nombre Estudiante</label>
-                <input type="text" id="nombre" class="custom-input" placeholder="ej. Jose Aristides" required>
+                <label for="nombre" class="input-label">Nombre docente</label>
+                <input type="text" id="nombre" class="custom-input" placeholder="Ingresa tu nombre" required>
               </div>
             </div>
 
@@ -170,14 +167,14 @@
               <label for="institucion" class="input-label">Institución</label>
               <select id="institucion" class="custom-select" required>
                 <option value="" disabled selected hidden>Selecciona una opción</option>
-                <option value="Federación Suiza">Federación Suiza</option>
                 <option value="Ofelia Herrera">Ofelia Herrera</option>
-                <option value="Injecar">Injecar</option>
+                <option value="INJECAR">INJECAR</option>
+                <option value="Federación Suiza">Federación Suiza</option>
               </select>
             </div>
 
             <div>
-              <label for="correo" class="input-label">Correo institucional</label>
+              <label for="correo" class="input-label">Correo</label>
               <input type="email" id="correo" class="custom-input" placeholder="Ingresa tu correo" required autocomplete="email">
             </div>
 
@@ -213,42 +210,40 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    const registroForm = document.getElementById("registroForm");
+    const teacherForm = document.getElementById("teacherForm");
     const btnRegistrar = document.getElementById("btnRegistrar");
 
-    registroForm.addEventListener("submit", async (e) => {
+    teacherForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
       btnRegistrar.disabled = true;
       btnRegistrar.textContent = "Registrando...";
 
-      const tipoUsuario = document.getElementById("tipo_usuario").value;
-      const nombre = document.getElementById("nombre").value.trim();
+      const nombreDocente = document.getElementById("nombre").value.trim();
       const institucion = document.getElementById("institucion").value;
       const correo = document.getElementById("correo").value.trim();
       const password = document.getElementById("password").value.trim();
 
       try {
-        // 1. Crear el usuario en Firebase Authentication
+        // 1. Crear usuario en Auth
         const userCredential = await createUserWithEmailAndPassword(auth, correo, password);
         const uid = userCredential.user.uid;
 
-        // 2. Crear el documento en la colección Estudiantes usando el UID
-        await setDoc(doc(db, "Estudiantes", uid), {
-          tipoUsuario: tipoUsuario,
-          nombre: nombre,
-          institucion: institucion,
-          correo: correo,
+        // 2. Guardar datos en la colección Docentes
+        await setDoc(doc(db, "Docentes", uid), {
+          Correo: correo,
+          Institucion: institucion,
+          NameDocente: nombreDocente,
           fechaRegistro: new Date()
         });
 
-        M.toast({html: 'Estudiante registrado con éxito. Redirigiendo...', classes: 'green rounded'});
+        M.toast({html: 'Docente registrado exitosamente. Redirigiendo...', classes: 'green rounded'});
         setTimeout(() => {
-          window.location.href = "loginU.html?perfil=estudiante";
+          window.location.href = "loginU.html?perfil=maestro";
         }, 1500);
 
       } catch (error) {
-        console.error("Error al registrar:", error);
+        console.error("Error al registrar docente:", error);
         let mensaje = error.message;
         if (error.code === 'auth/email-already-in-use') {
           mensaje = "Este correo ya está registrado.";
