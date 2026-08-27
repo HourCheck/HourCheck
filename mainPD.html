@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Inicio - HourCheck</title>
+  <title>Inicio Docente - HourCheck</title>
   
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
@@ -382,21 +382,103 @@
       });
     });
 
-    document.addEventListener("DOMContentLoaded", () => {
-  // Leer los datos guardados
-  const nombre = localStorage.getItem("nombreUsuario") || "Usuario";
-  const correo = localStorage.getItem("correoUsuario") || "correo@ejemplo.com";
+  const app = initializeApp(firebaseConfig);
 
-  // Reemplazar textos en el HTML
-  document.querySelector(".banner-title").textContent = `¡Bienvenido/a, ${nombre}!`;
-  document.querySelector(".user-name").textContent = nombre;
-  
-  const sidenavName = document.querySelector(".sidenav .name");
-  const sidenavEmail = document.querySelector(".sidenav .email");
-  
-  if (sidenavName) sidenavName.textContent = nombre;
-  if (sidenavEmail) sidenavEmail.textContent = correo;
-});
+  const auth = getAuth(app);
+
+  const db = getFirestore(app);
+
+
+
+  // Comprobar la sesión activa al cargar la página
+
+  onAuthStateChanged(auth, async (user) => {
+
+    if (user) {
+
+      let nombreUsuario = user.displayName;
+
+      let correoUsuario = user.email;
+
+
+
+      // Si el nombre no está en Auth, lo buscamos en Firestore en la colección "Estudiantes"
+
+      if (!nombreUsuario) {
+
+        try {
+
+          const docRef = doc(db, "Estudiantes", user.uid);
+
+          const docSnap = await getDoc(docRef);
+
+
+
+          if (docSnap.exists()) {
+
+            nombreUsuario = docSnap.data().nombre;
+
+          }
+
+        } catch (error) {
+
+          console.error("Error al obtener los datos del estudiante:", error);
+
+        }
+
+      }
+
+
+
+      // Actualizamos la interfaz gráfica con el nombre real
+
+      actualizarInterfaz(nombreUsuario || "Estudiante", correoUsuario);
+
+    } else {
+
+      // Si no hay sesión iniciada, redirige al login
+
+      window.location.href = "loginU.html";
+
+    }
+
+  });
+
+
+
+  function actualizarInterfaz(nombre, correo) {
+
+    // 1. Título del Banner de bienvenida
+
+    const bannerTitle = document.querySelector(".banner-title");
+
+    if (bannerTitle) bannerTitle.textContent = `¡Bienvenido/a, ${nombre}!`;
+
+
+
+    // 2. Nombre en la esquina superior derecha
+
+    const userNameHeader = document.querySelector(".user-name");
+
+    if (userNameHeader) userNameHeader.textContent = nombre;
+
+
+
+    // 3. Nombre y correo dentro del Menú Desplegable (Sidenav)
+
+    const sidenavName = document.querySelector(".sidenav .name");
+
+    const sidenavEmail = document.querySelector(".sidenav .email");
+
+
+
+    if (sidenavName) sidenavName.textContent = nombre;
+
+    if (sidenavEmail) sidenavEmail.textContent = correo;
+
+  }
+
+
   </script>
 </body>
 </html>
