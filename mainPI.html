@@ -1,28 +1,169 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HourCheck - Pagina principal de instituciones</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <!-- Materialize CSS CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    body { background-color: #f4f6f9; font-family: 'Roboto', sans-serif; }
+    .banner-welcome {
+      background: linear-gradient(135deg, #1565c0, #0d47a1);
+      color: white;
+      border-radius: 16px;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .custom-card { border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+    .badge-card { display: flex; align-items: center; gap: 15px; }
+    .badge-icon { font-size: 48px; color: #1e88e5; }
+    .table-custom tr { border-bottom: 1px solid #e0e0e0; }
+  </style>
 </head>
 <body>
+    <nav>
+    <ul id="slide-out" class="sidenav">
+    <li>
+      <div class="user-view">
+        <div class="background" style="background-color: #1557d0;"></div>
+        <a href="#user"><div class="avatar"><i class="material-icons">person</i></div></a>
+        <a href="#name"><span class="white-text name" style="font-weight:700;">Maria Pérez</span></a>
+        <a href="#email"><span class="white-text email">maria.perez@clases.edu.sv</span></a>
+      </div>
+    </li>
     
-  <nav>
-    <div class="navbar-fixed">
-        <div class="nav-wrapper">
-            <a href="#" class="brand-logo right">Logo</a>
-            <ul id="nav-mobile" class="left hide-on-med-and-down">
-            <li><a href="sass.html">Sass</a></li>
-            <li><a href="badges.html">Components</a></li>
-            <li><a href="collapsible.html">JavaScript</a></li>
-      </ul>
-        </div>
-    </div>
+    <!-- Apartados del menú -->
+    <li><a href="perfilD.html" class="waves-effect"><i class="material-icons">account_circle</i>Perfil</a></li>
+    <li><a href="notiD.html" class="waves-effect"><i class="material-icons">notifications</i>Notificaciones</a></li>
+    
+    <li><div class="divider"></div></li>
+    <li><a class="subheader">Proyectos y Actividades</a></li>
+    
+    <li><a href="#limpieza" class="waves-effect"><i class="material-icons">cleaning_services</i>Jornadas de limpieza</a></li>
+    <li><a href="#ingles" class="waves-effect"><i class="material-icons">translate</i>Tutorías de inglés</a></li>
+    <li><a href="#infancia" class="waves-effect"><i class="material-icons">child_care</i>Tutorías primera infancia</a></li>
+  </ul>
   </nav>
-        
+
+  <div class="container style="margin-top: 20px;">
     
+    <!-- Banner Superior -->
+    <div class="row">
+      <div class="col s12">
+        <div class="banner-welcome valign-wrapper">
+          <div class="col s12 m8">
+            <h4 style="font-weight: bold; margin-top: 0;">¡Bienvenido, Mario!</h4>
+            <p style="font-size: 1.1rem;">Supervisa el progreso general de docentes y estudiantes dando seguimiento al cumplimiento de horas y actividades realizadas.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Indicador Estudiantes Activos -->
+    <div class="row">
+      <div class="col s12 m4">
+        <div class="card white custom-card">
+          <div class="card-content">
+            <span class="card-title grey-text text-darken-3" style="font-size: 1rem; font-weight: bold;">Estudiantes Activos</span>
+            <div class="badge-card">
+              <i class="material-icons badge-icon">group</i>
+              <div>
+                <h4 style="margin: 0; font-weight: bold;">128</h4>
+                <span class="grey-text">Estudiantes</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección de Gráficos y Resumen -->
+    <div class="row">
+      <!-- Card Progreso General -->
+      <div class="col s12 m6">
+        <div class="card white custom-card">
+          <div class="card-content">
+            <span class="card-title grey-text text-darken-4" style="font-size: 0.9rem; font-weight: bold;">■ PROGRESO GENERAL DE HORAS</span>
+            <div class="row" style="margin-bottom: 0;">
+              <div class="col s8">
+                <canvas id="barChart" height="150"></canvas>
+              </div>
+              <div class="col s4 center-align">
+                <span class="grey-text" style="font-size: 0.8rem;">Este mes ▾</span>
+                <h4 style="color: #1565c0; font-weight: bold; margin: 10px 0 0 0;">72%</h4>
+                <span class="grey-text" style="font-size: 0.8rem;">Progreso total</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card Resumen de Cumplimiento -->
+      <div class="col s12 m6">
+        <div class="card white custom-card">
+          <div class="card-content">
+            <span class="card-title grey-text text-darken-4" style="font-size: 0.9rem; font-weight: bold;">◆ RESUMEN DE CUMPLIMIENTO</span>
+            <div class="row" style="margin-top: 15px;">
+              <div class="col s4">
+                <div class="card-panel blue lighten-5 center-align" style="border-radius: 10px; padding: 15px 5px; box-shadow: none;">
+                  <span class="grey-text text-darken-2" style="font-size: 0.7rem; font-weight: bold;">% DE CUMPLIMIENTO GENERAL</span>
+                  <h4 style="color: #1565c0; font-weight: bold; margin: 10px 0;">72%</h4>
+                  <span class="grey-text" style="font-size: 0.75rem;">Servicio social</span>
+                </div>
+              </div>
+              <div class="col s8">
+                <table class="table-custom">
+                  <tbody>
+                    <tr>
+                      <td style="font-size: 0.8rem;">Estudiantes en progreso</td>
+                      <td class="right-align" style="font-weight: bold;">86</td>
+                    </tr>
+                    <tr>
+                      <td style="font-size: 0.8rem;">Estudiantes próximos a completar</td>
+                      <td class="right-align" style="font-weight: bold;">18</td>
+                    </tr>
+                    <tr>
+                      <td style="font-size: 0.8rem;">Estudiantes sin actividad reciente</td>
+                      <td class="right-align" style="font-weight: bold;">9</td>
+                    </tr>
+                    <tr>
+                      <td style="font-size: 0.8rem;">Evidencias pendientes de revisión</td>
+                      <td class="right-align" style="font-weight: bold;">24</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- JS Materialize & Chart.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const ctx = document.getElementById('barChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Horas completadas', 'Horas pendientes'],
+        datasets: [{
+          data: [8450, 3250],
+          backgroundColor: ['#1565c0', '#b0bec5'],
+          borderRadius: 6
+        }]
+      },
+      options: {
+        plugins: { legend: { display: false } },
+        scales: { y: { display: false } }
+      }
+    });
+  </script>
 </body>
 </html>

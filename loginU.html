@@ -373,6 +373,12 @@
         }
       });
     }
+    // Después de validar las credenciales correctamente:
+localStorage.setItem("nombreUsuario", datosUsuario.nombre);
+localStorage.setItem("correoUsuario", datosUsuario.correo);
+
+// Redirigir al inicio
+window.location.href = "inicio.html";
   </script>
 
   
