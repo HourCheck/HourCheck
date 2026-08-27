@@ -5,9 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Registro de Estudiante - HourCheck</title>
   
-  <!-- Materialize CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-  <!-- Material Icons -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
   <style>
@@ -17,7 +15,6 @@
       font-family: 'Roboto', sans-serif;
       background-color: #f8f9fa;
     }
-
     .main-container {
       display: flex;
       min-height: 100vh;
@@ -25,7 +22,6 @@
       justify-content: center;
       padding: 20px;
     }
-
     .layout-wrapper {
       display: flex;
       width: 100%;
@@ -34,8 +30,6 @@
       justify-content: space-between;
       gap: 40px;
     }
-
-    /* Columna Izquierda: Título y Logo */
     .brand-section {
       flex: 1;
       display: flex;
@@ -43,7 +37,6 @@
       align-items: center;
       text-align: center;
     }
-
     .main-title {
       font-size: 3.2rem;
       font-weight: 800;
@@ -51,20 +44,16 @@
       line-height: 1.1;
       margin-bottom: 30px;
     }
-
     .brand-logo-img {
       width: 260px;
       height: auto;
       object-fit: contain;
     }
-
-    /* Columna Derecha: Tarjeta de Registro */
     .card-section {
       flex: 1.1;
       display: flex;
       justify-content: center;
     }
-
     .register-card {
       background: #ffffff;
       border-radius: 35px;
@@ -73,15 +62,12 @@
       max-width: 500px;
       box-shadow: 0 15px 35px rgba(0, 0, 0, 0.06), 0 5px 15px rgba(0, 0, 0, 0.04);
     }
-
-    /* Cabecera (Botón atrás + primer input alineado) */
     .header-row {
       display: flex;
       align-items: flex-start;
       gap: 15px;
       margin-bottom: 15px;
     }
-
     .btn-back {
       display: inline-flex;
       align-items: center;
@@ -96,21 +82,12 @@
       flex-shrink: 0;
       margin-top: 5px;
     }
-
     .btn-back:hover {
       background-color: #f0f0f0;
       transform: scale(1.05);
     }
-
-    .btn-back i {
-      font-size: 24px;
-    }
-
-    .flex-grow-input {
-      flex-grow: 1;
-    }
-
-    /* Estilos para etiquetas e inputs */
+    .btn-back i { font-size: 24px; }
+    .flex-grow-input { flex-grow: 1; }
     .input-label {
       font-weight: 700;
       color: #000000;
@@ -118,7 +95,6 @@
       margin-bottom: 6px;
       display: block;
     }
-
     .custom-input, .custom-select {
       background-color: #ffffff !important;
       border: 1.5px solid #e0e0e0 !important;
@@ -133,22 +109,12 @@
       transition: border-color 0.2s, box-shadow 0.2s !important;
       width: 100% !important;
     }
-
-    .custom-select {
-      display: block !important;
-      outline: none;
-    }
-
-    .custom-input::placeholder {
-      color: #cccccc;
-    }
-
+    .custom-select { display: block !important; outline: none; }
+    .custom-input::placeholder { color: #cccccc; }
     .custom-input:focus, .custom-select:focus {
       border-color: #ff5500 !important;
       box-shadow: 0 0 0 2px rgba(255, 85, 0, 0.15) !important;
     }
-
-    /* Botón Naranja de Registro */
     .btn-orange-submit {
       background-color: #ff5500 !important;
       color: #ffffff !important;
@@ -165,32 +131,14 @@
       cursor: pointer;
       margin-top: 10px;
     }
+    .btn-orange-submit:hover { background-color: #e64d00 !important; }
+    .btn-orange-submit:disabled { background-color: #ffaa80 !important; cursor: not-allowed; }
 
-    .btn-orange-submit:hover {
-      background-color: #e64d00 !important;
-    }
-
-    .btn-orange-submit:disabled {
-      background-color: #ffaa80 !important;
-      cursor: not-allowed;
-    }
-
-    /* Adaptación Responsiva */
     @media (max-width: 900px) {
-      .layout-wrapper {
-        flex-direction: column;
-        gap: 25px;
-      }
-      .main-title {
-        font-size: 2.3rem;
-        margin-bottom: 15px;
-      }
-      .brand-logo-img {
-        width: 160px;
-      }
-      .register-card {
-        padding: 30px 25px;
-      }
+      .layout-wrapper { flex-direction: column; gap: 25px; }
+      .main-title { font-size: 2.3rem; margin-bottom: 15px; }
+      .brand-logo-img { width: 160px; }
+      .register-card { padding: 30px 25px; }
     }
   </style>
 </head>
@@ -198,23 +146,18 @@
 
   <div class="main-container">
     <div class="layout-wrapper">
-      
-      <!-- Lado Izquierdo: Título y Branding -->
       <div class="brand-section">
         <h1 class="main-title">Registro de<br>Estudiante</h1>
         <img src="Transparente (1).png" alt="HourCheck Logo" class="brand-logo-img">
       </div>
 
-      <!-- Lado Derecho: Formulario de Registro -->
       <div class="card-section">
         <div class="register-card">
-          
           <form id="registroForm" autocomplete="off">
             <input type="hidden" id="tipo_usuario" name="tipo_usuario" value="estudiante">
 
-            <!-- Fila superior: Botón de regresar + Nombre Estudiante -->
             <div class="header-row">
-              <a href="loginU.html" class="btn-back waves-effect waves-light" title="Volver">
+              <a href="loginU.html?perfil=estudiante" class="btn-back waves-effect waves-light" title="Volver">
                 <i class="material-icons">arrow_back</i>
               </a>
               <div class="flex-grow-input">
@@ -223,48 +166,40 @@
               </div>
             </div>
 
-            <!-- Institución -->
             <div>
-              <label for="institucion" class="input-label">institucion</label>
+              <label for="institucion" class="input-label">Institución</label>
               <select id="institucion" class="custom-select" required>
-                <option value="" disabled selected hidden>ej.confederacion Suiza</option>
+                <option value="" disabled selected hidden>Selecciona una opción</option>
                 <option value="Federación Suiza">Federación Suiza</option>
                 <option value="Ofelia Herrera">Ofelia Herrera</option>
                 <option value="Injecar">Injecar</option>
               </select>
             </div>
 
-            <!-- Correo Institucional -->
             <div>
               <label for="correo" class="input-label">Correo institucional</label>
               <input type="email" id="correo" class="custom-input" placeholder="Ingresa tu correo" required autocomplete="email">
             </div>
 
-            <!-- Contraseña -->
             <div>
               <label for="password" class="input-label">Contraseña</label>
               <input type="password" id="password" class="custom-input" placeholder="Ingresa tu contraseña" required autocomplete="new-password">
             </div>
 
-            <!-- Botón de Registro -->
             <button type="submit" id="btnRegistrar" class="btn btn-orange-submit waves-effect waves-light">
               Registrarse
             </button>
-
           </form>
-
         </div>
       </div>
-
     </div>
   </div>
 
-  <!-- Script Modular de Firebase -->
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-    // Configuración del proyecto Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
       authDomain: "hourcheckt.firebaseapp.com",
@@ -274,11 +209,10 @@
       appId: "1:83459752453:web:1b81724c28973bf567126c"
     };
 
-    // Inicializar Firebase
     const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // Referencias al DOM
     const registroForm = document.getElementById("registroForm");
     const btnRegistrar = document.getElementById("btnRegistrar");
 
@@ -295,28 +229,39 @@
       const password = document.getElementById("password").value.trim();
 
       try {
-        await addDoc(collection(db, "Estudiantes"), {
+        // 1. Crear el usuario en Firebase Authentication
+        const userCredential = await createUserWithEmailAndPassword(auth, correo, password);
+        const uid = userCredential.user.uid;
+
+        // 2. Crear el documento en la colección Estudiantes usando el UID
+        await setDoc(doc(db, "Estudiantes", uid), {
           tipoUsuario: tipoUsuario,
           nombre: nombre,
           institucion: institucion,
           correo: correo,
-          password: password,
           fechaRegistro: new Date()
         });
 
-        M.toast({html: 'Estudiante registrado exitosamente', classes: 'green rounded'});
-        registroForm.reset();
+        M.toast({html: 'Estudiante registrado con éxito. Redirigiendo...', classes: 'green rounded'});
+        setTimeout(() => {
+          window.location.href = "loginU.html?perfil=estudiante";
+        }, 1500);
+
       } catch (error) {
         console.error("Error al registrar:", error);
-        M.toast({html: 'Error al guardar los datos: ' + error.message, classes: 'red rounded'});
-      } finally {
+        let mensaje = error.message;
+        if (error.code === 'auth/email-already-in-use') {
+          mensaje = "Este correo ya está registrado.";
+        } else if (error.code === 'auth/weak-password') {
+          mensaje = "La contraseña debe tener al menos 6 caracteres.";
+        }
+        M.toast({html: 'Error: ' + mensaje, classes: 'red rounded'});
         btnRegistrar.disabled = false;
         btnRegistrar.textContent = "Registrarse";
       }
     });
   </script>
 
-  <!-- Materialize JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
 </html>
