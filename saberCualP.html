@@ -1,0 +1,264 @@
+html_materialize = """<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Identificación de Perfil Académico</title>
+     <link rel="icon" type="image/png" href="logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f6f9;
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+        main {
+            flex: 1 0 auto;
+        }
+        .header-panel {
+            background: linear-gradient(135deg, #1e88e5 0%, #1565c0 100%);
+            color: white;
+            padding: 40px 0;
+            margin-bottom: 30px;
+        }
+        .card {
+            border-radius: 8px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .card-content {
+            flex-grow: 1;
+        }
+        .result-card {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header-panel center-align">
+        <div class="container">
+            <h3 class="white-text bold">Guía de Identificación de Perfil</h3>
+            <p class="flow-text blue-text text-lighten-4">Descubre qué rol o tipo de cuenta se adapta mejor a tus actividades académicos.</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Tarjeta de Introducción -->
+        <div class="row">
+            <div class="col s12">
+                <div class="card-panel white z-depth-1">
+                    <span class="grey-text text-darken-3">
+                        <h5><i class="material-icons left blue-text">info</i>¿Por qué elegir el perfil correcto?</h5>
+                        <p>Elegir tu perfil adecuado te garantiza acceso a las herramientas, permisos y opciones de configuración diseñadas específicamente para tus necesidades dentro de la plataforma.</p>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjetas de Perfiles -->
+        <div class="row">
+            <!-- Estudiante -->
+            <div class="col s12 m4">
+                <div class="card hoverable">
+                    <div class="card-content">
+                        <span class="card-title blue-text text-darken-2">
+                            <i class="material-icons left">school</i>Estudiante
+                        </span>
+                        <p>Diseñado para quienes participan activamente en procesos de aprendizaje y entregas.</p>
+                        <div class="divider" style="margin: 15px 0;"></div>
+                        <h6><strong>Características principales:</strong></h6>
+                        <ul>
+                            <li>• Inscrito en asignaturas específicas.</li>
+                            <li>• Realiza entrega de tareas y exámenes.</li>
+                            <li>• Consulta material y calificaciones.</li>
+                        </ul>
+                    </div>
+                    <div class="card-action">
+                        <span class="blue-text font-weight-bold">OBJETIVO: APRENDER</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Docente -->
+            <div class="col s12 m4">
+                <div class="card hoverable">
+                    <div class="card-content">
+                        <span class="card-title green-text text-darken-2">
+                            <i class="material-icons left">record_voice_over</i>Docente
+                        </span>
+                        <p>Para facilitadores del aprendizaje, tutores y gestores académicos de aula.</p>
+                        <div class="divider" style="margin: 15px 0;"></div>
+                        <h6><strong>Características principales:</strong></h6>
+                        <ul>
+                            <li>• Crea y administra cursos.</li>
+                            <li>• Evalúa y califica entregas.</li>
+                            <li>• Da seguimiento al progreso estudiantil.</li>
+                        </ul>
+                    </div>
+                    <div class="card-action">
+                        <span class="green-text font-weight-bold">OBJETIVO: ENSEÑAR</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Institución -->
+            <div class="col s12 m4">
+                <div class="card hoverable">
+                    <div class="card-content">
+                        <span class="card-title amber-text text-darken-3">
+                            <i class="material-icons left">account_balance</i>Institución
+                        </span>
+                        <p>Orientado a directivos y administradores de la plataforma educativa global.</p>
+                        <div class="divider" style="margin: 15px 0;"></div>
+                        <h6><strong>Características principales:</strong></h6>
+                        <ul>
+                            <li>• Gestión global de usuarios y altas.</li>
+                            <li>• Configuración de la plataforma.</li>
+                            <li>• Reportes de rendimiento y analíticas.</li>
+                        </ul>
+                    </div>
+                    <div class="card-action">
+                        <span class="amber-text text-darken-3 font-weight-bold">OBJETIVO: ADMINISTRAR</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulario Diagnóstico -->
+        <div class="row">
+            <div class="col s12">
+                <div class="card-panel white">
+                    <h5 class="center-align blue-grey-text text-darken-3">
+                        <i class="material-icons left">assignment</i>Cuestionario de Diagnóstico Rápido
+                    </h5>
+                    
+                    <form id="profileForm" style="margin-top: 25px;">
+                        <div class="row">
+                            <div class="col s12">
+                                <p><strong>1. ¿Cuál es tu función principal en la plataforma?</strong></p>
+                                <p>
+                                    <label>
+                                        <input class="with-gap" name="q1" type="radio" value="student" />
+                                        <span>Aprender, realizar consultas y enviar mis tareas.</span>
+                                    </label>
+                                </p>
+                                <p>
+                                    <label>
+                                        <input class="with-gap" name="q1" type="radio" value="teacher" />
+                                        <span>Crear contenido, guiar grupos de alumnos y calificar.</span>
+                                    </label>
+                                </p>
+                                <p>
+                                    <label>
+                                        <input class="with-gap" name="q1" type="radio" value="institution" />
+                                        <span>Administrar usuarios, matrículas y la configuración global del sistema.</span>
+                                    </label>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col s12">
+                                <p><strong>2. ¿Qué información te interesa consultar principalmente?</strong></p>
+                                <p>
+                                    <label>
+                                        <input class="with-gap" name="q2" type="radio" value="student" />
+                                        <span>Mis notas, horarios y tareas pendientes.</span>
+                                    </label>
+                                </p>
+                                <p>
+                                    <label>
+                                        <input class="with-gap" name="q2" type="radio" value="teacher" />
+                                        <span>Asistencia, notas grupales y planificación de clases.</span>
+                                    </label>
+                                </p>
+                                <p>
+                                    <label>
+                                        <input class="with-gap" name="q2" type="radio" value="institution" />
+                                        <span>Métricas institucionales, auditoría y administración de cuentas.</span>
+                                    </label>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="center-align" style="margin-top: 20px;">
+                            <button type="button" class="btn waves-effect waves-light blue darken-2" onclick="calculateProfile()">
+                                Identificar Mi Perfil <i class="material-icons right">send</i>
+                            </button>
+                        </div>
+                    </form>
+
+                    <div id="result-card" class="result-card center-align">
+                        <h5 id="result-title"></h5>
+                        <p id="result-desc"></p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="page-footer blue-grey darken-3">
+        <div class="footer-copyright">
+            <div class="container center-align">
+                Guía de Orientación de Perfiles Académicos &copy; 2026
+            </div>
+        </div>
+    </footer>
+
+    <!-- Compiled and minified JavaScript de Materialize -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+        function calculateProfile() {
+            const q1 = document.querySelector('input[name="q1"]:checked');
+            const q2 = document.querySelector('input[name="q2"]:checked');
+            const resultCard = document.getElementById('result-card');
+            const resultTitle = document.getElementById('result-title');
+            const resultDesc = document.getElementById('result-desc');
+
+            if (!q1 || !q2) {
+                M.toast({html: 'Por favor responde todas las preguntas', classes: 'rounded red'});
+                return;
+            }
+
+            let profile = '';
+            let bgClass = '';
+            let textClass = '';
+            let message = '';
+
+            if (q1.value === 'institution' || q2.value === 'institution') {
+                profile = 'Institución Educativa';
+                bgClass = '#fff8e1';
+                textClass = '#b78103';
+                message = 'Tu perfil ideal es de Administrador o Representante Institucional.';
+            } else if (q1.value === 'teacher' || q2.value === 'teacher') {
+                profile = 'Docente / Profesor';
+                bgClass = '#e8f5e9';
+                textClass = '#2e7d32';
+                message = 'Tu perfil ideal es el de Gestión Académica / Profesor.';
+            } else {
+                profile = 'Estudiante';
+                bgClass = '#e3f2fd';
+                textClass = '#1565c0';
+                message = 'Tu perfil ideal es de Alumno / Estudiante.';
+            }
+
+            resultCard.style.display = 'block';
+            resultCard.style.backgroundColor = bgClass;
+            resultCard.style.color = textClass;
+            resultTitle.innerHTML = `¡Tu perfil sugerido es <strong>${profile}</strong>!`;
+            resultDesc.innerText = message;
+        }
+    </script>
+</body>
+</html>
+
+

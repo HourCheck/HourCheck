@@ -266,6 +266,52 @@
   </style>
 </head>
 <body>
+  <!-- SDK de Firebase -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+  // Configuración de tu proyecto Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
+      authDomain: "hourcheckt.firebaseapp.com",
+      projectId: "hourcheckt",
+      storageBucket: "hourcheckt.firebasestorage.app",
+      messagingSenderId: "83459752453",
+      appId: "1:83459752453:web:1b81724c28973bf567126c",
+    appId: "TU_APP_ID"
+  };
+
+  // Inicializar Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // Función para obtener y mostrar los datos de un documento específico
+  async function cargarPerfilUsuario(idDocumento) {
+    try {
+      // Reemplaza "NOMBRE_DE_COLECCION" por la colección donde está el registro (ej: "directores" o "usuarios")
+      const docRef = doc(db, "NOMBRE_DE_COLECCION", idDocumento);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+
+        // Inyectar los datos en los elementos HTML según los parámetros de tu Firestore
+        document.getElementById("user-name").textContent = data.NameDirector || "Sin nombre";
+        document.getElementById("user-email").textContent = data.CorreoInst || "Sin correo";
+        document.getElementById("user-inst").textContent = data.NameInst || "Sin institución";
+      } else {
+        console.log("No se encontró el documento especificado.");
+      }
+    } catch (error) {
+      console.error("Error al obtener los datos del usuario: ", error);
+    }
+  }
+
+  // Llama a la función pasando el ID del documento en Firestore
+  // Reemplaza "ID_DEL_DOCUMENTO" por el ID real del documento (ej: "13082" o el ID que asignó Firebase)
+  cargarPerfilUsuario("ID_DEL_DOCUMENTO");
+</script>
 
   
   <ul id="slide-out" class="sidenav">
@@ -274,7 +320,7 @@
         <div class="background" style="background-color: #1557d0;"></div>
         <a href="#user"><div class="avatar"><i class="material-icons">person</i></div></a>
         <a href="#name"><span class="white-text name" style="font-weight:700;">Mario Melendez</span></a>
-        <a href="#email"><span class="white-text email">maria.perez@clases.edu.sv</span></a>
+        <a href="#email"><span class="white-text email">mariomelendez@clases.edu.sv</span></a>
       </div>
     </li>
     
