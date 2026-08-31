@@ -3,32 +3,115 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Identificación de Perfil - HourCheck</title>
-  <link rel="icon" type="image/png" href="logo.png">
+  <title>Guía de Perfiles - HourCheck</title>
   
   <!-- Materialize CSS CDN -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-  <link href="https://fonts.googleapis.com/icon?family=Material-Icons" rel="stylesheet">
+  
+  <!-- Material Icons de Google -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
   <style>
-    body {
-      background-color: #f4f6f9;
-      font-family: 'Roboto', sans-serif;
+    /* Estilos del Footer */
+    .custom-footer {
+      background-color: #1557d0 !important;
+      border-top-left-radius: 25px;
+      border-top-right-radius: 25px;
+      margin-top: 50px;
+      padding-top: 30px !important;
+    }
+
+    .footer-container {
+      width: 90%;
+      max-width: 1100px;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .footer-logo {
+      height: 35px;
+      width: auto;
+      filter: brightness(0) invert(1); /* Convierte el logo a blanco si es oscuro */
+    }
+
+    .footer-brand h5 {
       margin: 0;
-      padding: 20px;
+      font-size: 1.4rem;
     }
 
-    .dashboard-container {
-      max-width: 1200px;
-      margin: 0 auto;
+    .footer-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-bottom: 8px;
+      transition: color 0.2s, transform 0.2s;
     }
 
-    /* Header superior */
+    .footer-link:hover {
+      color: #ff5500 !important;
+      transform: translateX(4px);
+    }
+
+    .footer-btn {
+      background-color: rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      text-transform: none;
+      font-weight: 600;
+      margin-top: 5px;
+    }
+
+    .footer-btn:hover {
+      background-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .custom-copyright {
+      background-color: rgba(0, 0, 0, 0.12) !important;
+      font-size: 0.85rem;
+      padding: 15px 0;
+    }
+
+    .font-weight-bold {
+      font-weight: 700;
+    }
+    /* Regla para forzar el renderizado correcto de los íconos de Materialize */
+    .material-icons {
+      font-family: 'Material Icons' !important;
+      font-weight: normal;
+      font-style: normal;
+      font-size: 24px;
+      display: inline-block;
+      line-height: 1;
+      text-transform: none;
+      letter-spacing: normal;
+      word-wrap: normal;
+      white-space: nowrap;
+      direction: ltr;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: 'liga';
+    }
+
+    body {
+      background-color: #f2f5fd;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Header Superior */
     .top-header {
+      background-color: #ffffff;
+      padding: 15px 40px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px 0 20px 0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
 
     .header-left {
@@ -37,22 +120,26 @@
       gap: 15px;
     }
 
-    .btn-menu-trigger {
-      background: none;
-      border: none;
-      cursor: pointer;
+    .back-btn {
       color: #333;
-      padding: 0;
       display: flex;
       align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      transition: transform 0.2s;
     }
 
-    .btn-menu-trigger i {
+    .back-btn:hover {
+      transform: translateX(-3px);
+      color: #1557d0;
+    }
+
+    .back-btn i {
       font-size: 30px;
     }
 
     .header-title {
-      font-size: 1.5rem;
+      font-size: 1.25rem;
       font-weight: 700;
       color: #000;
       margin: 0;
@@ -61,82 +148,25 @@
     .header-right {
       display: flex;
       align-items: center;
-      gap: 20px;
     }
 
-    .icon-btn {
-      position: relative;
-      cursor: pointer;
-      color: #333;
-    }
-
-    .user-profile {
+    .logo-container {
       display: flex;
       align-items: center;
-      gap: 10px;
-      cursor: pointer;
-      text-decoration: none;
+      gap: 8px;
     }
 
-    .avatar {
-      width: 40px;
-      height: 40px;
-      background-color: #1557d0;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
+    .logo-img {
+      height: 38px;
+      width: auto;
+      object-fit: contain;
     }
 
-    .user-info {
-      display: flex;
-      flex-direction: column;
-      line-height: 1.2;
-    }
-
-    .user-name {
-      font-weight: 700;
-      color: #000;
-      font-size: 0.95rem;
-    }
-
-    .user-role {
-      font-size: 0.8rem;
-      color: #666;
-    }
-
-    /* Sidenav */
-    .sidenav {
-      width: 300px;
-      border-top-right-radius: 20px;
-      border-bottom-right-radius: 20px;
-    }
-
-    .sidenav .user-view {
-      padding: 32px 32px 10px 32px;
-    }
-
-    .sidenav li > a {
-      font-weight: 600;
-      color: #333333;
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      font-size: 0.95rem;
-    }
-
-    .sidenav li > a > i.material-icons {
-      margin: 0;
-      color: #ff5500;
-    }
-
-    .sidenav .subheader {
-      font-weight: 700;
-      color: #9e9e9e;
-      text-transform: uppercase;
-      font-size: 0.75rem;
-      letter-spacing: 0.8px;
+    /* Contenedor Principal */
+    .main-container {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 20px;
     }
 
     /* Banner Principal */
@@ -145,15 +175,12 @@
       border-radius: 25px;
       padding: 35px 40px;
       color: #ffffff;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 30px;
+      margin-bottom: 35px;
       box-shadow: 0 10px 20px rgba(21, 87, 208, 0.15);
     }
 
     .banner-title {
-      font-size: 2rem;
+      font-size: 1.8rem;
       font-weight: 800;
       margin: 0 0 10px 0;
     }
@@ -161,40 +188,23 @@
     .banner-text {
       font-size: 1rem;
       line-height: 1.5;
-      opacity: 0.9;
+      opacity: 0.95;
       margin: 0;
-    }
-
-    /* Tarjeta informativa */
-    .info-card {
-      background: #ffffff;
-      border-radius: 20px;
-      padding: 20px 25px;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.03);
-      margin-bottom: 30px;
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .info-card i {
-      color: #1557d0;
-      font-size: 32px;
     }
 
     /* Grid de tarjetas de Perfiles */
     .profiles-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 20px;
+      gap: 25px;
       margin-bottom: 35px;
     }
 
     .profile-card {
       background: #ffffff;
       border-radius: 25px;
-      padding: 25px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.03);
+      padding: 30px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.03);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -202,21 +212,21 @@
     }
 
     .profile-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.06);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06);
     }
 
     .profile-card-header {
       display: flex;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 12px;
+      gap: 15px;
+      margin-bottom: 15px;
     }
 
     .profile-icon {
-      width: 45px;
-      height: 45px;
-      border-radius: 12px;
+      width: 50px;
+      height: 50px;
+      border-radius: 15px;
       background-color: #e8f0fe;
       color: #1557d0;
       display: flex;
@@ -224,15 +234,26 @@
       justify-content: center;
     }
 
+    .profile-icon i {
+      font-size: 28px;
+    }
+
     .profile-card-title {
-      font-size: 1.25rem;
+      font-size: 1.3rem;
       font-weight: 800;
       color: #000;
       margin: 0;
     }
 
+    .profile-description {
+      color: #666;
+      font-size: 0.95rem;
+      line-height: 1.4;
+      margin: 0 0 15px 0;
+    }
+
     .profile-list {
-      margin: 15px 0;
+      margin: 0 0 20px 0;
       padding-left: 0;
       list-style: none;
     }
@@ -240,193 +261,76 @@
     .profile-list li {
       display: flex;
       align-items: center;
-      gap: 8px;
-      margin-bottom: 8px;
+      gap: 10px;
+      margin-bottom: 10px;
       font-size: 0.9rem;
-      color: #555;
+      color: #444;
     }
 
     .profile-list li i {
       color: #ff5500;
-      font-size: 16px;
+      font-size: 18px;
     }
 
     .card-badge {
       font-weight: 700;
-      font-size: 0.85rem;
-      padding: 8px 12px;
-      border-radius: 10px;
-      display: inline-block;
+      font-size: 0.8rem;
+      padding: 10px 14px;
+      border-radius: 12px;
+      display: block;
       text-align: center;
-      margin-top: 10px;
+      letter-spacing: 0.5px;
     }
 
     .badge-blue { background-color: #e8f0fe; color: #1557d0; }
     .badge-green { background-color: #e8f5e9; color: #2e7d32; }
     .badge-amber { background-color: #fff8e1; color: #b78103; }
 
-    /* Tarjeta del Formulario */
-    .form-card {
-      background: #ffffff;
-      border-radius: 25px;
-      padding: 35px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.03);
-      margin-bottom: 40px;
-    }
-
-    .form-title {
-      font-size: 1.4rem;
-      font-weight: 800;
-      color: #000;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 0;
-      margin-bottom: 25px;
-    }
-
-    .question-block {
-      margin-bottom: 25px;
-    }
-
-    .question-block strong {
-      color: #333;
-      font-size: 1rem;
-    }
-
-    /* Personalización de los Radio Buttons */
-    [type="radio"].with-gap:checked + span:after {
-      background-color: #1557d0 !important;
-      border-color: #1557d0 !important;
-    }
-
-    .btn-submit {
-      background-color: #1557d0;
-      color: #fff;
-      border: none;
-      border-radius: 12px;
-      padding: 12px 30px;
-      font-weight: 700;
-      font-size: 1rem;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      transition: background-color 0.2s;
-    }
-
-    .btn-submit:hover {
-      background-color: #0047e0;
-    }
-
-    /* Resultado del Test */
-    .result-card {
-      display: none;
-      margin-top: 25px;
-      padding: 20px;
-      border-radius: 18px;
-      text-align: center;
-    }
-
-    .result-card h5 {
-      margin: 0 0 8px 0;
-      font-weight: 800;
-    }
-
-    .result-card p {
-      margin: 0;
-      font-size: 1rem;
-    }
-
-    @media (max-width: 768px) {
+    @media (max-width: 600px) {
+      .top-header {
+        padding: 12px 20px;
+      }
       .welcome-banner {
         padding: 25px 20px;
-      }
-      .form-card {
-        padding: 20px;
       }
     }
   </style>
 </head>
 <body>
 
-  <!-- Sidenav -->
-  <ul id="slide-out" class="sidenav">
-    <li>
-      <div class="user-view">
-        <div class="background" style="background-color: #1557d0;"></div>
-        <a href="perfilD.html"><div class="avatar"><i class="material-icons">person</i></div></a>
-        <a href="perfilD.html"><span class="white-text name" style="font-weight:700;">Cargando...</span></a>
-        <a href="perfilD.html"><span class="white-text email">Cargando...</span></a>
-      </div>
-    </li>
-    
-    <li><a href="inicioD.html" class="waves-effect"><i class="material-icons">home</i>Inicio</a></li>
-    <li><a href="perfilD.html" class="waves-effect"><i class="material-icons">account_circle</i>Perfil</a></li>
-    <li><a href="notiD.html" class="waves-effect"><i class="material-icons">notifications</i>Notificaciones</a></li>
-    <li><a href="guiaPerfil.html" class="waves-effect"><i class="material-icons">help_outline</i>Guía de Perfiles</a></li>
-    
-    <li><div class="divider"></div></li>
-    <li><a class="subheader">Proyectos y Actividades</a></li>
-    
-    <li><a href="#limpieza" class="waves-effect"><i class="material-icons">cleaning_services</i>Jornadas de limpieza</a></li>
-    <li><a href="#ingles" class="waves-effect"><i class="material-icons">translate</i>Tutorías de inglés</a></li>
-    <li><a href="#infancia" class="waves-effect"><i class="material-icons">child_care</i>Tutorías primera infancia</a></li>
-  </ul>
-
-  <!-- CONTENEDOR PRINCIPAL -->
-  <div class="dashboard-container">
-    
-    <!-- Header Superior -->
-    <header class="top-header">
-      <div class="header-left">
-        <button class="sidenav-trigger btn-menu-trigger" data-target="slide-out">
-          <i class="material-icons">menu</i>
-        </button>
-        <h1 class="header-title">Identificación de Perfil</h1>
-      </div>
-      
-      <div class="header-right">
-        <a href="notiD.html" class="icon-btn">
-          <i class="material-icons">notifications_none</i>
-        </a>
-        
-        <a href="perfilD.html" class="user-profile">
-          <div class="avatar">
-            <i class="material-icons">person</i>
-          </div>
-          <div class="user-info">
-            <span class="user-name">Cargando...</span>
-            <span class="user-role">Docente</span>
-          </div>
-          <i class="material-icons">keyboard_arrow_down</i>
-        </a>
-      </div>
-    </header>
-
-    <!-- Banner Principal -->
-    <section class="welcome-banner">
-      <div>
-        <h2 class="banner-title">Guía de Identificación de Perfil</h2>
-        <p class="banner-text">Descubre qué rol o tipo de cuenta se adapta mejor a tus actividades dentro del sistema de Servicio Social.</p>
-      </div>
-    </section>
-
-    <!-- Info Card -->
-    <div class="info-card">
-      <i class="material-icons">info</i>
-      <div>
-        <strong style="color: #000; font-size: 1.05rem;">¿Por qué elegir el perfil correcto?</strong>
-        <p style="margin: 3px 0 0 0; color: #666; font-size: 0.95rem;">
-          Elegir tu perfil adecuado te garantiza acceso a las herramientas, permisos y opciones de configuración diseñadas específicamente para tus necesidades.
-        </p>
-      </div>
+  <!-- Header Superior -->
+  <header class="top-header">
+    <div class="header-left">
+      <!-- Flecha de regreso al index.html -->
+      <a href="index.html" class="back-btn" title="Volver al Inicio">
+        <i class="material-icons">arrow_back</i>
+      </a>
+      <h1 class="header-title">Guía de Perfiles</h1>
     </div>
 
-    <!-- Tarjetas de Perfiles -->
+    <!-- Logo a la derecha -->
+    <div class="header-right">
+      <div class="logo-container">
+        <img src="logo.png" alt="HourCheck Logo" class="logo-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x40?text=HourCheck';">
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenido Principal -->
+  <main class="main-container">
+
+    <!-- Banner Informativo -->
+    <section class="welcome-banner">
+      <h2 class="banner-title">Conoce tu perfil en HourCheck</h2>
+      <p class="banner-text">
+        Cada tipo de usuario en la plataforma cuenta con herramientas y accesos especializados para la gestión eficiente del Servicio Social Estudiantil.
+      </p>
+    </section>
+
+    <!-- Tarjetas de Roles -->
     <section class="profiles-grid">
       
-      <!-- Estudiante -->
+      <!-- Perfil Estudiante -->
       <div class="profile-card">
         <div>
           <div class="profile-card-header">
@@ -435,186 +339,114 @@
             </div>
             <h3 class="profile-card-title">Estudiante</h3>
           </div>
-          <p style="color: #666; font-size: 0.9rem; margin: 0;">Diseñado para quienes participan activamente en procesos de aprendizaje y entregas de horas.</p>
+          <p class="profile-description">
+            Perfil orientado a los alumnos matriculados que ejecutan proyectos de servicio social.
+          </p>
           
           <ul class="profile-list">
-            <li><i class="material-icons">check_circle</i> Inscrito en proyectos específicos.</li>
-            <li><i class="material-icons">check_circle</i> Sube bitácoras y evidencias de horas.</li>
-            <li><i class="material-icons">check_circle</i> Consulta avance global de servicio social.</li>
+            <li><i class="material-icons">check_circle</i> Registro y subida de bitácoras de horas.</li>
+            <li><i class="material-icons">check_circle</i> Carga de evidencias fotográficas o digitales.</li>
+            <li><i class="material-icons">check_circle</i> Consulta del historial acumulado en tiempo real.</li>
           </ul>
         </div>
-        <div class="card-badge badge-blue">OBJETIVO: APRENDER Y REGISTRAR</div>
+     
       </div>
 
-      <!-- Docente -->
+      <!-- Perfil Docente -->
       <div class="profile-card">
         <div>
           <div class="profile-card-header">
-            <div class="profile-icon">
+            <div class="profile-icon" style="background-color: #e8f5e9; color: #2e7d32;">
               <i class="material-icons">record_voice_over</i>
             </div>
             <h3 class="profile-card-title">Docente</h3>
           </div>
-          <p style="color: #666; font-size: 0.9rem; margin: 0;">Para tutores, encargados y gestores académicos de las horas de servicio.</p>
+          <p class="profile-description">
+            Diseñado para profesores, tutores y encargados de la supervisión de horas.
+          </p>
           
           <ul class="profile-list">
-            <li><i class="material-icons">check_circle</i> Revisa y valida bitácoras entregadas.</li>
-            <li><i class="material-icons">check_circle</i> Evalúa el cumplimiento de proyectos.</li>
-            <li><i class="material-icons">check_circle</i> Da seguimiento al progreso estudiantil.</li>
+            <li><i class="material-icons">check_circle</i> Revisión y aprobación de actividades.</li>
+            <li><i class="material-icons">check_circle</i> Control de asistencia e informes de grupo.</li>
+            <li><i class="material-icons">check_circle</i> Evaluación de cumplimiento del plan social.</li>
           </ul>
         </div>
-        <div class="card-badge badge-green">OBJETIVO: GUIAR Y EVALUAR</div>
+      
       </div>
 
-      <!-- Institución -->
+      <!-- Perfil Institución -->
       <div class="profile-card">
         <div>
           <div class="profile-card-header">
-            <div class="profile-icon">
+            <div class="profile-icon" style="background-color: #fff8e1; color: #b78103;">
               <i class="material-icons">account_balance</i>
             </div>
             <h3 class="profile-card-title">Institución</h3>
           </div>
-          <p style="color: #666; font-size: 0.9rem; margin: 0;">Orientado a directivos y administradores de la plataforma global.</p>
+          <p class="profile-description">
+            Dirigido a administradores y directivos generales de la plataforma escolar.
+          </p>
           
           <ul class="profile-list">
-            <li><i class="material-icons">check_circle</i> Gestión global de usuarios y altas.</li>
-            <li><i class="material-icons">check_circle</i> Configuración general del sistema.</li>
-            <li><i class="material-icons">check_circle</i> Reportes de rendimiento y analíticas.</li>
+            <li><i class="material-icons">check_circle</i> Alta y gestión global de cuentas de usuario.</li>
+            <li><i class="material-icons">check_circle</i> Reportes generales y métricas de rendimiento.</li>
+            <li><i class="material-icons">check_circle</i> Configuración de proyectos e instituciones.</li>
           </ul>
         </div>
-        <div class="card-badge badge-amber">OBJETIVO: ADMINISTRAR</div>
+      
       </div>
 
     </section>
 
-    <!-- Formulario de Diagnóstico -->
-    <section class="form-card">
-      <h3 class="form-title">
-        <i class="material-icons" style="color: #ff5500;">assignment</i> Cuestionario de Diagnóstico Rápido
-      </h3>
+  </main>
 
-      <form id="profileForm">
+  <!-- FOOTER -->
+  <footer class="page-footer custom-footer">
+    <div class="container footer-container">
+      <div class="row style-row">
         
-        <!-- Pregunta 1 -->
-        <div class="question-block">
-          <p><strong>1. ¿Cuál es tu función principal en la plataforma?</strong></p>
-          <p>
-            <label>
-              <input class="with-gap" name="q1" type="radio" value="student" />
-              <span>Aprender, realizar consultas y subir mis evidencias de horas.</span>
-            </label>
-          </p>
-          <p>
-            <label>
-              <input class="with-gap" name="q1" type="radio" value="teacher" />
-              <span>Crear proyectos, guiar grupos de alumnos y validar bitácoras.</span>
-            </label>
-          </p>
-          <p>
-            <label>
-              <input class="with-gap" name="q1" type="radio" value="institution" />
-              <span>Administrar usuarios, matrículas y la configuración global del sistema.</span>
-            </label>
+        <!-- Columna 1: Información de la Plataforma -->
+        <div class="col s12 m4">
+          <div class="footer-brand">
+            <img src="logo.png" alt="HourCheck Logo" class="footer-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x40?text=HourCheck';">
+            <h5 class="white-text font-weight-bold">HourCheck</h5>
+          </div>
+          <p class="grey-text text-lighten-2">
+            Sistema para la gestión y seguimiento del Servicio Social Estudiantil. Facilitando la validación y control de horas de forma eficiente.
           </p>
         </div>
 
-        <!-- Pregunta 2 -->
-        <div class="question-block">
-          <p><strong>2. ¿Qué información te interesa consultar principalmente?</strong></p>
-          <p>
-            <label>
-              <input class="with-gap" name="q2" type="radio" value="student" />
-              <span>Mis horas acumuladas, estado de revisiones y avisos.</span>
-            </label>
-          </p>
-          <p>
-            <label>
-              <input class="with-gap" name="q2" type="radio" value="teacher" />
-              <span>Asistencia, total de horas aprobadas por grupo y planificación.</span>
-            </label>
-          </p>
-          <p>
-            <label>
-              <input class="with-gap" name="q2" type="radio" value="institution" />
-              <span>Métricas institucionales, auditoría y administración de cuentas.</span>
-            </label>
-          </p>
+        <!-- Columna 2: Enlaces Rápidos -->
+        <div class="col s12 m4 center-on-small">
+          <h5 class="white-text font-weight-bold">Enlaces Rápidos</h5>
+          <ul>
+            <li><a class="grey-text text-lighten-3 footer-link" href="index.html"><i class="material-icons tiny">chevron_right</i> Inicio</a></li>
+            <li><a class="grey-text text-lighten-3 footer-link" href="saberCualP.html"><i class="material-icons tiny">chevron_right</i> Guía de Perfiles</a></li>
+          </ul>
         </div>
 
-        <!-- Botón de Envío -->
-        <div class="center-align" style="margin-top: 30px;">
-          <button type="button" class="btn-submit" onclick="calculateProfile()">
-            Identificar Mi Perfil <i class="material-icons">send</i>
-          </button>
+        <!-- Columna 3: Soporte y Ayuda -->
+        <div class="col s12 m4">
+          <h5 class="white-text font-weight-bold">Soporte</h5>
+          <p class="grey-text text-lighten-2">
+            ¿Tienes dudas con el registro de tus horas?
+          </p>
+          <a href="mailto:soporte@hourcheck.com" class="btn-flat white-text footer-btn">
+            <i class="material-icons left">help_outline</i> Contactar Soporte
+          </a>
         </div>
 
-      </form>
-
-      <!-- Resultado -->
-      <div id="result-card" class="result-card">
-        <h5 id="result-title"></h5>
-        <p id="result-desc"></p>
       </div>
-    </section>
+    </div>
 
-  </div>
-
-  <!-- Materialize JS -->
+    <!-- Sub-footer con Derechos de Autor -->
+    <div class="footer-copyright custom-copyright">
+      <div class="container center-align white-text">
+        © 2026 HourCheck - Todos los derechos reservados.
+      </div>
+    </div>
+  </footer>
+  <!-- Materialize JS CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-
-  <!-- Lógica JavaScript del Cuestionario y Sidenav -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      var elems = document.querySelectorAll('.sidenav');
-      M.Sidenav.init(elems, {
-        edge: 'left',
-        draggable: true
-      });
-    });
-
-    function calculateProfile() {
-      const q1 = document.querySelector('input[name="q1"]:checked');
-      const q2 = document.querySelector('input[name="q2"]:checked');
-      const resultCard = document.getElementById('result-card');
-      const resultTitle = document.getElementById('result-title');
-      const resultDesc = document.getElementById('result-desc');
-
-      if (!q1 || !q2) {
-        M.toast({html: 'Por favor responde todas las preguntas', classes: 'rounded red'});
-        return;
-      }
-
-      let profile = '';
-      let bgClass = '';
-      let textClass = '';
-      let message = '';
-
-      if (q1.value === 'institution' || q2.value === 'institution') {
-        profile = 'Institución Educativa';
-        bgClass = '#fff8e1';
-        textClass = '#b78103';
-        message = 'Tu perfil ideal es de Administrador o Representante Institucional.';
-      } else if (q1.value === 'teacher' || q2.value === 'teacher') {
-        profile = 'Docente / Tutor';
-        bgClass = '#e8f5e9';
-        textClass = '#2e7d32';
-        message = 'Tu perfil ideal es de Gestión Académica o Profesor Evaluador.';
-      } else {
-        profile = 'Estudiante';
-        bgClass = '#e8f0fe';
-        textClass = '#1557d0';
-        message = 'Tu perfil ideal es de Alumno / Estudiante.';
-      }
-
-      resultCard.style.display = 'block';
-      resultCard.style.backgroundColor = bgClass;
-      resultCard.style.color = textClass;
-      resultTitle.innerHTML = `¡Tu perfil sugerido es <strong>${profile}</strong>!`;
-      resultDesc.innerText = message;
-    }
-  </script>
 </body>
 </html>
-
-

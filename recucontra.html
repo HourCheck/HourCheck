@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recuperar Contraseña - HourCheck</title>
+  
+  <!-- Materialize CSS CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <!-- Font Awesome Icons CDN (Sin fallos de carga) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    body {
+      background-color: #f4f6fa;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* Header Superior */
+    .top-header {
+      background-color: #ffffff;
+      padding: 16px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #eef2f6;
+    }
+
+    .back-btn {
+      color: #475569;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background-color: #f8fafc;
+      border: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .back-btn:hover {
+      background-color: #1557d0;
+      color: #ffffff;
+      border-color: #1557d0;
+      transform: translateX(-2px);
+    }
+
+    .logo-img {
+      height: 36px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    /* Contenedor Principal Centrado */
+    .main-container {
+      max-width: 440px;
+      width: 90%;
+      margin: 40px auto;
+    }
+
+    /* Tarjeta de Recuperación */
+    .recovery-card {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 40px 32px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+      border: 1px solid #e2e8f0;
+      text-align: center;
+    }
+
+    /* Contenedor de Ícono */
+    .icon-badge {
+      width: 68px;
+      height: 68px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #e8f0fe 0%, #d2e3fc 100%);
+      color: #1557d0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      font-size: 26px;
+    }
+
+    .card-title-text {
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0 0 10px 0;
+    }
+
+    .card-description {
+      color: #64748b;
+      font-size: 0.92rem;
+      line-height: 1.5;
+      margin: 0 0 28px 0;
+    }
+
+    /* Input con Icono estilizado */
+    .input-box {
+      position: relative;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .input-box i {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #94a3b8;
+      font-size: 16px;
+      transition: color 0.2s ease;
+    }
+
+    .input-box input {
+      width: 100%;
+      padding: 13px 16px 13px 45px !important;
+      border: 1px solid #cbd5e1 !important;
+      border-radius: 12px !important;
+      box-sizing: border-box !important;
+      font-size: 0.95rem !important;
+      color: #1e293b !important;
+      outline: none !important;
+      height: auto !important;
+      margin: 0 !important;
+      transition: all 0.2s ease !important;
+    }
+
+    .input-box input:focus {
+      border-color: #1557d0 !important;
+      box-shadow: 0 0 0 3px rgba(21, 87, 208, 0.15) !important;
+    }
+
+    .input-box input:focus + i {
+      color: #1557d0;
+    }
+
+    /* Botón */
+    .btn-recovery {
+      background-color: #1557d0;
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      width: 100%;
+      padding: 14px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(21, 87, 208, 0.25);
+    }
+
+    .btn-recovery:hover {
+      background-color: #0d47a1;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(21, 87, 208, 0.3);
+    }
+
+    /* Mensaje de Confirmación */
+    .response-message {
+      display: none;
+      margin-top: 20px;
+      padding: 14px;
+      border-radius: 10px;
+      background-color: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      color: #166534;
+      font-size: 0.88rem;
+      font-weight: 500;
+      text-align: left;
+    }
+
+    /* Footer */
+    .custom-footer {
+      background-color: #1557d0 !important;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      padding: 18px 0 !important;
+    }
+
+    @media (max-width: 600px) {
+      .top-header {
+        padding: 12px 20px;
+      }
+      .recovery-card {
+        padding: 30px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header Superior -->
+  <header class="top-header">
+    <a href="index.html" class="back-btn" title="Volver al Inicio">
+      <i class="fa-solid fa-arrow-left"></i>
+    </a>
+
+    <div class="logo-container">
+      <img src="logo.png" alt="HourCheck Logo" class="logo-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x40?text=HourCheck';">
+    </div>
+  </header>
+
+  <!-- Contenido Principal -->
+  <main class="main-container">
+    <div class="recovery-card">
+      
+      <!-- Icono de Candado / Llave -->
+      <div class="icon-badge">
+        <i class="fa-solid fa-key"></i>
+      </div>
+
+      <h2 class="card-title-text">¿Olvidaste tu contraseña?</h2>
+      <p class="card-description">
+        Ingresa el correo electrónico asociado a tu cuenta para buscar tu información en la base de datos y enviarte las instrucciones.
+      </p>
+
+      <!-- Formulario -->
+      <form id="recoveryForm" onsubmit="handleRecovery(event)">
+        
+        <div class="input-box">
+          <input id="email" type="email" placeholder="Correo electrónico" required autocomplete="off">
+          <i class="fa-regular fa-envelope"></i>
+        </div>
+
+        <button type="submit" class="btn-recovery">
+          <span>Enviar instrucciones</span>
+          <i class="fa-solid fa-paper-plane"></i>
+        </button>
+      </form>
+
+      <!-- Mensaje de respuesta -->
+      <div id="responseMessage" class="response-message">
+        <i class="fa-solid fa-circle-check" style="margin-right: 6px;"></i>
+        Si el correo existe en nuestro sistema, recibirás un mensaje con las credenciales o el enlace de recuperación.
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="page-footer custom-footer">
+    <div class="container center-align white-text" style="font-size: 0.85rem;">
+      © 2026 HourCheck - Todos los derechos reservados.
+    </div>
+  </footer>
+
+  <!-- Materialize JS CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+ <!-- Reemplaza la etiqueta <script> al final de tu archivo HTML por este código -->
+
+<!-- Importar SDKs de Firebase v10 (Módulos ESM) -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getAuth, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+  // 1. Configuración de tu proyecto Firebase (Copia estos datos desde tu consola de Firebase)
+const firebaseConfig = {
+      apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
+      authDomain: "hourcheckt.firebaseapp.com",
+      projectId: "hourcheckt",
+      storageBucket: "hourcheckt.firebasestorage.app",
+      messagingSenderId: "83459752453",
+      appId: "1:83459752453:web:1b81724c28973bf567126c"
+    };
+
+
+  // 2. Inicializar Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  // 3. Vincular el formulario
+  const recoveryForm = document.getElementById('recoveryForm');
+  const messageDiv = document.getElementById('responseMessage');
+  const submitBtn = document.querySelector('.btn-recovery');
+
+  recoveryForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById('email').value.trim();
+
+    // Deshabilitar botón durante el envío
+    submitBtn.disabled = true;
+    submitBtn.style.opacity = '0.7';
+
+    try {
+      // Función nativa de Firebase que busca el correo y le envía la instrucción
+      await sendPasswordResetEmail(auth, email);
+
+      // Respuesta de éxito
+      messageDiv.style.display = 'block';
+      messageDiv.className = 'response-message';
+      messageDiv.innerHTML = `
+        <i class="fa-solid fa-circle-check" style="margin-right: 6px;"></i>
+        Correo enviado con éxito. Revisa tu bandeja de entrada o spam.
+      `;
+      
+      M.toast({
+        html: 'Enlace enviado a tu correo', 
+        classes: 'rounded green'
+      });
+
+      recoveryForm.reset();
+
+    } catch (error) {
+      console.error('Error de Firebase:', error.code, error.message);
+
+      messageDiv.style.display = 'block';
+      messageDiv.style.backgroundColor = '#fef2f2';
+      messageDiv.style.borderColor = '#fecaca';
+      messageDiv.style.color = '#991b1b';
+
+      // Manejo de errores comunes de Firebase
+      if (error.code === 'auth/user-not-found') {
+        messageDiv.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> No existe ninguna cuenta registrada con este correo.`;
+      } else if (error.code === 'auth/invalid-email') {
+        messageDiv.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> El formato del correo no es válido.`;
+      } else {
+        messageDiv.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> Ocurrió un error al procesar la solicitud.`;
+      }
+
+      M.toast({
+        html: 'No se pudo enviar el correo', 
+        classes: 'rounded red'
+      });
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.style.opacity = '1';
+    }
+  });
+</script>
+</body>
+</html>
