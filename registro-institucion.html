@@ -135,6 +135,11 @@
       .brand-logo-img { width: 160px; }
       .register-card { padding: 30px 25px; }
     }
+    #boton-position {
+      text-align: left;
+      width: 100%;
+      align-self: flex-start;
+    }
   </style>
 </head>
 <body>
@@ -142,6 +147,9 @@
   <div class="main-container">
     <div class="layout-wrapper">
       <div class="brand-section">
+        <div id="boton-position"> <a href="loginU.html?perfil=institucion" class="btn-back waves-effect waves-light" title="Volver">
+                <i class="material-icons">arrow_back</i>
+              </a></div>
         <h1 class="main-title">Registro de<br>Institución</h1>
         <img src="Transparente (1).png" alt="HourCheck Logo" class="brand-logo-img">
       </div>
@@ -152,9 +160,7 @@
             <input type="hidden" id="tipoUsuario" name="tipo_usuario" value="institucion">
 
             <div class="header-row">
-              <a href="loginU.html?perfil=institucion" class="btn-back waves-effect waves-light" title="Volver">
-                <i class="material-icons">arrow_back</i>
-              </a>
+             
               <div class="flex-grow-input">
                 <label for="nombreInstitucion" class="input-label">Nombre de la institución</label>
                 <input type="text" id="nombreInstitucion" class="custom-input" placeholder="ej. Ofelia Herrera" required>

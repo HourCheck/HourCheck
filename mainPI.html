@@ -274,12 +274,12 @@
 
   // 1. Configuración de tu proyecto Firebase
   const firebaseConfig = {
-    apiKey: "TU_API_KEY",
-    authDomain: "TU_PROYECTO.firebaseapp.com",
-    projectId: "TU_PROJECT_ID",
-    storageBucket: "TU_PROYECTO.appspot.com",
-    messagingSenderId: "TU_SENDER_ID",
-    appId: "TU_APP_ID"
+    apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
+    authDomain: "hourcheckt.firebaseapp.com",
+    projectId: "hourcheckt",
+    storageBucket: "hourcheckt.firebasestorage.app",
+    messagingSenderId: "83459752453",
+    appId: "1:83459752453:web:1b81724c28973bf567126c",
   };
 
   // 2. Inicializar Firebase, Auth y Firestore
@@ -296,7 +296,7 @@
       try {
         
         // OPCIÓN B: Usar esta opción SOLO SI el ID del documento en Firestore es exactamente igual al UID de autenticación (user.uid)
-        const docRef = doc(db, "NOMBRE_DE_TU_COLECCION", user.uid);
+        const docRef = doc(db, "Institucion", user.uid);
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
@@ -385,7 +385,7 @@
     <!-- Banner Principal -->
     <section class="welcome-banner">
       <div class="banner-content">
-        <h2 class="banner-title">¡Bienvenida, Mario!</h2>
+        <h2 class="banner-title">¡Bienvenido/a, Mario!</h2>
         <p class="banner-text">Supervisa y registra el progreso de tus estudiantes, controla sus encargados y verifica sus actividades y evidencias.</p>
       </div>
       <img src="https://cdnai.iconscout.com/ai-image/premium/thumb/ai-hombre-de-negocios-trabajando-en-una-computadora-portatil-illustration-png-download-jpg-13171712.png" alt="Ilustración Trabajo" class="banner-illustration">
