@@ -375,11 +375,10 @@
   <!-- Materialize JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
-  <!-- Script Firebase y Manejo de Sesión -->
-  <script type="module">
+<script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     // 1. Configuración de Firebase
     const firebaseConfig = {
@@ -407,36 +406,64 @@
     // 3. Comprobar la sesión activa al cargar la página
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        let nombreUsuario = user.displayName || null;
-        let correoUsuario = user.email || "";
+        // En tu registro no actualizas user.displayName, así que siempre será null.
+        // Lo forzamos a null para que siempre busque en Firestore.
+        let nombreUsuario = null; 
+        let correoUsuario = user.email;
 
-        // Si no está en Auth, buscamos directamente en Firestore
-        try {
-          // Primero en la colección Docentes
-          let docRef = doc(db, "Docentes", user.uid);
-          let docSnap = await getDoc(docRef);
-
-          if (!docSnap.exists()) {
-            // Si no existe, buscar en la colección Estudiantes
-            docRef = doc(db, "Estudiantes", user.uid);
-            docSnap = await getDoc(docRef);
-          }
-
-          if (docSnap.exists()) {
-            const data = docSnap.data();
-            // Comprueba las variaciones de nombre más comunes en Firestore
-            nombreUsuario = data.nombre || data.Nombre || data.nombreCompleto || data.fullName || nombreUsuario;
-          }
-        } catch (error) {
-          console.error("Error al obtener los datos de Firestore:", error);
-        }
+        // Intentamos obtener el nombre desde Firestore usando tu estructura real
+        nombreUsuario = await obtenerNombreDesdeFirestore(user.uid, correoUsuario);
 
         // Si sigue sin encontrar nombre, se asigna un valor por defecto limpio
         actualizarInterfaz(nombreUsuario || "Docente", correoUsuario);
       } else {
+        // Si no hay sesión, redirigir al login
         window.location.href = "loginU.html";
       }
     });
+
+    async function obtenerNombreDesdeFirestore(uid, email) {
+      // INTENTO 1: Buscar por ID de documento (UID) en la colección 'Docentes'
+      try {
+        const docRef = doc(db, "Docentes", uid);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          // USAMOS TU CAMPO REAL: data.nombreDocente
+          if (data.nombreDocente) {
+            console.log("✔ Nombre encontrado por UID:", data.nombreDocente);
+            return data.nombreDocente;
+          }
+        }
+      } catch (e) {
+        console.error("Error al buscar por UID:", e);
+      }
+
+      // INTENTO 2: Buscar filtrando por correo electrónico en 'Docentes'
+      // Esto es por si los documentos no se guardaron usando el UID como ID.
+      if (email) {
+        try {
+          // USAMOS TU CAMPO REAL EN LA BÚSQUEDA: where("correo", "==", email)
+          const q = query(collection(db, "Docentes"), where("correo", "==", email));
+          const querySnapshot = await getDocs(q);
+
+          if (!querySnapshot.empty) {
+            const data = querySnapshot.docs[0].data();
+            // USAMOS TU CAMPO REAL: data.nombreDocente
+            if (data.nombreDocente) {
+              console.log("✔ Nombre encontrado por Correo:", data.nombreDocente);
+              return data.nombreDocente;
+            }
+          }
+        } catch (e) {
+          console.error("Error al buscar por Correo:", e);
+        }
+      }
+
+      console.warn("No se pudo obtener el nombre desde Firestore.");
+      return null;
+    }
 
     function actualizarInterfaz(nombre, correo) {
       // 1. Banner de bienvenida
@@ -445,7 +472,7 @@
         bannerTitle.textContent = `¡Bienvenido/a, ${nombre}!`;
       }
 
-      // 2. Nombre en el Header Superior
+      // 2. Nombre de la barra superior (Header)
       const userNameHeader = document.querySelector(".top-header .user-name");
       if (userNameHeader) {
         userNameHeader.textContent = nombre;
