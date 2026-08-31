@@ -294,28 +294,7 @@
       const correoUsuarioLogueado = user.email; // Correo de la sesión actual
 
       try {
-        // OPCIÓN A: Si buscas al usuario en Firestore por su campo de correo (CorreoInst)
-        const q = query(
-          collection(db, "Institucion"), 
-          where("CorreoInst", "==", correoUsuarioLogueado)
-        );
-
-        const querySnapshot = await getDocs(q);
-
-        if (!querySnapshot.empty) {
-          querySnapshot.forEach((docSnap) => {
-            const data = docSnap.data();
-
-            // Cargar datos en los elementos HTML
-            document.getElementById("user-name").textContent = data.NameDirector || "Sin nombre";
-            document.getElementById("user-email").textContent = data.CorreoInst || "Sin correo";
-            document.getElementById("user-inst").textContent = data.NameInst || "Sin institución";
-          });
-        } else {
-          console.warn("No se encontró ningún documento con el correo:", correoUsuarioLogueado);
-        }
-
-        /* 
+        
         // OPCIÓN B: Usar esta opción SOLO SI el ID del documento en Firestore es exactamente igual al UID de autenticación (user.uid)
         const docRef = doc(db, "NOMBRE_DE_TU_COLECCION", user.uid);
         const docSnap = await getDoc(docRef);
@@ -326,7 +305,7 @@
           document.getElementById("user-email").textContent = data.CorreoInst;
           document.getElementById("user-inst").textContent = data.NameInst;
         }
-        */
+        
 
       } catch (error) {
         console.error("Error al obtener los datos del usuario logueado:", error);
