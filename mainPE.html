@@ -5,105 +5,162 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Inicio Estudiante - HourCheck</title>
   <link rel="icon" type="image/png" href="logo.png">
+  
   <!-- Materialize CSS CDN -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  
+  <!-- Material Icons Directo desde Google Fonts -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
-    body {
-      background-color: #f3f6fc;
-      font-family: 'Poppins', sans-serif;
-      margin: 0;
-      padding: 20px;
+    :root {
+      --primary-color: #2563eb;
+      --bg-body: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
     }
+
+    body {
+      background-color: var(--bg-body);
+      font-family: 'Inter', sans-serif;
+      color: var(--text-main);
+      margin: 0;
+      padding: 0;
+    }
+
+.material-icons {
+  font-family: 'Material Icons' !important;
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  font-feature-settings: 'liga'; /* <-- Añade esta línea */
+  -webkit-font-smoothing: antialiased;
+  vertical-align: middle;
+}
+  
 
     .dashboard-container {
       max-width: 1200px;
       margin: 0 auto;
+      padding: 24px;
     }
 
     /* Navbar superior */
     .top-header {
+      background-color: var(--card-bg);
+      padding: 16px 32px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px 0 20px 0;
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
 
     .header-left {
       display: flex;
       align-items: center;
-      gap: 15px;
+      gap: 16px;
     }
 
     .btn-menu-trigger {
       background: none;
       border: none;
       cursor: pointer;
-      color: #333;
+      color: var(--text-muted);
       padding: 0;
       display: flex;
       align-items: center;
+      transition: color 0.2s;
+    }
+
+    .btn-menu-trigger:hover {
+      color: var(--primary-color);
     }
 
     .btn-menu-trigger i {
-      font-size: 30px;
+      font-size: 28px !important;
     }
 
     .header-title {
-      font-size: 1.5rem;
+      font-size: 1.25rem;
       font-weight: 700;
-      color: #000;
+      color: var(--text-main);
       margin: 0;
     }
 
     .header-right {
       display: flex;
       align-items: center;
-      gap: 20px;
+      gap: 24px;
     }
 
     .icon-btn {
       position: relative;
       cursor: pointer;
-      color: #333;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      transition: color 0.2s;
+    }
+
+    .icon-btn:hover {
+      color: var(--primary-color);
     }
 
     .user-profile {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       cursor: pointer;
       text-decoration: none;
+      padding: 4px 8px;
+      border-radius: 12px;
+      transition: background 0.2s;
+    }
+
+    .user-profile:hover {
+      background-color: #f1f5f9;
     }
 
     .avatar {
       width: 40px;
       height: 40px;
-      background-color: #2979ff;
+      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       color: #fff;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
     }
 
     .user-info {
       display: flex;
       flex-direction: column;
-      line-height: 1.2;
     }
 
     .user-name {
-      font-weight: 700;
-      color: #000;
-      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-main);
+      font-size: 0.9rem;
     }
 
     .user-role {
-      font-size: 0.8rem;
-      color: #666;
+      font-size: 0.78rem;
+      color: var(--text-muted);
     }
 
     /* Sidenav */
@@ -114,12 +171,12 @@
     }
 
     .sidenav .user-view {
-      padding: 32px 32px 10px 32px;
+      padding: 32px 32px 16px 32px;
     }
 
     .sidenav li > a {
-      font-weight: 600;
-      color: #333333;
+      font-weight: 500;
+      color: #334155;
       display: flex;
       align-items: center;
       gap: 15px;
@@ -127,13 +184,13 @@
     }
 
     .sidenav li > a > i.material-icons {
-      margin: 0;
-      color: #ff5500;
+      margin: 0 !important;
+      color: #2563eb;
     }
 
     .sidenav .subheader {
       font-weight: 700;
-      color: #9e9e9e;
+      color: #94a3b8;
       text-transform: uppercase;
       font-size: 0.75rem;
       letter-spacing: 0.8px;
@@ -141,15 +198,15 @@
 
     /* Banner de Bienvenida Estudiante */
     .welcome-banner {
-      background: linear-gradient(135deg, #0d47a1 0%, #1565c0 100%);
-      border-radius: 25px;
-      padding: 40px 45px;
+      background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+      border-radius: 20px;
+      padding: 36px 40px;
       color: #ffffff;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 35px;
-      box-shadow: 0 10px 25px rgba(13, 71, 161, 0.15);
+      margin-bottom: 32px;
+      box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.3);
       position: relative;
       overflow: hidden;
     }
@@ -160,52 +217,54 @@
     }
 
     .banner-title {
-      font-size: 2.2rem;
+      font-size: 2rem;
       font-weight: 700;
-      margin: 0 0 12px 0;
+      margin: 0 0 8px 0;
     }
 
     .banner-text {
-      font-size: 1.05rem;
+      font-size: 1rem;
       line-height: 1.5;
-      opacity: 0.9;
+      color: #e0e7ff;
       margin: 0;
     }
 
     .banner-illustration {
-      width: 320px;
+      width: 280px;
       height: auto;
       z-index: 2;
     }
 
-    /* Grid de Tarjetas de Métricas (KPIs) */
+    /* Grid de Tarjetas KPI */
     .kpi-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 25px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-bottom: 36px;
     }
 
     .kpi-card {
-      background: #ffffff;
-      border-radius: 24px;
-      padding: 30px 25px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.03);
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 24px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
       display: flex;
       align-items: center;
       gap: 20px;
-      transition: transform 0.2s;
+      transition: transform 0.2s, box-shadow 0.2s;
     }
 
     .kpi-card:hover {
       transform: translateY(-3px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
     }
 
-    /* Gráfico Anillo de Horas Registradas */
     .donut-chart {
-      width: 80px;
-      height: 80px;
+      width: 72px;
+      height: 72px;
       border-radius: 50%;
-      background: conic-gradient(#0d47a1 0% 67%, #ff6f00 67% 100%);
+      background: conic-gradient(#2563eb 0% 67%, #f97316 67% 100%);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -213,30 +272,28 @@
     }
 
     .donut-inner {
-      width: 50px;
-      height: 50px;
-      background-color: #ffffff;
+      width: 46px;
+      height: 46px;
+      background-color: var(--card-bg);
       border-radius: 50%;
     }
 
-    /* Gráfico Semicírculo de Evidencias */
     .half-donut-chart {
-      width: 80px;
-      height: 80px;
+      width: 72px;
+      height: 72px;
       border-radius: 50%;
-      background: conic-gradient(#ff6f00 0% 50%, #0d47a1 50% 65%, #ffffff 65% 100%);
+      background: conic-gradient(#f97316 0% 50%, #2563eb 50% 65%, #e2e8f0 65% 100%);
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
     }
 
-    /* Ícono Calendario Próxima Actividad */
     .calendar-badge {
-      width: 80px;
-      height: 80px;
+      width: 72px;
+      height: 72px;
       border-radius: 50%;
-      background-color: #ff5722;
+      background-color: #ef4444;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -245,39 +302,140 @@
     }
 
     .calendar-badge i {
-      font-size: 2.5rem;
+      font-size: 2.2rem !important;
     }
 
     .kpi-title {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: #000;
-      margin-bottom: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 4px;
     }
 
     .kpi-value {
-      font-size: 1rem;
-      color: #444;
-      margin-bottom: 6px;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 2px;
     }
 
     .kpi-footer {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: #000;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--primary-color);
     }
 
-    /* Adaptación Responsiva */
+    /* Tabla */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin: 0;
+    }
+
+    .table-card {
+      background-color: var(--card-bg);
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+      overflow: hidden;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+
+    table.custom-table {
+      margin: 0;
+      width: 100%;
+    }
+
+    table.custom-table th {
+      background-color: #f8fafc;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    table.custom-table td {
+      padding: 18px 24px;
+      color: var(--text-main);
+      font-size: 0.92rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    table.custom-table tbody tr:hover {
+      background-color: #f8fafc;
+    }
+
+    table.custom-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .evidence-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--primary-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.88rem;
+    }
+
+    .evidence-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Badges */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .status-comprobado {
+      background-color: #dcfce7;
+      color: #15803d;
+    }
+
+    .status-revision {
+      background-color: #fef3c7;
+      color: #b45309;
+    }
+
+    .status-pendiente {
+      background-color: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .status-proceso {
+      background-color: #e0f2fe;
+      color: #0369a1;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: currentColor;
+    }
+
     @media (max-width: 768px) {
-      .welcome-banner {
-        flex-direction: column;
-        text-align: center;
-        padding: 30px 20px;
-      }
-      .banner-illustration {
-        margin-top: 20px;
-        width: 220px;
-      }
+      .top-header { padding: 16px 20px; }
+      .dashboard-container { padding: 16px; }
+      .welcome-banner { flex-direction: column; text-align: center; padding: 30px 20px; }
+      .banner-illustration { margin-top: 20px; width: 200px; }
     }
   </style>
 </head>
@@ -287,14 +445,13 @@
   <ul id="slide-out" class="sidenav">
     <li>
       <div class="user-view">
-        <div class="background" style="background-color: #0d47a1;"></div>
+        <div class="background" style="background-color: #1e40af;"></div>
         <a href="perfilE.html"><div class="avatar"><i class="material-icons">person</i></div></a>
         <a href="perfilE.html"><span class="white-text name" style="font-weight:700;">Cargando...</span></a>
         <a href="perfilE.html"><span class="white-text email">Cargando...</span></a>
       </div>
     </li>
     
-    <!-- Apartados del menú Estudiante -->
     <li><a href="perfilE.html" class="waves-effect"><i class="material-icons">account_circle</i>Perfil</a></li>
     <li><a href="notiE.html" class="waves-effect"><i class="material-icons">notifications</i>Notificaciones</a></li>
     
@@ -302,48 +459,45 @@
     <li><a class="subheader">Mi Servicio Social</a></li>
     
     <li><a href="historialE.html" class="waves-effect"><i class="material-icons">history</i>Historial de Horas</a></li>
-    <li><a href="evidenciasE.html" class="waves-effect"><i class="material-icons">upload_file</i>Subir Evidencias</a></li>
+    <li><a href="evidencias.html" class="waves-effect"><i class="material-icons">upload_file</i>Subir Evidencias</a></li>
     <li><a href="actividadesE.html" class="waves-effect"><i class="material-icons">event_available</i>Próximas Actividades</a></li>
   </ul>
+
+  <!-- Encabezado Superior -->
+  <header class="top-header">
+    <div class="header-left">
+      <a href="#" data-target="slide-out" class="sidenav-trigger btn-menu-trigger">
+        <i class="material-icons">menu</i>
+      </a>
+      <h1 class="header-title">Inicio</h1>
+    </div>
+    
+    <div class="header-right">
+      <a href="notiE.html" class="icon-btn">
+        <i class="material-icons">notifications_none</i>
+      </a>
+      
+      <a href="perfilE.html" class="user-profile">
+        <div class="avatar">
+          <i class="material-icons">person</i>
+        </div>
+        <div class="user-info">
+          <span class="user-name">Cargando...</span>
+          <span class="user-role">Estudiante</span>
+        </div>
+        <i class="material-icons" style="color: var(--text-muted); font-size: 20px !important;">expand_more</i>
+      </a>
+    </div>
+  </header>
 
   <!-- CONTENIDO PRINCIPAL -->
   <div class="dashboard-container">
     
-    <!-- Encabezado Superior -->
-    <header class="top-header">
-      <div class="header-left">
-        <!-- Botón de Hamburguesa con trigger hacia el Sidenav -->
-        <a href="#" data-target="slide-out" class="sidenav-trigger btn-menu-trigger">
-          <i class="material-icons">menu</i>
-        </a>
-        <h1 class="header-title">Inicio</h1>
-      </div>
-      
-      <div class="header-right">
-        <!-- Ícono de Notificaciones redireccionando a notiE.html -->
-        <a href="notiE.html" class="icon-btn">
-          <i class="material-icons">notifications_none</i>
-        </a>
-        
-        <!-- Perfil completo (Foto + Nombre) redireccionando a perfilE.html -->
-        <a href="perfilE.html" class="user-profile">
-          <div class="avatar">
-            <i class="material-icons">person</i>
-          </div>
-          <div class="user-info">
-            <span class="user-name">Cargando...</span>
-            <span class="user-role">Estudiante</span>
-          </div>
-          <i class="material-icons">keyboard_arrow_down</i>
-        </a>
-      </div>
-    </header>
-
-    <!-- Banner Principal Estudiante -->
+    <!-- Banner Principal -->
     <section class="welcome-banner">
       <div class="banner-content">
         <h2 class="banner-title">¡Bienvenido!</h2>
-        <p class="banner-text">Gestiona tus horas de servicio social, actividades y evidencias de forma facil y segura</p>
+        <p class="banner-text">Gestiona tus horas de servicio social, actividades y evidencias de forma fácil y segura.</p>
       </div>
       <svg class="banner-illustration" viewBox="0 0 500 300" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M400 150 C450 120, 480 200, 420 280 C360 320, 250 250, 300 180 Z" fill="#64b5f6" opacity="0.4"/>
@@ -357,22 +511,19 @@
       </svg>
     </section>
 
-    <!-- Sección de Tarjetas KPI -->
+    <!-- Tarjetas KPI -->
     <main class="kpi-grid">
-      
-      <!-- Card 1: Horas Registradas -->
       <div class="kpi-card">
         <div class="donut-chart">
           <div class="donut-inner"></div>
         </div>
         <div>
-          <div class="kpi-title">Horas registradas:</div>
-          <div class="kpi-value">100 h y 30 min.</div>
-          <div class="kpi-footer">De 150 requeridas</div>
+          <div class="kpi-title">Horas registradas</div>
+          <div class="kpi-value">100 h 30 min</div>
+          <div class="kpi-footer">De 150 h requeridas</div>
         </div>
       </div>
 
-      <!-- Card 2: Evidencias Enviadas -->
       <div class="kpi-card">
         <div class="half-donut-chart">
           <div class="donut-inner"></div>
@@ -384,7 +535,6 @@
         </div>
       </div>
 
-      <!-- Card 3: Próxima Actividad -->
       <div class="kpi-card">
         <div class="calendar-badge">
           <i class="material-icons">event</i>
@@ -395,12 +545,112 @@
           <div class="kpi-footer">Campaña de limpieza</div>
         </div>
       </div>
-
     </main>
+
+    <!-- Historial de Horas -->
+    <div class="section-header">
+      <h2 class="section-title">Historial de Horas</h2>
+    </div>
+
+    <div class="table-card">
+      <table class="custom-table responsive-table">
+        <thead>
+          <tr>
+            <th>Actividad</th>
+            <th>Fecha</th>
+            <th>Horas</th>
+            <th>Evidencia</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="font-weight: 600;">Campaña de limpieza</td>
+            <td style="color: var(--text-muted);">15 Oct 2026</td>
+            <td><strong>5 h</strong></td>
+            <td>
+              <a href="#" class="evidence-link">
+                <i class="material-icons" style="font-size: 16px !important;">image</i>
+                IMG_20261015.jpg
+              </a>
+            </td>
+            <td>
+              <span class="status-badge status-comprobado">
+                <span class="dot"></span>Comprobado
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td style="font-weight: 600;">Apoyo escolar</td>
+            <td style="color: var(--text-muted);">10 Oct 2026</td>
+            <td><strong>4 h</strong></td>
+            <td>
+              <a href="#" class="evidence-link">
+                <i class="material-icons" style="font-size: 16px !important;">image</i>
+                IMG_20261010.jpg
+              </a>
+            </td>
+            <td>
+              <span class="status-badge status-revision">
+                <span class="dot"></span>En revisión
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td style="font-weight: 600;">Reforestación</td>
+            <td style="color: var(--text-muted);">05 Oct 2026</td>
+            <td><strong>6 h</strong></td>
+            <td>
+              <a href="#" class="evidence-link">
+                <i class="material-icons" style="font-size: 16px !important;">image</i>
+                IMG_20261005.jpg
+              </a>
+            </td>
+            <td>
+              <span class="status-badge status-comprobado">
+                <span class="dot"></span>Comprobado
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td style="font-weight: 600;">Donación de víveres</td>
+            <td style="color: var(--text-muted);">28 Sep 2026</td>
+            <td><strong>3.5 h</strong></td>
+            <td>
+              <a href="#" class="evidence-link">
+                <i class="material-icons" style="font-size: 16px !important;">image</i>
+                IMG_20260928.jpg
+              </a>
+            </td>
+            <td>
+              <span class="status-badge status-pendiente">
+                <span class="dot"></span>Pendiente
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td style="font-weight: 600;">Visita a hogar de donaciones</td>
+            <td style="color: var(--text-muted);">20 Sep 2026</td>
+            <td><strong>2 h</strong></td>
+            <td>
+              <a href="#" class="evidence-link">
+                <i class="material-icons" style="font-size: 16px !important;">image</i>
+                IMG_20260920.jpg
+              </a>
+            </td>
+            <td>
+              <span class="status-badge status-proceso">
+                <span class="dot"></span>En proceso
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
   </div>
 
-  <!-- Materialize JS -->
+  <!-- Materialize JS CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
   <!-- Script Firebase y Manejo de Sesión -->
@@ -409,7 +659,6 @@
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // 1. Configuración de Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
       authDomain: "hourcheckt.firebaseapp.com",
@@ -423,16 +672,11 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // 2. Inicializar Sidenav de Materialize
     document.addEventListener('DOMContentLoaded', function() {
       var elems = document.querySelectorAll('.sidenav');
-      M.Sidenav.init(elems, {
-        edge: 'left',
-        draggable: true
-      });
+      M.Sidenav.init(elems, { edge: 'left', draggable: true });
     });
 
-    // 3. Comprobar la sesión activa al cargar la página
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         let nombreUsuario = user.displayName;
@@ -440,14 +684,12 @@
 
         if (!nombreUsuario) {
           try {
-            // Intentar buscar prioritariamente en la colección Estudiantes
             let docRef = doc(db, "Estudiantes", user.uid);
             let docSnap = await getDoc(docRef);
 
             if (docSnap.exists()) {
               nombreUsuario = docSnap.data().nombre;
             } else {
-              // Si no existe en Estudiantes, buscar en Docentes
               docRef = doc(db, "Docentes", user.uid);
               docSnap = await getDoc(docRef);
               if (docSnap.exists()) {
@@ -466,15 +708,12 @@
     });
 
     function actualizarInterfaz(nombre, correo) {
-      // 1. Banner de bienvenida
       const bannerTitle = document.querySelector(".banner-title");
       if (bannerTitle) bannerTitle.textContent = `¡Bienvenido, ${nombre}!`;
 
-      // 2. Nombre de la barra superior (Header)
       const userNameHeader = document.querySelector(".top-header .user-name");
       if (userNameHeader) userNameHeader.textContent = nombre;
 
-      // 3. Menú Lateral (Sidenav)
       const sidenavName = document.querySelector(".sidenav .name");
       const sidenavEmail = document.querySelector(".sidenav .email");
 
