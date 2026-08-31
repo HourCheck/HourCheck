@@ -407,30 +407,31 @@
     // 3. Comprobar la sesión activa al cargar la página
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        let nombreUsuario = user.displayName;
-        let correoUsuario = user.email;
+        let nombreUsuario = user.displayName || null;
+        let correoUsuario = user.email || "";
 
-        if (!nombreUsuario) {
-          try {
-            // Intentar buscar en la colección Docentes
-            let docRef = doc(db, "Docentes", user.uid);
-            let docSnap = await getDoc(docRef);
+        // Si no está en Auth, buscamos directamente en Firestore
+        try {
+          // Primero en la colección Docentes
+          let docRef = doc(db, "Docentes", user.uid);
+          let docSnap = await getDoc(docRef);
 
-            if (docSnap.exists()) {
-              nombreUsuario = docSnap.data().nombre;
-            } else {
-              // Si no existe en Docentes, buscar en Estudiantes
-              docRef = doc(db, "Estudiantes", user.uid);
-              docSnap = await getDoc(docRef);
-              if (docSnap.exists()) {
-                nombreUsuario = docSnap.data().nombre;
-              }
-            }
-          } catch (error) {
-            console.error("Error al obtener los datos del usuario:", error);
+          if (!docSnap.exists()) {
+            // Si no existe, buscar en la colección Estudiantes
+            docRef = doc(db, "Estudiantes", user.uid);
+            docSnap = await getDoc(docRef);
           }
+
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            // Comprueba las variaciones de nombre más comunes en Firestore
+            nombreUsuario = data.nombre || data.Nombre || data.nombreCompleto || data.fullName || nombreUsuario;
+          }
+        } catch (error) {
+          console.error("Error al obtener los datos de Firestore:", error);
         }
 
+        // Si sigue sin encontrar nombre, se asigna un valor por defecto limpio
         actualizarInterfaz(nombreUsuario || "Docente", correoUsuario);
       } else {
         window.location.href = "loginU.html";
@@ -440,11 +441,15 @@
     function actualizarInterfaz(nombre, correo) {
       // 1. Banner de bienvenida
       const bannerTitle = document.querySelector(".banner-title");
-     // Ajustar en la función JS
-if (bannerTitle) bannerTitle.textContent = `¡Bienvenido/a, ${nombre}!`;
-      // 2. Nombre de la barra superior (Header) - Especificando la clase exact para no borrar la clase user-role
+      if (bannerTitle) {
+        bannerTitle.textContent = `¡Bienvenido/a, ${nombre}!`;
+      }
+
+      // 2. Nombre en el Header Superior
       const userNameHeader = document.querySelector(".top-header .user-name");
-      if (userNameHeader) userNameHeader.textContent = nombre;
+      if (userNameHeader) {
+        userNameHeader.textContent = nombre;
+      }
 
       // 3. Menú Lateral (Sidenav)
       const sidenavName = document.querySelector(".sidenav .name");
