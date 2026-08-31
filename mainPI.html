@@ -268,55 +268,122 @@
 <body>
 <!-- SDK de Firebase (Auth y Firestore) -->
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-  import { getFirestore, collection, query, where, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-  // 1. Configuración de tu proyecto Firebase
-  const firebaseConfig = {
-    apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
-    authDomain: "hourcheckt.firebaseapp.com",
-    projectId: "hourcheckt",
-    storageBucket: "hourcheckt.firebasestorage.app",
-    messagingSenderId: "83459752453",
-    appId: "1:83459752453:web:1b81724c28973bf567126c",
-  };
+    // 1. Configuración de Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
+      authDomain: "hourcheckt.firebaseapp.com",
+      projectId: "hourcheckt",
+      storageBucket: "hourcheckt.firebasestorage.app",
+      messagingSenderId: "83459752453",
+      appId: "1:83459752453:web:1b81724c28973bf567126c"
+    };
 
-  // 2. Inicializar Firebase, Auth y Firestore
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-  // 3. Escuchar automáticamente la sesión activa del usuario
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      // El usuario SÍ está autenticado en la sesión
-      const correoUsuarioLogueado = user.email; // Correo de la sesión actual
+    // 2. Inicializar Sidenav
+    document.addEventListener('DOMContentLoaded', function() {
+      var elems = document.querySelectorAll('.sidenav');
+      if (typeof M !== 'undefined' && M.Sidenav) {
+        M.Sidenav.init(elems, { edge: 'left', draggable: true });
+      }
+    });
 
-      try {
-        
-        // OPCIÓN B: Usar esta opción SOLO SI el ID del documento en Firestore es exactamente igual al UID de autenticación (user.uid)
-        const docRef = doc(db, "Institucion", user.uid);
-        const docSnap = await getDoc(docRef);
+    // 3. Comprobar la sesión activa al cargar la página
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        console.log("==========================================");
+        console.log("1. TU USUARIO ACTUAL:");
+        console.log("   - UID de Auth:", user.uid);
+        console.log("   - Email de Auth:", user.email);
+        console.log("==========================================");
 
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          document.getElementById("user-name").textContent = data.NameDirector;
-          document.getElementById("user-email").textContent = data.CorreoInst;
-          document.getElementById("user-inst").textContent = data.NameInst;
+        const correoAuth = user.email ? user.email.toLowerCase().trim() : "";
+        let nombreEncontrado = null;
+
+        try {
+          const querySnapshot = await getDocs(collection(db, "Docentes"));
+          console.log(`2. DOCUMENTOS ENCONTRADOS EN LA COLECCIÓN 'Docentes' (${querySnapshot.size}):`);
+
+          querySnapshot.forEach((docSnap) => {
+            const data = docSnap.data();
+            console.log(` -> Documento ID: "${docSnap.id}"`);
+            console.log("    Datos guardados:", data);
+
+            // Coincidencia por UID
+            if (docSnap.id === user.uid) {
+              console.log("    ¡COINCIDENCIA POR UID!");
+              nombreEncontrado = obtenerNombreDeObjeto(data);
+            }
+
+            // Coincidencia por correo
+            for (let clave in data) {
+              const valor = String(data[clave]).toLowerCase().trim();
+              if (valor === correoAuth && correoAuth !== "") {
+                console.log(`    ¡COINCIDENCIA POR CORREO en el campo "${clave}"!`);
+                nombreEncontrado = nombreEncontrado || obtenerNombreDeObjeto(data);
+              }
+            }
+          });
+
+        } catch (error) {
+          console.error("❌ ERROR AL LEER FIRESTORE:", error);
+          alert("Error de lectura en Firestore. Revisa las reglas de seguridad.");
         }
-        
 
-      } catch (error) {
-        console.error("Error al obtener los datos del usuario logueado:", error);
+        console.log("==========================================");
+        console.log("3. RESULTADO FINAL: Nombre detectado ->", nombreEncontrado);
+        console.log("==========================================");
+
+        actualizarInterfaz(nombreEncontrado || "Docente", user.email);
+      } else {
+        window.location.href = "loginU.html";
+      }
+    });
+
+    // --- FUNCIONES AUXILIARES (MODIFICADAS) ---
+
+    function obtenerNombreDeObjeto(obj) {
+      if (obj.NombreDocente) return obj.NombreDocente;
+      if (obj.Nombre) return obj.Nombre;
+      if (obj.nombre) return obj.nombre;
+      if (obj.Name) return obj.Name;
+
+      for (let clave in obj) {
+        const claveLower = clave.toLowerCase();
+        if ((claveLower.includes("nombre") || claveLower.includes("name")) && 
+            !claveLower.includes("inst") && !claveLower.includes("director")) {
+          return obj[clave];
+        }
+      }
+      return null;
+    }
+
+    function actualizarInterfaz(nombre, correo) {
+      // Actualiza el título en el banner principal
+      const bannerTitle = document.querySelector(".welcome-banner .banner-title");
+      if (bannerTitle) {
+        bannerTitle.textContent = `¡Bienvenido/a, ${nombre}!`;
       }
 
-    } else {
-      // Si el usuario no ha iniciado sesión, puedes redirigirlo a la pantalla de login
-      console.log("No hay usuario autenticado.");
-      // window.location.href = "login.html"; 
+      // Actualiza el nombre en el encabezado (.user-name)
+      const userNameHeader = document.querySelector(".header-right .user-info .user-name");
+      if (userNameHeader) {
+        userNameHeader.textContent = nombre;
+      }
+
+      // Actualiza los datos en el menú lateral (sidenav) si existen
+      const sidenavName = document.querySelector(".sidenav .name");
+      const sidenavEmail = document.querySelector(".sidenav .email");
+
+      if (sidenavName) sidenavName.textContent = nombre;
+      if (sidenavEmail) sidenavEmail.textContent = correo;
     }
-  });
 </script>
   
   <ul id="slide-out" class="sidenav">
@@ -385,7 +452,7 @@
     <!-- Banner Principal -->
     <section class="welcome-banner">
       <div class="banner-content">
-        <h2 class="banner-title">¡Bienvenido/a, Mario!</h2>
+        <h2 class="banner-title">¡Bienvenido/a!</h2>
         <p class="banner-text">Supervisa y registra el progreso de tus estudiantes, controla sus encargados y verifica sus actividades y evidencias.</p>
       </div>
       <img src="https://cdnai.iconscout.com/ai-image/premium/thumb/ai-hombre-de-negocios-trabajando-en-una-computadora-portatil-illustration-png-download-jpg-13171712.png" alt="Ilustración Trabajo" class="banner-illustration">

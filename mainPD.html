@@ -10,6 +10,72 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
   <style>
+         /* Footer */
+   .custom-footer {
+      background-color: #1557d0 !important;
+      border-top-left-radius: 25px;
+      border-top-right-radius: 25px;
+      margin-top: 50px;
+      padding-top: 30px !important;
+    }
+
+    .footer-container {
+      width: 90%;
+      max-width: 1100px;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .footer-logo {
+      height: 35px;
+      width: auto;
+      filter: brightness(0) invert(1); /* Convierte el logo a blanco si es oscuro */
+    }
+
+    .footer-brand h5 {
+      margin: 0;
+      font-size: 1.4rem;
+    }
+
+    .footer-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-bottom: 8px;
+      transition: color 0.2s, transform 0.2s;
+    }
+
+    .footer-link:hover {
+      color: #ff5500 !important;
+      transform: translateX(4px);
+    }
+
+    .footer-btn {
+      background-color: rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      text-transform: none;
+      font-weight: 600;
+      margin-top: 5px;
+    }
+
+    .footer-btn:hover {
+      background-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .custom-copyright {
+      background-color: rgba(0, 0, 0, 0.12) !important;
+      font-size: 0.85rem;
+      padding: 15px 0;
+    }
+
+    .font-weight-bold {
+      font-weight: 700;
+    }
     body {
       background-color: #f4f6f9;
       font-family: 'Roboto', sans-serif;
@@ -371,7 +437,51 @@
     </main>
 
   </div>
+<footer class="page-footer custom-footer">
+    <div class="container footer-container">
+      <div class="row style-row">
+        
+        <!-- Columna 1: Información de la Plataforma -->
+        <div class="col s12 m4">
+          <div class="footer-brand">
+            <img src="logo.png" alt="HourCheck Logo" class="footer-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x40?text=HourCheck';">
+            <h5 class="white-text font-weight-bold">HourCheck</h5>
+          </div>
+          <p class="grey-text text-lighten-2">
+            Sistema para la gestión y seguimiento del Servicio Social Estudiantil. Facilitando la validación y control de horas de forma eficiente.
+          </p>
+        </div>
 
+        <!-- Columna 2: Enlaces Rápidos -->
+        <div class="col s12 m4 center-on-small">
+          <h5 class="white-text font-weight-bold">Enlaces Rápidos</h5>
+          <ul>
+            <li><a class="grey-text text-lighten-3 footer-link" href="index.html"><i class="material-icons tiny">chevron_right</i> Inicio</a></li>
+            <li><a class="grey-text text-lighten-3 footer-link" href="saberCualP.html"><i class="material-icons tiny">chevron_right</i> Guía de Perfiles</a></li>
+          </ul>
+        </div>
+
+        <!-- Columna 3: Soporte y Ayuda -->
+        <div class="col s12 m4">
+          <h5 class="white-text font-weight-bold">Soporte</h5>
+          <p class="grey-text text-lighten-2">
+            ¿Tienes dudas con el registro de tus horas?
+          </p>
+          <a href="mailto:soporte@hourcheck.com" class="btn-flat white-text footer-btn">
+            <i class="material-icons left">help_outline</i> Contactar Soporte
+          </a>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Sub-footer con Derechos de Autor -->
+    <div class="footer-copyright custom-copyright">
+      <div class="container center-align white-text">
+        © 2026 HourCheck - Todos los derechos reservados.
+      </div>
+    </div>
+  </footer>
   <!-- Materialize JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
