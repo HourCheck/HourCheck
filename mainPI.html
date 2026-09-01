@@ -331,127 +331,91 @@
     </header>
 
    <!-- Banner Principal -->
-<section class="welcome-banner">
+<section class="welcome-banner" style="background: linear-gradient(135deg, #1557d0, #2867f0); padding: 30px; border-radius: 16px; color: white; display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(21, 87, 208, 0.2);">
   <div class="banner-content">
-    <h2 class="banner-title">¡Bienvenido, <span id="user-name-banner">test1</span>!</h2>
-    <p class="banner-text">Gestiona tus horas de servicio social, actividades y evidencias de forma fácil y segura.</p>
+    <h2 class="banner-title" style="margin: 0 0 10px 0; font-size: 1.8rem; font-weight: bold;">¡Bienvenido/a!</h2>
+    <p class="banner-text" style="margin: 0; font-size: 0.95rem; opacity: 0.9; max-width: 600px;">Supervisa y registra el progreso de tus estudiantes, controla sus encargados y verifica sus actividades y evidencias.</p>
   </div>
-  <img src="https://cdnai.iconscout.com/ai-image/premium/thumb/ai-hombre-de-negocios-trabajando-en-una-computadora-portatil-illustration-png-download-jpg-13171712.png" alt="Ilustración Trabajo" class="banner-illustration">
+  <img src="https://cdnai.iconscout.com/ai-image/premium/thumb/ai-hombre-de-negocios-trabajando-en-una-computadora-portatil-illustration-png-download-jpg-13171712.png" alt="Ilustración Trabajo" class="banner-illustration" style="height: 110px; object-fit: contain;">
 </section>
 
-<!-- Tarjetas de Métricas Superior (KPIs) -->
+<!-- Indicador Estudiantes Activos -->
 <div class="row">
-  <!-- Horas Registradas -->
   <div class="col s12 m4">
-    <div class="card white custom-card">
-      <div class="card-content valign-wrapper">
-        <div class="chart-donut-container" style="width: 50px; height: 50px; margin-right: 15px;">
-          <!-- Espacio para grafico circular / SVG de Dona -->
-          <svg viewBox="0 0 36 36" class="circular-chart blue-chart">
-            <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#eee" stroke-width="3.8"/>
-            <path class="circle" stroke-dasharray="67, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#2196f3" stroke-width="3.8"/>
-          </svg>
-        </div>
-        <div>
-          <span class="grey-text text-darken-1" style="font-size: 0.85rem;">Horas registradas</span>
-          <h5 style="margin: 2px 0; font-weight: bold; color: #333;">100 h 30 min</h5>
-          <span class="grey-text" style="font-size: 0.75rem;">De 150 h requeridas</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Evidencias Enviadas -->
-  <div class="col s12 m4">
-    <div class="card white custom-card">
-      <div class="card-content valign-wrapper">
-        <div class="chart-donut-container" style="width: 50px; height: 50px; margin-right: 15px;">
-          <svg viewBox="0 0 36 36" class="circular-chart orange-chart">
-            <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#eee" stroke-width="3.8"/>
-            <path class="circle" stroke-dasharray="80, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#ff9800" stroke-width="3.8"/>
-          </svg>
-        </div>
-        <div>
-          <span class="grey-text text-darken-1" style="font-size: 0.85rem;">Evidencias enviadas</span>
-          <h5 style="margin: 2px 0; font-weight: bold; color: #333;">4 enviadas</h5>
-          <span class="grey-text" style="font-size: 0.75rem;">Completadas</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Próxima Actividad -->
-  <div class="col s12 m4">
-    <div class="card white custom-card">
-      <div class="card-content valign-wrapper">
-        <div class="icon-avatar-container red lighten-5" style="border-radius: 50%; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
-          <i class="material-icons red-text text-lighten-1">event</i>
-        </div>
-        <div>
-          <span class="grey-text text-darken-1" style="font-size: 0.85rem;">Próxima Actividad</span>
-          <h5 style="margin: 2px 0; font-weight: bold; color: #333;">15 Oct 2026</h5>
-          <span class="grey-text" style="font-size: 0.75rem;">Campaña de limpieza</span>
+    <div class="card white custom-card" style="border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #f0f0f0;">
+      <div class="card-content" style="padding: 20px;">
+        <span class="card-title grey-text text-darken-3" style="font-size: 0.9rem; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">Estudiantes Activos</span>
+        <div class="badge-card valign-wrapper" style="margin-top: 15px;">
+          <div style="background-color: #e3f2fd; border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+            <i class="material-icons blue-text text-darken-1" style="font-size: 28px;">group</i>
+          </div>
+          <div>
+            <h4 style="margin: 0; font-weight: bold; color: #2c3e50; font-size: 1.8rem;">128</h4>
+            <span class="grey-text" style="font-size: 0.8rem;">Estudiantes</span>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Tabla Historial de Horas -->
+<!-- Sección de Gráficos y Resumen -->
 <div class="row">
-  <div class="col s12">
-    <div class="card white custom-card">
-      <div class="card-content">
-        <span class="card-title grey-text text-darken-4" style="font-size: 1.1rem; font-weight: bold; margin-bottom: 20px; display: block;">Historial de Horas</span>
-        
-        <table class="striped responsive-table">
-          <thead>
-            <tr class="grey-text text-darken-1" style="font-size: 0.75rem; text-transform: uppercase;">
-              <th>Actividad</th>
-              <th>Fecha</th>
-              <th>Horas</th>
-              <th>Evidencia</th>
-              <th>Estado</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td style="font-weight: 600;">Campaña de limpieza</td>
-              <td class="grey-text">15 Oct 2026</td>
-              <td style="font-weight: 600;">5 h</td>
-              <td><a href="#" class="blue-text" style="display: flex; align-items: center;"><i class="material-icons tiny" style="margin-right: 4px;">image</i> IMG_20261015.jpg</a></td>
-              <td><span class="badge green lighten-5 green-text text-accent-4" style="border-radius: 12px; float: left;">• Comprobado</span></td>
-            </tr>
-            <tr>
-              <td style="font-weight: 600;">Apoyo escolar</td>
-              <td class="grey-text">10 Oct 2026</td>
-              <td style="font-weight: 600;">4 h</td>
-              <td><a href="#" class="blue-text" style="display: flex; align-items: center;"><i class="material-icons tiny" style="margin-right: 4px;">image</i> IMG_20261010.jpg</a></td>
-              <td><span class="badge orange lighten-5 orange-text text-darken-2" style="border-radius: 12px; float: left;">• En revisión</span></td>
-            </tr>
-            <tr>
-              <td style="font-weight: 600;">Reforestación</td>
-              <td class="grey-text">05 Oct 2026</td>
-              <td style="font-weight: 600;">6 h</td>
-              <td><a href="#" class="blue-text" style="display: flex; align-items: center;"><i class="material-icons tiny" style="margin-right: 4px;">image</i> IMG_20261005.jpg</a></td>
-              <td><span class="badge green lighten-5 green-text text-accent-4" style="border-radius: 12px; float: left;">• Comprobado</span></td>
-            </tr>
-            <tr>
-              <td style="font-weight: 600;">Donación de víveres</td>
-              <td class="grey-text">28 Sep 2026</td>
-              <td style="font-weight: 600;">3.5 h</td>
-              <td><a href="#" class="blue-text" style="display: flex; align-items: center;"><i class="material-icons tiny" style="margin-right: 4px;">image</i> IMG_20260928.jpg</a></td>
-              <td><span class="badge red lighten-5 red-text text-darken-1" style="border-radius: 12px; float: left;">• Pendiente</span></td>
-            </tr>
-            <tr>
-              <td style="font-weight: 600;">Visita a hogar de donaciones</td>
-              <td class="grey-text">20 Sep 2026</td>
-              <td style="font-weight: 600;">2 h</td>
-              <td><a href="#" class="blue-text" style="display: flex; align-items: center;"><i class="material-icons tiny" style="margin-right: 4px;">image</i> IMG_20260920.jpg</a></td>
-              <td><span class="badge blue lighten-5 blue-text" style="border-radius: 12px; float: left;">• En proceso</span></td>
-            </tr>
-          </tbody>
-        </table>
+  <!-- Card Progreso General -->
+  <div class="col s12 m6">
+    <div class="card white custom-card" style="border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #f0f0f0;">
+      <div class="card-content" style="padding: 20px;">
+        <span class="card-title grey-text text-darken-4" style="font-size: 0.85rem; font-weight: bold; letter-spacing: 0.5px;">■ PROGRESO GENERAL DE HORAS</span>
+        <div class="row valign-wrapper" style="margin-bottom: 0; margin-top: 15px;">
+          <div class="col s8">
+            <canvas id="barChart" height="150"></canvas>
+          </div>
+          <div class="col s4 center-align">
+            <span class="grey-text" style="font-size: 0.8rem; background: #f5f5f5; padding: 4px 8px; border-radius: 6px;">Este mes ▾</span>
+            <h4 style="color: #1565c0; font-weight: bold; margin: 15px 0 0 0; font-size: 2rem;">72%</h4>
+            <span class="grey-text" style="font-size: 0.8rem;">Progreso total</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card Resumen de Cumplimiento -->
+  <div class="col s12 m6">
+    <div class="card white custom-card" style="border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #f0f0f0;">
+      <div class="card-content" style="padding: 20px;">
+        <span class="card-title grey-text text-darken-4" style="font-size: 0.85rem; font-weight: bold; letter-spacing: 0.5px;">◆ RESUMEN DE CUMPLIMIENTO</span>
+        <div class="row" style="margin-top: 15px; margin-bottom: 0;">
+          <div class="col s4">
+            <div class="card-panel blue lighten-5 center-align" style="border-radius: 12px; padding: 15px 5px; box-shadow: none; margin: 0;">
+              <span class="grey-text text-darken-2" style="font-size: 0.65rem; font-weight: bold; display: block; line-height: 1.2;">% DE CUMPLIMIENTO GENERAL</span>
+              <h4 style="color: #1565c0; font-weight: bold; margin: 10px 0; font-size: 1.8rem;">72%</h4>
+              <span class="grey-text text-darken-1" style="font-size: 0.75rem;">Servicio social</span>
+            </div>
+          </div>
+          <div class="col s8">
+            <table class="table-custom highlight" style="margin: 0;">
+              <tbody>
+                <tr style="border-bottom: 1px solid #f0f0f0;">
+                  <td style="font-size: 0.8rem; padding: 8px 5px; color: #555;">Estudiantes en progreso</td>
+                  <td class="right-align" style="font-weight: bold; padding: 8px 5px; color: #2c3e50;">86</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #f0f0f0;">
+                  <td style="font-size: 0.8rem; padding: 8px 5px; color: #555;">Estudiantes próximos a completar</td>
+                  <td class="right-align" style="font-weight: bold; padding: 8px 5px; color: #2c3e50;">18</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #f0f0f0;">
+                  <td style="font-size: 0.8rem; padding: 8px 5px; color: #555;">Estudiantes sin actividad reciente</td>
+                  <td class="right-align" style="font-weight: bold; padding: 8px 5px; color: #e53935;">9</td>
+                </tr>
+                <tr>
+                  <td style="font-size: 0.8rem; padding: 8px 5px; color: #555;">Evidencias pendientes de revisión</td>
+                  <td class="right-align" style="font-weight: bold; padding: 8px 5px; color: #fb8c00;">24</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   </div>
