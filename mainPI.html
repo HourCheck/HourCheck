@@ -266,125 +266,6 @@
   </style>
 </head>
 <body>
-<!-- SDK de Firebase (Auth y Firestore) -->
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-    // 1. Configuración de Firebase
-    const firebaseConfig = {
-      apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
-      authDomain: "hourcheckt.firebaseapp.com",
-      projectId: "hourcheckt",
-      storageBucket: "hourcheckt.firebasestorage.app",
-      messagingSenderId: "83459752453",
-      appId: "1:83459752453:web:1b81724c28973bf567126c"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    // 2. Inicializar Sidenav
-    document.addEventListener('DOMContentLoaded', function() {
-      var elems = document.querySelectorAll('.sidenav');
-      if (typeof M !== 'undefined' && M.Sidenav) {
-        M.Sidenav.init(elems, { edge: 'left', draggable: true });
-      }
-    });
-
-    // 3. Comprobar la sesión activa al cargar la página
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        console.log("==========================================");
-        console.log("1. TU USUARIO ACTUAL:");
-        console.log("   - UID de Auth:", user.uid);
-        console.log("   - Email de Auth:", user.email);
-        console.log("==========================================");
-
-        const correoAuth = user.email ? user.email.toLowerCase().trim() : "";
-        let nombreEncontrado = null;
-
-        try {
-          const querySnapshot = await getDocs(collection(db, "Institucion"));
-          console.log(`2. DOCUMENTOS ENCONTRADOS EN LA COLECCIÓN 'Institucion' (${querySnapshot.size}):`);
-
-          querySnapshot.forEach((docSnap) => {
-            const data = docSnap.data();
-            console.log(` -> Documento ID: "${docSnap.id}"`);
-            console.log("    Datos guardados:", data);
-
-            // Coincidencia por UID
-            if (docSnap.id === user.uid) {
-              console.log("    ¡COINCIDENCIA POR UID!");
-              nombreEncontrado = obtenerNombreDeObjeto(data);
-            }
-
-            // Coincidencia por correo
-            for (let clave in data) {
-              const valor = String(data[clave]).toLowerCase().trim();
-              if (valor === correoAuth && correoAuth !== "") {
-                console.log(`    ¡COINCIDENCIA POR CORREO en el campo "${clave}"!`);
-                nombreEncontrado = nombreEncontrado || obtenerNombreDeObjeto(data);
-              }
-            }
-          });
-
-        } catch (error) {
-          console.error("❌ ERROR AL LEER FIRESTORE:", error);
-          alert("Error de lectura en Firestore. Revisa las reglas de seguridad.");
-        }
-
-        console.log("==========================================");
-        console.log("3. RESULTADO FINAL: Nombre detectado ->", nombreEncontrado);
-        console.log("==========================================");
-
-        actualizarInterfaz(nombreEncontrado || "Docente", user.email);
-      } else {
-        window.location.href = "loginU.html";
-      }
-    });
-
-    // --- FUNCIONES AUXILIARES (MODIFICADAS) ---
-
-    function obtenerNombreDeObjeto(obj) {
-      if (obj.NombreDocente) return obj.NombreDocente;
-      if (obj.Nombre) return obj.Nombre;
-      if (obj.nombre) return obj.nombre;
-      if (obj.Name) return obj.Name;
-
-      for (let clave in obj) {
-        const claveLower = clave.toLowerCase();
-        if ((claveLower.includes("nombre") || claveLower.includes("name")) && 
-            !claveLower.includes("inst") && !claveLower.includes("director")) {
-          return obj[clave];
-        }
-      }
-      return null;
-    }
-
-    function actualizarInterfaz(nombre, correo) {
-      // Actualiza el título en el banner principal
-      const bannerTitle = document.querySelector(".welcome-banner .banner-title");
-      if (bannerTitle) {
-        bannerTitle.textContent = `¡Bienvenido/a, ${nombre}!`;
-      }
-
-      // Actualiza el nombre en el encabezado (.user-name)
-      const userNameHeader = document.querySelector(".header-right .user-info .user-name");
-      if (userNameHeader) {
-        userNameHeader.textContent = nombre;
-      }
-
-      // Actualiza los datos en el menú lateral (sidenav) si existen
-      const sidenavName = document.querySelector(".sidenav .name");
-      const sidenavEmail = document.querySelector(".sidenav .email");
-
-      if (sidenavName) sidenavName.textContent = nombre;
-      if (sidenavEmail) sidenavEmail.textContent = correo;
-    }
-</script>
   
   <ul id="slide-out" class="sidenav">
     <li>
@@ -552,7 +433,105 @@
         draggable: true // Permite arrastrar en dispositivos táctiles
       });
     });
+  </script>
+    
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+// 1. Configuración de Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
+  authDomain: "hourcheckt.firebaseapp.com",
+  projectId: "hourcheckt",
+  storageBucket: "hourcheckt.firebasestorage.app",
+  messagingSenderId: "83459752453",
+  appId: "1:83459752453:web:1b81724c28973bf567126c"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// 2. Inicializar Sidenav
+document.addEventListener('DOMContentLoaded', function() {
+  var elems = document.querySelectorAll('.sidenav');
+  if (typeof M !== 'undefined' && M.Sidenav) {
+    M.Sidenav.init(elems, { edge: 'left', draggable: true });
+  }
+});
+
+// 3. Comprobar la sesión activa al cargar la página
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    const userEmail = user.email ? user.email.toLowerCase().trim() : "";
+    let instData = null;
+
+    try {
+      // Intento 1: Buscar documento por ID directo (UID del usuario)
+      const docRef = doc(db, "Institucion", user.uid);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        instData = docSnap.data();
+      } else {
+        // Intento 2: Buscar por campo 'CorreoInst' en caso de que el ID no sea el UID
+        const q = query(collection(db, "Institucion"), where("CorreoInst", "==", user.email));
+        const querySnapshot = await getDocs(q);
+        
+        if (!querySnapshot.empty) {
+          instData = querySnapshot.docs[0].data();
+        }
+      }
+
+      if (instData) {
+        actualizarInterfaz({
+          nombreDirector: instData.NameDirector || "Director/a",
+          correoInst: instData.CorreoInst || user.email,
+          nombreInst: instData.NameInst || "Institución Educativa"
+        });
+      } else {
+        actualizarInterfaz({
+          nombreDirector: "Director/a",
+          correoInst: user.email,
+          nombreInst: "Institución No Encontrada"
+        });
+      }
+
+    } catch (error) {
+      console.error("❌ Error al consultar Firestore:", error);
+      actualizarInterfaz({
+        nombreDirector: "Error de lectura",
+        correoInst: user.email,
+        nombreInst: "Verifique permisos de Firebase"
+      });
+    }
+  } else {
+    window.location.href = "loginU.html";
+  }
+});
+
+// --- FUNCION AUXILIAR PARA ACTUALIZAR LA INTERFAZ ---
+
+function actualizarInterfaz({ nombreDirector, correoInst, nombreInst }) {
+  // Sidenav (Menú lateral)
+  const sidenavName = document.getElementById("user-name");
+  const sidenavEmail = document.getElementById("user-email");
+  const sidenavInst = document.getElementById("user-inst");
+
+  if (sidenavName) sidenavName.textContent = nombreDirector;
+  if (sidenavEmail) sidenavEmail.textContent = correoInst;
+  if (sidenavInst) sidenavInst.textContent = nombreInst;
+
+  // Header superior
+  const userNameHeader = document.querySelector(".header-right .user-info .user-name");
+  if (userNameHeader) userNameHeader.textContent = nombreDirector;
+
+  // Banner principal
+  const bannerTitle = document.querySelector(".welcome-banner .banner-title");
+  if (bannerTitle) bannerTitle.textContent = `¡Bienvenido/a, ${nombreDirector}!`;
+}
   </script>
 </body>
 </html>
