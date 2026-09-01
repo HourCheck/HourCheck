@@ -3,84 +3,362 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Registro de Horas Sociales</title>
+  <title>Registro de Horas Sociales - HourCheck</title>
+  
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <style>
+   /* Estilos del Footer */
+    .custom-footer {
+      background-color: #1557d0 !important;
+      border-top-left-radius: 25px;
+      border-top-right-radius: 25px;
+      margin-top: 50px;
+      padding-top: 30px !important;
+    }
+
+    .footer-container {
+      width: 90%;
+      max-width: 1100px;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .footer-logo {
+      height: 35px;
+      width: auto;
+      filter: brightness(0) invert(1); /* Convierte el logo a blanco si es oscuro */
+    }
+
+    .footer-brand h5 {
+      margin: 0;
+      font-size: 1.4rem;
+    }
+
+    .footer-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-bottom: 8px;
+      transition: color 0.2s, transform 0.2s;
+    }
+
+    .footer-link:hover {
+      color: #ff5500 !important;
+      transform: translateX(4px);
+    }
+
+    .footer-btn {
+      background-color: rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      text-transform: none;
+      font-weight: 600;
+      margin-top: 5px;
+    }
+
+    .footer-btn:hover {
+      background-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .custom-copyright {
+      background-color: rgba(0, 0, 0, 0.12) !important;
+      font-size: 0.85rem;
+      padding: 15px 0;
+    }
+
+    .font-weight-bold {
+      font-weight: 700;
+    }
+
+    body {
+      background-color: #f7f9fc;
+      font-family: 'Roboto', sans-serif;
+    }
+
+     .top-header {
+      background-color: #ffffff;
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .back-btn {
+      color: #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      transition: transform 0.2s;
+    }
+
+    .back-btn:hover {
+      transform: translateX(-3px);
+      color: #1557d0;
+    }
+
+    .back-btn i {
+      font-size: 30px;
+    }
+
+    .header-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #000;
+      margin: 0;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo-img {
+      height: 38px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    /* Contenedor Principal */
+    .main-container {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+  
+    .back-btn {
+      color: #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      border: 1.5px solid #333;
+      border-radius: 50%;
+      transition: background 0.3s;
+    }
+    .back-btn:hover {
+      background-color: #e0e0e0;
+    }
+
+    /* Logo ficticio SVG / Estilo */
+    .brand-logo-custom {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: bold;
+      color: #1e293b;
+      font-size: 1.2rem;
+    }
+
+    /* Targeta / Card estilo UI */
+    .custom-card {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 35px 40px;
+      box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.05);
+      margin-top: 10px;
+    }
+
+    .form-label {
+      font-weight: 700;
+      color: #000000;
+      font-size: 0.95rem;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    /* Campos de Entrada redondeados */
+    .custom-input, 
+    .custom-textarea {
+      border: 1.5px solid #dcdcdc !important;
+      border-radius: 10px !important;
+      padding: 0 15px !important;
+      box-sizing: border-box !important;
+      height: 42px !important;
+      background-color: #ffffff !important;
+      margin-bottom: 18px !important;
+      box-shadow: none !important;
+    }
+
+    .custom-textarea {
+      height: 90px !important;
+      padding: 10px 15px !important;
+      resize: vertical;
+    }
+
+    .custom-input:focus, 
+    .custom-textarea:focus {
+      border-color: #ff6b00 !important;
+    }
+
+    /* Ajuste para input de archivo */
+    .file-field .btn {
+      border-radius: 8px;
+      background-color: #e2e8f0;
+      color: #334155;
+      box-shadow: none;
+      height: 42px;
+      line-height: 42px;
+    }
+    .file-field .btn:hover {
+      background-color: #cbd5e1;
+    }
+
+    /* Botón Naranja Principal */
+    .btn-orange {
+      background-color: #ff6b00;
+      border-radius: 12px;
+      width: 100%;
+      height: 50px;
+      line-height: 50px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      text-transform: none;
+      box-shadow: none;
+    }
+    .btn-orange:hover {
+      background-color: #e66000;
+      box-shadow: 0 4px 12px rgba(255, 107, 0, 0.3);
+    }
+  </style>
 </head>
 <body>
 
-  <div class="container" style="margin-top: 30px;">
+ <!-- Header Superior -->
+  <header class="top-header">
+    <div class="header-left">
+      <!-- Flecha de regreso al index.html -->
+      <a href="mainPE.html" class="back-btn" title="Volver al Inicio">
+        <i class="material-icons">arrow_back</i>
+      </a>
+    </div>
+
+    <!-- Logo a la derecha -->
+    <div class="header-right">
+      <div class="logo-container">
+        <img src="logo.png" alt="HourCheck Logo" class="logo-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x40?text=HourCheck';">
+      </div>
+    </div>
+  </header>
+  <div class="container">
     <div class="row">
-      <div class="col s12 m10 offset-m1 l8 offset-l2">
-        <div class="card-panel z-depth-2">
-          <h4 class="center-align blue-text text-darken-2">Registro de Horas Sociales</h4>
-          
+      <div class="col s12 m8 offset-m2 l6 offset-l3">
+        <div class="custom-card">
+
           <form action="#" method="POST" enctype="multipart/form-data">
-            
-            <div class="row">
-              <div class="input-field col s12">
-                <i class="material-icons prefix">location_on</i>
-                <input id="lugar" type="text" class="validate" required>
-                <label for="lugar">Lugar donde se realizó</label>
-              </div>
+
+            <div>
+              <label class="form-label" for="lugar">Lugar donde se realizó</label>
+              <input id="lugar" type="text" class="custom-input" placeholder="ej. Basica" required>
             </div>
 
-            <div class="row">
-              <div class="input-field col s12">
-                <i class="material-icons prefix">person</i>
-                <input id="docente" type="text" class="validate" required>
-                <label for="docente">Docente encargado</label>
-              </div>
+            <div>
+              <label class="form-label" for="docente">Docente encargado</label>
+              <input id="docente" type="text" class="custom-input" placeholder="ej. Lic. Roberto Gómez" required>
             </div>
 
-            <div class="row">
-              <div class="input-field col s12">
-                <i class="material-icons prefix">access_time</i>
-                <input id="horas" type="number" min="1" step="0.5" class="validate" required>
-                <label for="horas">Horas realizadas</label>
-                <span class="helper-text" data-error="Ingresa un número válido de horas"></span>
-              </div>
+            <div>
+              <label class="form-label" for="horas">Cuántas horas realizadas</label>
+              <input id="horas" type="number" min="1" step="0.5" class="custom-input" placeholder="ej. 15" required>
             </div>
 
-            <div class="row">
-              <div class="input-field col s12">
-                <i class="material-icons prefix">description</i>
-                <textarea id="descripcion" class="materialize-textarea" required></textarea>
-                <label for="descripcion">Descripción de las actividades</label>
-              </div>
+            <div>
+              <label class="form-label" for="descripcion">Descripción</label>
+              <textarea id="descripcion" class="custom-textarea" placeholder="Escribe un breve resumen de las actividades..." required></textarea>
             </div>
 
-            <div class="row">
-              <div class="file-field input-field col s12">
-                <div class="btn blue darken-1">
-                  <span>Evidencia</span>
+            <div>
+              <label class="form-label">Adjuntar evidencia</label>
+              <div class="file-field input-field" style="margin-top: 0;">
+                <div class="btn">
+                  <span>Subir</span>
                   <input type="file" id="evidencia" accept="image/*,.pdf" required>
                 </div>
                 <div class="file-path-wrapper">
-                  <input class="file-path validate" type="text" placeholder="Adjuntar archivo (PDF o imagen)">
+                  <input class="file-path custom-input" type="text" placeholder="Selecciona un archivo...">
                 </div>
               </div>
             </div>
 
-            <div class="row center-align" style="margin-top: 20px;">
-              <button class="btn waves-effect waves-light blue darken-2 btn-large" type="submit" name="action">
+            <div style="margin-top: 15px;">
+              <button class="btn waves-effect waves-light btn-orange" type="submit">
                 Guardar Registro
-                <i class="material-icons right">send</i>
               </button>
             </div>
 
           </form>
+
         </div>
       </div>
     </div>
   </div>
+  <!-- FOOTER -->
+<footer class="page-footer custom-footer">
+    <div class="container footer-container">
+      <div class="row style-row">
+        
+        <!-- Columna 1: Información de la Plataforma -->
+        <div class="col s12 m4">
+          <div class="footer-brand">
+            <img src="logo.png" alt="HourCheck Logo" class="footer-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x40?text=HourCheck';">
+            <h5 class="white-text font-weight-bold">HourCheck</h5>
+          </div>
+          <p class="grey-text text-lighten-2">
+            Sistema para la gestión y seguimiento del Servicio Social Estudiantil. Facilitando la validación y control de horas de forma eficiente.
+          </p>
+        </div>
 
+        <!-- Columna 2: Enlaces Rápidos -->
+        <div class="col s12 m4 center-on-small">
+          <h5 class="white-text font-weight-bold">Enlaces Rápidos</h5>
+          <ul>
+            <li><a class="grey-text text-lighten-3 footer-link" href="index.html"><i class="material-icons tiny">chevron_right</i> Inicio</a></li>
+            <li><a class="grey-text text-lighten-3 footer-link" href="saberCualP.html"><i class="material-icons tiny">chevron_right</i> Guía de Perfiles</a></li>
+          </ul>
+        </div>
+
+        <!-- Columna 3: Soporte y Ayuda -->
+        <div class="col s12 m4">
+          <h5 class="white-text font-weight-bold">Soporte</h5>
+          <p class="grey-text text-lighten-2">
+            ¿Tienes dudas con el registro de tus horas?
+          </p>
+          <a href="mailto:soporte@hourcheck.com" class="btn-flat white-text footer-btn">
+            <i class="material-icons left">help_outline</i> Contactar Soporte
+          </a>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Sub-footer con Derechos de Autor -->
+    <div class="footer-copyright custom-copyright">
+      <div class="container center-align white-text">
+        © 2026 HourCheck - Todos los derechos reservados.
+      </div>
+    </div>
+  </footer>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Inicialización de etiquetas activas y autogrow del textarea
-      M.updateTextFields();
-    });
-  </script>
 </body>
 </html>

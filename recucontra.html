@@ -5,11 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Recuperar Contraseña - HourCheck</title>
   
-  <!-- Materialize CSS CDN -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-  <!-- Material Icons CDN -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <!-- Font Awesome Icons CDN -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
@@ -101,18 +98,21 @@
       border-bottom: 1px solid #eef2f6;
     }
 
-    /* Botón de regresar simplificado */
+    /* Botón de regresar sencillo con arrow_back */
     .back-btn {
       color: #64748b;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       text-decoration: none;
-      font-size: 28px;
       transition: color 0.2s ease, transform 0.2s ease;
       background: none;
       border: none;
       padding: 0;
+    }
+
+    .back-btn i {
+      font-size: 26px;
     }
 
     .back-btn:hover {
@@ -137,7 +137,6 @@
       font-family: 'Material Icons' !important;
       font-weight: normal;
       font-style: normal;
-      font-size: 24px;
       line-height: 1;
       letter-spacing: normal;
       text-transform: none;
@@ -280,10 +279,9 @@
 </head>
 <body>
 
-  <!-- Header Superior -->
   <header class="top-header">
     <a href="index.html" class="back-btn" title="Volver al Inicio">
-      <i class="material-icons" style="font-size: 32px;">chevron_left</i>
+      <i class="material-icons">arrow_back</i>
     </a>
 
     <div class="logo-container">
@@ -291,11 +289,9 @@
     </div>
   </header>
 
-  <!-- Contenido Principal -->
   <main class="main-container">
     <div class="recovery-card">
       
-      <!-- Icono de Candado / Llave -->
       <div class="icon-badge">
         <i class="fa-solid fa-key"></i>
       </div>
@@ -305,7 +301,6 @@
         Ingresa el correo electrónico asociado a tu cuenta para enviarte las instrucciones de restablecimiento.
       </p>
 
-      <!-- Formulario -->
       <form id="recoveryForm">
         
         <div class="input-box">
@@ -319,7 +314,6 @@
         </button>
       </form>
 
-      <!-- Mensaje de respuesta -->
       <div id="responseMessage" class="response-message"></div>
 
     </div>
@@ -329,7 +323,6 @@
     <div class="container footer-container">
       <div class="row style-row">
         
-        <!-- Columna 1: Información -->
         <div class="col s12 m4">
           <div class="footer-brand">
             <img src="logo.png" alt="HourCheck Logo" class="footer-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x40?text=HourCheck';">
@@ -340,7 +333,6 @@
           </p>
         </div>
 
-        <!-- Columna 2: Enlaces Rápidos -->
         <div class="col s12 m4 center-on-small">
           <h5 class="white-text font-weight-bold">Enlaces Rápidos</h5>
           <ul>
@@ -349,7 +341,6 @@
           </ul>
         </div>
 
-        <!-- Columna 3: Soporte y Ayuda -->
         <div class="col s12 m4">
           <h5 class="white-text font-weight-bold">Soporte</h5>
           <p class="grey-text text-lighten-2">
@@ -363,7 +354,6 @@
       </div>
     </div>
 
-    <!-- Sub-footer -->
     <div class="footer-copyright custom-copyright">
       <div class="container center-align white-text">
         © 2026 HourCheck - Todos los derechos reservados.
@@ -371,10 +361,8 @@
     </div>
   </footer>
 
-  <!-- Materialize JS CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
-  <!-- Script Firebase Module -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
