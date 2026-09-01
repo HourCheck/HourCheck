@@ -230,12 +230,12 @@
       <div class="col s12 m8 offset-m2 l6 offset-l3">
         <div class="custom-card">
 
-          <!-- Formulario con id="horasForm" -->
+          <!-- Formulario -->
           <form id="horasForm">
 
             <div>
               <label class="form-label" for="lugar">Lugar donde se realizó</label>
-              <input id="lugar" type="text" class="custom-input" placeholder="ej. Basica" required>
+              <input id="lugar" type="text" class="custom-input" placeholder="ej. Básica" required>
             </div>
 
             <div>
@@ -245,7 +245,7 @@
 
             <div>
               <label class="form-label" for="horas">Cuántas horas realizadas</label>
-              <input id="horas" type="number" min="1" step="0.5" class="custom-input" placeholder="ej. 15" required>
+              <input id="horas" type="number" min="0.5" step="0.5" class="custom-input" placeholder="ej. 15" required>
             </div>
 
             <div>
@@ -266,7 +266,7 @@
               </div>
             </div>
 
-            <!-- Botón con id="btnGuardar" -->
+            <!-- Botón de Envío -->
             <div style="margin-top: 15px;">
               <button class="btn waves-effect waves-light btn-orange" type="submit" id="btnGuardar">
                 Guardar Registro
@@ -298,7 +298,7 @@
         <div class="col s12 m4 center-on-small">
           <h5 class="white-text font-weight-bold">Enlaces Rápidos</h5>
           <ul>
-            <li><a class="grey-text text-lighten-3 footer-link" href="index.html"><i class="material-icons tiny">chevron_right</i> Inicio</a></li>
+            <li><a class="grey-text text-lighten-3 footer-link" href="mainPE.html"><i class="material-icons tiny">chevron_right</i> Inicio</a></li>
             <li><a class="grey-text text-lighten-3 footer-link" href="saberCualP.html"><i class="material-icons tiny">chevron_right</i> Guía de Perfiles</a></li>
           </ul>
         </div>
@@ -326,102 +326,105 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
   <!-- Firebase JavaScript Modular -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
-    authDomain: "hourcheckt.firebaseapp.com",
-    projectId: "hourcheckt",
-    messagingSenderId: "83459752453",
-    appId: "1:83459752453:web:1b81724c28973bf567126c"
-  };
+    const firebaseConfig = {
+      apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
+      authDomain: "hourcheckt.firebaseapp.com",
+      projectId: "hourcheckt",
+      messagingSenderId: "83459752453",
+      appId: "1:83459752453:web:1b81724c28973bf567126c"
+    };
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-  const auth = getAuth(app);
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
 
-  let usuarioActual = null;
+    let usuarioActual = null;
 
-  // Verificar si hay un usuario logueado
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      usuarioActual = user;
-    } else {
-      // Si no ha iniciado sesión, redirigir al login
-      M.toast({html: 'Debes iniciar sesión primero', classes: 'red rounded'});
-      window.location.href = "login.html"; 
-    }
-  });
+    // Verificar si hay un usuario logueado
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        usuarioActual = user;
+      } else {
+        M.toast({html: 'Debes iniciar sesión primero', classes: 'red rounded'});
+        window.location.href = "login.html"; 
+      }
+    });
 
-  const form = document.getElementById("horasForm");
-  const btnGuardar = document.getElementById("btnGuardar");
+    const form = document.getElementById("horasForm");
+    const btnGuardar = document.getElementById("btnGuardar");
 
-  const convertirABase64 = (archivo) => new Promise((resolve, reject) => {
-    const lector = new FileReader();
-    lector.readAsDataURL(archivo);
-    lector.onload = () => resolve(lector.result);
-    lector.onerror = (error) => reject(error);
-  });
-
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    if (!usuarioActual) {
-      M.toast({html: 'No hay una sesión activa', classes: 'red rounded'});
-      return;
-    }
-
-    const lugarInput = document.getElementById("lugar").value;
-    const docenteInput = document.getElementById("docente").value;
-    const horasInput = parseFloat(document.getElementById("horas").value);
-    const descripcionInput = document.getElementById("descripcion").value;
-    const archivoEvidencia = document.getElementById("evidencia").files[0];
-
-    if (!archivoEvidencia) {
-      M.toast({html: 'Por favor adjunta la evidencia', classes: 'red rounded'});
-      return;
-    }
-
-    if (archivoEvidencia.size > 1024 * 1024) {
-      M.toast({html: 'La imagen debe pesar menos de 1 MB', classes: 'orange rounded'});
-      return;
-    }
-
-    try {
-      btnGuardar.disabled = true;
-      btnGuardar.textContent = "Guardando...";
-
-      const evidenciaBase64 = await convertirABase64(archivoEvidencia);
-
-      // Guardar asociando el ID del usuario actual (uid)
-      await addDoc(collection(db, "HorasSociales"), {
-        "userId": usuarioActual.uid,               // <--- AQUÍ VINCULAMOS AL USUARIO
-        "email": usuarioActual.email,               // Opcional: para referencia
-        "Descripcion": descripcionInput,
-        "Docente encargado": docenteInput,
-        "Evidencia": evidenciaBase64,
-        "Horas": horasInput,
-        "Lugar": lugarInput,
-        "fechaCreacion": serverTimestamp()          // Para ordenar el historial por fecha
+    // Función asíncrona segura para Base64
+    const convertirABase64 = (archivo) => {
+      return new Promise((resolve, reject) => {
+        const lector = new FileReader();
+        lector.readAsDataURL(archivo);
+        lector.onload = () => resolve(lector.result);
+        lector.onerror = (error) => reject(error);
       });
+    };
 
-      M.toast({html: '¡Registro guardado exitosamente!', classes: 'green rounded'});
-      form.reset();
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-      setTimeout(() => {
-        window.location.href = "mainPE.html";
-      }, 1500);
+      if (!usuarioActual) {
+        M.toast({html: 'No hay una sesión activa', classes: 'red rounded'});
+        return;
+      }
 
-    } catch (error) {
-      console.error("Error al guardar en Firebase:", error);
-      M.toast({html: 'Error al guardar el registro', classes: 'red rounded'});
-      btnGuardar.disabled = false;
-      btnGuardar.textContent = "Guardar Registro";
-    }
-  });
-</script>
+      const lugarInput = document.getElementById("lugar").value.trim();
+      const docenteInput = document.getElementById("docente").value.trim();
+      const horasInput = parseFloat(document.getElementById("horas").value);
+      const descripcionInput = document.getElementById("descripcion").value.trim();
+      const archivoEvidencia = document.getElementById("evidencia").files[0];
+
+      if (!archivoEvidencia) {
+        M.toast({html: 'Por favor adjunta la evidencia', classes: 'red rounded'});
+        return;
+      }
+
+      // Validar tamaño de archivo para no saturar Firestore (máximo 1 MB para Base64)
+      if (archivoEvidencia.size > 1024 * 1024) {
+        M.toast({html: 'La evidencia debe pesar menos de 1 MB', classes: 'orange rounded'});
+        return;
+      }
+
+      try {
+        btnGuardar.disabled = true;
+        btnGuardar.textContent = "Guardando registro...";
+
+        const evidenciaBase64 = await convertirABase64(archivoEvidencia);
+
+        // Guardado de documento con las claves exactas vinculadas al usuario activo
+        await addDoc(collection(db, "HorasSociales"), {
+          userId: usuarioActual.uid,
+          email: usuarioActual.email || "",
+          Descripcion: descripcionInput,
+          "Docente encargado": docenteInput,
+          Evidencia: evidenciaBase64,
+          Horas: horasInput,
+          Lugar: lugarInput,
+          fechaCreacion: serverTimestamp()
+        });
+
+        M.toast({html: '¡Jornada registrada exitosamente!', classes: 'green rounded'});
+        form.reset();
+
+        setTimeout(() => {
+          window.location.href = "mainPE.html";
+        }, 1500);
+
+      } catch (error) {
+        console.error("Error al registrar en Firestore:", error);
+        M.toast({html: 'Error al registrar la jornada. Inténtalo de nuevo.', classes: 'red rounded'});
+        btnGuardar.disabled = false;
+        btnGuardar.textContent = "Guardar Registro";
+      }
+    });
+  </script>
 </body>
 </html>
