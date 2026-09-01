@@ -346,12 +346,12 @@
 
         // 2. Guardar en Firestore asociando el UID
         await setDoc(doc(db, "Institucion", uid), {
-          CodigoInf: codigoInstitucion,
+          codigoInf: codigoInstitucion,
           CorreoInst: correo,
           NameDirector: nombreDirector,
           NameInst: nombreInstitucion,
           fechaRegistro: new Date(),
-          password: password
+          Password: password
         });
 
         M.toast({html: 'Institución registrada exitosamente. Redirigiendo...', classes: 'green rounded'});
