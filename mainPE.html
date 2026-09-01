@@ -14,8 +14,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
-         /* Footer */
-   .custom-footer {
+    /* Footer */
+    .custom-footer {
       background-color: #1557d0 !important;
       border-top-left-radius: 25px;
       border-top-right-radius: 25px;
@@ -38,7 +38,7 @@
     .footer-logo {
       height: 35px;
       width: auto;
-      filter: brightness(0) invert(1); /* Convierte el logo a blanco si es oscuro */
+      filter: brightness(0) invert(1);
     }
 
     .footer-brand h5 {
@@ -97,24 +97,23 @@
       padding: 0;
     }
 
-.material-icons {
-  font-family: 'Material Icons' !important;
-  font-weight: normal;
-  font-style: normal;
-  font-size: 24px;
-  line-height: 1;
-  letter-spacing: normal;
-  text-transform: none;
-  display: inline-block;
-  white-space: nowrap;
-  word-wrap: normal;
-  direction: ltr;
-  -webkit-font-feature-settings: 'liga';
-  font-feature-settings: 'liga'; /* <-- Añade esta línea */
-  -webkit-font-smoothing: antialiased;
-  vertical-align: middle;
-}
-  
+    .material-icons {
+      font-family: 'Material Icons' !important;
+      font-weight: normal;
+      font-style: normal;
+      font-size: 24px;
+      line-height: 1;
+      letter-spacing: normal;
+      text-transform: none;
+      display: inline-block;
+      white-space: nowrap;
+      word-wrap: normal;
+      direction: ltr;
+      -webkit-font-feature-settings: 'liga';
+      font-feature-settings: 'liga';
+      -webkit-font-smoothing: antialiased;
+      vertical-align: middle;
+    }
 
     .dashboard-container {
       max-width: 1200px;
@@ -475,21 +474,6 @@
       color: #15803d;
     }
 
-    .status-revision {
-      background-color: #fef3c7;
-      color: #b45309;
-    }
-
-    .status-pendiente {
-      background-color: #fee2e2;
-      color: #b91c1c;
-    }
-
-    .status-proceso {
-      background-color: #e0f2fe;
-      color: #0369a1;
-    }
-
     .dot {
       width: 6px;
       height: 6px;
@@ -585,7 +569,8 @@
         </div>
         <div>
           <div class="kpi-title">Horas registradas</div>
-          <div class="kpi-value">100 h 30 min</div>
+          <!-- ID asignado para actualizar en tiempo real -->
+          <div class="kpi-value" id="kpiTotalHoras">0 h</div>
           <div class="kpi-footer">De 150 h requeridas</div>
         </div>
       </div>
@@ -596,7 +581,8 @@
         </div>
         <div>
           <div class="kpi-title">Evidencias enviadas</div>
-          <div class="kpi-value">4 enviadas</div>
+          <!-- ID asignado para actualizar la cantidad de registros -->
+          <div class="kpi-value" id="kpiTotalEvidencias">0 enviadas</div>
           <div class="kpi-footer">Completadas</div>
         </div>
       </div>
@@ -622,104 +608,29 @@
       <table class="custom-table responsive-table">
         <thead>
           <tr>
-            <th>Actividad</th>
-            <th>Fecha</th>
+            <th>Lugar / Actividad</th>
+            <th>Docente Encargado</th>
             <th>Horas</th>
             <th>Evidencia</th>
             <th>Estado</th>
           </tr>
         </thead>
-        <tbody>
+        <!-- ID asignado al tbody para cargar dinámicamente -->
+        <tbody id="tablaHistorial">
           <tr>
-            <td style="font-weight: 600;">Campaña de limpieza</td>
-            <td style="color: var(--text-muted);">15 Oct 2026</td>
-            <td><strong>5 h</strong></td>
-            <td>
-              <a href="#" class="evidence-link">
-                <i class="material-icons" style="font-size: 16px !important;">image</i>
-                IMG_20261015.jpg
-              </a>
-            </td>
-            <td>
-              <span class="status-badge status-comprobado">
-                <span class="dot"></span>Comprobado
-              </span>
-            </td>
-          </tr>
-          <tr>
-            <td style="font-weight: 600;">Apoyo escolar</td>
-            <td style="color: var(--text-muted);">10 Oct 2026</td>
-            <td><strong>4 h</strong></td>
-            <td>
-              <a href="#" class="evidence-link">
-                <i class="material-icons" style="font-size: 16px !important;">image</i>
-                IMG_20261010.jpg
-              </a>
-            </td>
-            <td>
-              <span class="status-badge status-revision">
-                <span class="dot"></span>En revisión
-              </span>
-            </td>
-          </tr>
-          <tr>
-            <td style="font-weight: 600;">Reforestación</td>
-            <td style="color: var(--text-muted);">05 Oct 2026</td>
-            <td><strong>6 h</strong></td>
-            <td>
-              <a href="#" class="evidence-link">
-                <i class="material-icons" style="font-size: 16px !important;">image</i>
-                IMG_20261005.jpg
-              </a>
-            </td>
-            <td>
-              <span class="status-badge status-comprobado">
-                <span class="dot"></span>Comprobado
-              </span>
-            </td>
-          </tr>
-          <tr>
-            <td style="font-weight: 600;">Donación de víveres</td>
-            <td style="color: var(--text-muted);">28 Sep 2026</td>
-            <td><strong>3.5 h</strong></td>
-            <td>
-              <a href="#" class="evidence-link">
-                <i class="material-icons" style="font-size: 16px !important;">image</i>
-                IMG_20260928.jpg
-              </a>
-            </td>
-            <td>
-              <span class="status-badge status-pendiente">
-                <span class="dot"></span>Pendiente
-              </span>
-            </td>
-          </tr>
-          <tr>
-            <td style="font-weight: 600;">Visita a hogar de donaciones</td>
-            <td style="color: var(--text-muted);">20 Sep 2026</td>
-            <td><strong>2 h</strong></td>
-            <td>
-              <a href="#" class="evidence-link">
-                <i class="material-icons" style="font-size: 16px !important;">image</i>
-                IMG_20260920.jpg
-              </a>
-            </td>
-            <td>
-              <span class="status-badge status-proceso">
-                <span class="dot"></span>En proceso
-              </span>
-            </td>
+            <td colspan="5" class="center-align" style="color: var(--text-muted); padding: 30px;">Cargando historial...</td>
           </tr>
         </tbody>
       </table>
     </div>
 
   </div>
+
+  <!-- FOOTER -->
   <footer class="page-footer custom-footer">
     <div class="container footer-container">
       <div class="row style-row">
         
-        <!-- Columna 1: Información de la Plataforma -->
         <div class="col s12 m4">
           <div class="footer-brand">
             <img src="logo.png" alt="HourCheck Logo" class="footer-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x40?text=HourCheck';">
@@ -730,7 +641,6 @@
           </p>
         </div>
 
-        <!-- Columna 2: Enlaces Rápidos -->
         <div class="col s12 m4 center-on-small">
           <h5 class="white-text font-weight-bold">Enlaces Rápidos</h5>
           <ul>
@@ -739,7 +649,6 @@
           </ul>
         </div>
 
-        <!-- Columna 3: Soporte y Ayuda -->
         <div class="col s12 m4">
           <h5 class="white-text font-weight-bold">Soporte</h5>
           <p class="grey-text text-lighten-2">
@@ -753,7 +662,6 @@
       </div>
     </div>
 
-    <!-- Sub-footer con Derechos de Autor -->
     <div class="footer-copyright custom-copyright">
       <div class="container center-align white-text">
         © 2026 HourCheck - Todos los derechos reservados.
@@ -764,17 +672,16 @@
   <!-- Materialize JS CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
-  <!-- Script Firebase y Manejo de Sesión -->
+  <!-- Script Firebase con Carga de Datos en Tiempo Real -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
       authDomain: "hourcheckt.firebaseapp.com",
       projectId: "hourcheckt",
-      storageBucket: "hourcheckt.firebasestorage.app",
       messagingSenderId: "83459752453",
       appId: "1:83459752453:web:1b81724c28973bf567126c"
     };
@@ -788,6 +695,7 @@
       M.Sidenav.init(elems, { edge: 'left', draggable: true });
     });
 
+    // Control de Sesión
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         let nombreUsuario = user.displayName;
@@ -813,6 +721,7 @@
         }
 
         actualizarInterfaz(nombreUsuario || "Estudiante", correoUsuario);
+        escucharHistorialHoras(); // Iniciar listener de datos
       } else {
         window.location.href = "loginU.html";
       }
@@ -830,6 +739,73 @@
 
       if (sidenavName) sidenavName.textContent = nombre;
       if (sidenavEmail) sidenavEmail.textContent = correo;
+    }
+
+    // Función para escuchar la colección de Firestore en tiempo real
+    function escucharHistorialHoras() {
+      const tablaHistorial = document.getElementById("tablaHistorial");
+      const kpiTotalHoras = document.getElementById("kpiTotalHoras");
+      const kpiTotalEvidencias = document.getElementById("kpiTotalEvidencias");
+
+      onSnapshot(collection(db, "HorasSociales"), (snapshot) => {
+        tablaHistorial.innerHTML = "";
+        let sumaHoras = 0;
+        let totalRegistros = snapshot.size;
+
+        if (snapshot.empty) {
+          tablaHistorial.innerHTML = `
+            <tr>
+              <td colspan="5" class="center-align" style="color: var(--text-muted); padding: 30px;">
+                No hay registros de horas guardados aún.
+              </td>
+            </tr>`;
+          kpiTotalHoras.textContent = "0 h";
+          kpiTotalEvidencias.textContent = "0 enviadas";
+          return;
+        }
+
+        snapshot.forEach((docSnap) => {
+          const data = docSnap.data();
+          const horasNum = Number(data.Horas) || 0;
+          sumaHoras += horasNum;
+
+          // Crear fila dinámicamente
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td style="font-weight: 600;">${data.Lugar || 'Sin especificar'}</td>
+            <td style="color: var(--text-muted);">${data["Docente encargado"] || 'N/A'}</td>
+            <td><strong>${horasNum} h</strong></td>
+            <td>
+              ${data.Evidencia 
+                ? `<a href="${data.Evidencia}" target="_blank" class="evidence-link">
+                     <i class="material-icons" style="font-size: 16px !important;">image</i>
+                     Ver Evidencia
+                   </a>`
+                : `<span style="color: var(--text-muted);">Sin evidencia</span>`
+              }
+            </td>
+            <td>
+              <span class="status-badge status-comprobado">
+                <span class="dot"></span>Comprobado
+              </span>
+            </td>
+          `;
+
+          tablaHistorial.appendChild(tr);
+        });
+
+        // Actualizar valores de las tarjetas KPI
+        kpiTotalHoras.textContent = `${sumaHoras} h`;
+        kpiTotalEvidencias.textContent = `${totalRegistros} enviada${totalRegistros === 1 ? '' : 's'}`;
+      }, (error) => {
+        console.error("Error al leer el historial:", error);
+        tablaHistorial.innerHTML = `
+          <tr>
+            <td colspan="5" class="center-align red-text" style="padding: 20px;">
+              Error al cargar los registros.
+            </td>
+          </tr>`;
+      });
     }
   </script>
 </body>
