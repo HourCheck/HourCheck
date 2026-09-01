@@ -307,8 +307,8 @@
         let nombreEncontrado = null;
 
         try {
-          const querySnapshot = await getDocs(collection(db, "Docentes"));
-          console.log(`2. DOCUMENTOS ENCONTRADOS EN LA COLECCIÓN 'Docentes' (${querySnapshot.size}):`);
+          const querySnapshot = await getDocs(collection(db, "Institucion"));
+          console.log(`2. DOCUMENTOS ENCONTRADOS EN LA COLECCIÓN 'Institucion' (${querySnapshot.size}):`);
 
           querySnapshot.forEach((docSnap) => {
             const data = docSnap.data();
