@@ -329,26 +329,29 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
       authDomain: "hourcheckt.firebaseapp.com",
       projectId: "hourcheckt",
-      storageBucket: "hourcheckt.firebasestorage.app",
       messagingSenderId: "83459752453",
       appId: "1:83459752453:web:1b81724c28973bf567126c"
     };
 
-    // Inicializar Firebase
+    // Inicializar Firebase y Firestore
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-    
-    // Apuntamos explícitamente a la dirección gs:// del Storage Bucket
-    const storage = getStorage(app, "gs://hourcheckt.firebasestorage.app");
 
     const form = document.getElementById("horasForm");
     const btnGuardar = document.getElementById("btnGuardar");
+
+    // Función auxiliar para convertir archivos a Base64
+    const convertirABase64 = (archivo) => new Promise((resolve, reject) => {
+      const lector = new FileReader();
+      lector.readAsDataURL(archivo);
+      lector.onload = () => resolve(lector.result);
+      lector.onerror = (error) => reject(error);
+    });
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -365,23 +368,24 @@
         return;
       }
 
+      // Validar tamaño máximo para guardar en Firestore (1MB)
+      if (archivoEvidencia.size > 1024 * 1024) {
+        M.toast({html: 'La imagen debe pesar menos de 1 MB', classes: 'orange rounded'});
+        return;
+      }
+
       try {
         btnGuardar.disabled = true;
         btnGuardar.textContent = "Guardando...";
 
-        // 1. Subir la evidencia a Firebase Storage
-        const nombreArchivo = `evidencias/${Date.now()}_${archivoEvidencia.name}`;
-        const storageRef = ref(storage, nombreArchivo);
-        const snapshot = await uploadBytes(storageRef, archivoEvidencia);
-        
-        // Obtener la URL pública de la evidencia
-        const urlEvidencia = await getDownloadURL(snapshot.ref);
+        // 1. Convertir el archivo seleccionado a texto Base64
+        const evidenciaBase64 = await convertirABase64(archivoEvidencia);
 
-        // 2. Guardar en la colección "HorasSociales"
+        // 2. Guardar directamente en Firestore en la colección "HorasSociales"
         await addDoc(collection(db, "HorasSociales"), {
           "Descripcion": descripcionInput,
           "Docente encargado": docenteInput,
-          "Evidencia": urlEvidencia,
+          "Evidencia": evidenciaBase64,
           "Horas": horasInput,
           "Lugar": lugarInput
         });
