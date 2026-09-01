@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
   <style>
-   /* Estilos del Footer */
+    /* Estilos del Footer */
     .custom-footer {
       background-color: #1557d0 !important;
       border-top-left-radius: 25px;
@@ -33,7 +33,7 @@
     .footer-logo {
       height: 35px;
       width: auto;
-      filter: brightness(0) invert(1); /* Convierte el logo a blanco si es oscuro */
+      filter: brightness(0) invert(1);
     }
 
     .footer-brand h5 {
@@ -81,7 +81,7 @@
       font-family: 'Roboto', sans-serif;
     }
 
-     .top-header {
+    .top-header {
       background-color: #ffffff;
       padding: 15px 40px;
       display: flex;
@@ -103,22 +103,20 @@
       justify-content: center;
       text-decoration: none;
       transition: transform 0.2s;
+      width: 42px;
+      height: 42px;
+      border: 1.5px solid #333;
+      border-radius: 50%;
     }
 
     .back-btn:hover {
       transform: translateX(-3px);
+      background-color: #e0e0e0;
       color: #1557d0;
     }
 
     .back-btn i {
-      font-size: 30px;
-    }
-
-    .header-title {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: #000;
-      margin: 0;
+      font-size: 24px;
     }
 
     .header-right {
@@ -138,46 +136,13 @@
       object-fit: contain;
     }
 
-    /* Contenedor Principal */
-    .main-container {
-      max-width: 1100px;
-      margin: 40px auto;
-      padding: 0 20px;
-    }
-
-  
-    .back-btn {
-      color: #333;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 42px;
-      height: 42px;
-      border: 1.5px solid #333;
-      border-radius: 50%;
-      transition: background 0.3s;
-    }
-    .back-btn:hover {
-      background-color: #e0e0e0;
-    }
-
-    /* Logo ficticio SVG / Estilo */
-    .brand-logo-custom {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-weight: bold;
-      color: #1e293b;
-      font-size: 1.2rem;
-    }
-
     /* Targeta / Card estilo UI */
     .custom-card {
       background: #ffffff;
       border-radius: 20px;
       padding: 35px 40px;
       box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.05);
-      margin-top: 10px;
+      margin-top: 20px;
     }
 
     .form-label {
@@ -245,28 +210,28 @@
 </head>
 <body>
 
- <!-- Header Superior -->
+  <!-- Header Superior -->
   <header class="top-header">
     <div class="header-left">
-      <!-- Flecha de regreso al index.html -->
       <a href="mainPE.html" class="back-btn" title="Volver al Inicio">
         <i class="material-icons">arrow_back</i>
       </a>
     </div>
 
-    <!-- Logo a la derecha -->
     <div class="header-right">
       <div class="logo-container">
         <img src="logo.png" alt="HourCheck Logo" class="logo-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x40?text=HourCheck';">
       </div>
     </div>
   </header>
+
   <div class="container">
     <div class="row">
       <div class="col s12 m8 offset-m2 l6 offset-l3">
         <div class="custom-card">
 
-          <form action="#" method="POST" enctype="multipart/form-data">
+          <!-- Formulario con id="horasForm" -->
+          <form id="horasForm">
 
             <div>
               <label class="form-label" for="lugar">Lugar donde se realizó</label>
@@ -301,8 +266,9 @@
               </div>
             </div>
 
+            <!-- Botón con id="btnGuardar" -->
             <div style="margin-top: 15px;">
-              <button class="btn waves-effect waves-light btn-orange" type="submit">
+              <button class="btn waves-effect waves-light btn-orange" type="submit" id="btnGuardar">
                 Guardar Registro
               </button>
             </div>
@@ -313,12 +279,12 @@
       </div>
     </div>
   </div>
+
   <!-- FOOTER -->
-<footer class="page-footer custom-footer">
+  <footer class="page-footer custom-footer">
     <div class="container footer-container">
       <div class="row style-row">
         
-        <!-- Columna 1: Información de la Plataforma -->
         <div class="col s12 m4">
           <div class="footer-brand">
             <img src="logo.png" alt="HourCheck Logo" class="footer-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x40?text=HourCheck';">
@@ -329,7 +295,6 @@
           </p>
         </div>
 
-        <!-- Columna 2: Enlaces Rápidos -->
         <div class="col s12 m4 center-on-small">
           <h5 class="white-text font-weight-bold">Enlaces Rápidos</h5>
           <ul>
@@ -338,7 +303,6 @@
           </ul>
         </div>
 
-        <!-- Columna 3: Soporte y Ayuda -->
         <div class="col s12 m4">
           <h5 class="white-text font-weight-bold">Soporte</h5>
           <p class="grey-text text-lighten-2">
@@ -352,13 +316,87 @@
       </div>
     </div>
 
-    <!-- Sub-footer con Derechos de Autor -->
     <div class="footer-copyright custom-copyright">
       <div class="container center-align white-text">
         © 2026 HourCheck - Todos los derechos reservados.
       </div>
     </div>
   </footer>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+  <!-- Firebase JavaScript Modular -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
+      authDomain: "hourcheckt.firebaseapp.com",
+      projectId: "hourcheckt",
+      storageBucket: "hourcheckt.firebasestorage.app",
+      messagingSenderId: "83459752453",
+      appId: "1:83459752453:web:1b81724c28973bf567126c"
+    };
+
+    // Inicializar Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    
+    // Apuntamos explícitamente a la dirección gs:// del Storage Bucket
+    const storage = getStorage(app, "gs://hourcheckt.firebasestorage.app");
+
+    const form = document.getElementById("horasForm");
+    const btnGuardar = document.getElementById("btnGuardar");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      // Capturar datos de los inputs del HTML
+      const lugarInput = document.getElementById("lugar").value;
+      const docenteInput = document.getElementById("docente").value;
+      const horasInput = parseFloat(document.getElementById("horas").value);
+      const descripcionInput = document.getElementById("descripcion").value;
+      const archivoEvidencia = document.getElementById("evidencia").files[0];
+
+      if (!archivoEvidencia) {
+        M.toast({html: 'Por favor adjunta la evidencia', classes: 'red rounded'});
+        return;
+      }
+
+      try {
+        btnGuardar.disabled = true;
+        btnGuardar.textContent = "Guardando...";
+
+        // 1. Subir la evidencia a Firebase Storage
+        const nombreArchivo = `evidencias/${Date.now()}_${archivoEvidencia.name}`;
+        const storageRef = ref(storage, nombreArchivo);
+        const snapshot = await uploadBytes(storageRef, archivoEvidencia);
+        
+        // Obtener la URL pública de la evidencia
+        const urlEvidencia = await getDownloadURL(snapshot.ref);
+
+        // 2. Guardar en la colección "HorasSociales"
+        await addDoc(collection(db, "HorasSociales"), {
+          "Descripcion": descripcionInput,
+          "Docente encargado": docenteInput,
+          "Evidencia": urlEvidencia,
+          "Horas": horasInput,
+          "Lugar": lugarInput
+        });
+
+        M.toast({html: '¡Registro guardado exitosamente!', classes: 'green rounded'});
+        form.reset();
+
+      } catch (error) {
+        console.error("Error al guardar en Firebase:", error);
+        M.toast({html: 'Error al guardar el registro', classes: 'red rounded'});
+      } finally {
+        btnGuardar.disabled = false;
+        btnGuardar.textContent = "Guardar Registro";
+      }
+    });
+  </script>
 </body>
 </html>
