@@ -393,10 +393,14 @@
         M.toast({html: '¡Registro guardado exitosamente!', classes: 'green rounded'});
         form.reset();
 
+        // 3. Redirigir a la página de inicio después de 1.5 segundos
+        setTimeout(() => {
+          window.location.href = "mainPE.html";
+        }, 1500);
+
       } catch (error) {
         console.error("Error al guardar en Firebase:", error);
         M.toast({html: 'Error al guardar el registro', classes: 'red rounded'});
-      } finally {
         btnGuardar.disabled = false;
         btnGuardar.textContent = "Guardar Registro";
       }

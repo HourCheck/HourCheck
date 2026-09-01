@@ -318,6 +318,8 @@
       align-items: center;
       gap: 20px;
       transition: transform 0.2s, box-shadow 0.2s;
+      text-decoration: none;
+      color: inherit;
     }
 
     .kpi-card:hover {
@@ -354,20 +356,26 @@
       flex-shrink: 0;
     }
 
-    .calendar-badge {
+    /* Estilo para la nueva tarjeta de Acción (Subir Jornada) */
+    .action-badge {
       width: 72px;
       height: 72px;
       border-radius: 50%;
-      background-color: #ef4444;
+      background-color: #2563eb;
       display: flex;
       align-items: center;
       justify-content: center;
       color: white;
       flex-shrink: 0;
+      transition: background-color 0.2s;
     }
 
-    .calendar-badge i {
-      font-size: 2.2rem !important;
+    .kpi-card:hover .action-badge {
+      background-color: #1d4ed8;
+    }
+
+    .action-badge i {
+      font-size: 2.5rem !important;
     }
 
     .kpi-title {
@@ -444,18 +452,20 @@
       border-bottom: none;
     }
 
-    .evidence-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      color: var(--primary-color);
-      text-decoration: none;
-      font-weight: 500;
-      font-size: 0.88rem;
+    /* Estilos para la miniatura de la imagen (Evidencia) */
+    .img-evidencia {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: transform 0.2s;
     }
 
-    .evidence-link:hover {
-      text-decoration: underline;
+    .img-evidencia:hover {
+      transform: scale(1.08);
     }
 
     /* Badges */
@@ -510,7 +520,8 @@
     
     <li><a href="historialE.html" class="waves-effect"><i class="material-icons">history</i>Historial de Horas</a></li>
     <li><a href="evidencias.html" class="waves-effect"><i class="material-icons">upload_file</i>Subir Evidencias</a></li>
-    <li><a href="actividadesE.html" class="waves-effect"><i class="material-icons">event_available</i>Próximas Actividades</a></li>
+    <!-- Modificado: Subir Jornada -->
+    <li><a href="evidencias.html" class="waves-effect"><i class="material-icons">add_circle_outline</i>Subir Jornada</a></li>
   </ul>
 
   <!-- Encabezado Superior -->
@@ -569,7 +580,6 @@
         </div>
         <div>
           <div class="kpi-title">Horas registradas</div>
-          <!-- ID asignado para actualizar en tiempo real -->
           <div class="kpi-value" id="kpiTotalHoras">0 h</div>
           <div class="kpi-footer">De 150 h requeridas</div>
         </div>
@@ -581,22 +591,22 @@
         </div>
         <div>
           <div class="kpi-title">Evidencias enviadas</div>
-          <!-- ID asignado para actualizar la cantidad de registros -->
           <div class="kpi-value" id="kpiTotalEvidencias">0 enviadas</div>
           <div class="kpi-footer">Completadas</div>
         </div>
       </div>
 
-      <div class="kpi-card">
-        <div class="calendar-badge">
-          <i class="material-icons">event</i>
+      <!-- Tarjeta Modificada: Subir Jornada (Clicable) -->
+      <a href="evidencias.html" class="kpi-card">
+        <div class="action-badge">
+          <i class="material-icons">add_circle</i>
         </div>
         <div>
-          <div class="kpi-title">Próxima Actividad</div>
-          <div class="kpi-value">15 Oct 2026</div>
-          <div class="kpi-footer">Campaña de limpieza</div>
+          <div class="kpi-title">Nueva Actividad</div>
+          <div class="kpi-value">Subir Jornada</div>
+          <div class="kpi-footer">Registrar horas y evidencia &rarr;</div>
         </div>
-      </div>
+      </a>
     </main>
 
     <!-- Historial de Horas -->
@@ -615,7 +625,6 @@
             <th>Estado</th>
           </tr>
         </thead>
-        <!-- ID asignado al tbody para cargar dinámicamente -->
         <tbody id="tablaHistorial">
           <tr>
             <td colspan="5" class="center-align" style="color: var(--text-muted); padding: 30px;">Cargando historial...</td>
@@ -626,7 +635,6 @@
 
   </div>
 
-  <!-- FOOTER -->
   <footer class="page-footer custom-footer">
     <div class="container footer-container">
       <div class="row style-row">
@@ -721,7 +729,7 @@
         }
 
         actualizarInterfaz(nombreUsuario || "Estudiante", correoUsuario);
-        escucharHistorialHoras(); // Iniciar listener de datos
+        escucharHistorialHoras();
       } else {
         window.location.href = "loginU.html";
       }
@@ -741,7 +749,7 @@
       if (sidenavEmail) sidenavEmail.textContent = correo;
     }
 
-    // Función para escuchar la colección de Firestore en tiempo real
+    // Función para escuchar Firestore y renderizar imágenes <img>
     function escucharHistorialHoras() {
       const tablaHistorial = document.getElementById("tablaHistorial");
       const kpiTotalHoras = document.getElementById("kpiTotalHoras");
@@ -777,10 +785,7 @@
             <td><strong>${horasNum} h</strong></td>
             <td>
               ${data.Evidencia 
-                ? `<a href="${data.Evidencia}" target="_blank" class="evidence-link">
-                     <i class="material-icons" style="font-size: 16px !important;">image</i>
-                     Ver Evidencia
-                   </a>`
+                ? `<img src="${data.Evidencia}" alt="Evidencia" class="img-evidencia materialboxed" />`
                 : `<span style="color: var(--text-muted);">Sin evidencia</span>`
               }
             </td>
@@ -794,7 +799,11 @@
           tablaHistorial.appendChild(tr);
         });
 
-        // Actualizar valores de las tarjetas KPI
+        // Inicializar la funcionalidad Materialbox de Materialize para que al hacer clic en la imagen se amplíe flotante
+        const materialboxedElems = document.querySelectorAll('.materialboxed');
+        M.Materialbox.init(materialboxedElems);
+
+        // Actualizar tarjetas KPI
         kpiTotalHoras.textContent = `${sumaHoras} h`;
         kpiTotalEvidencias.textContent = `${totalRegistros} enviada${totalRegistros === 1 ? '' : 's'}`;
       }, (error) => {
