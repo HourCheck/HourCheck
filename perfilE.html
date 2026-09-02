@@ -9,6 +9,72 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
   <style>
+     .custom-footer {
+      background-color: #1557d0 !important;
+      border-top-left-radius: 25px;
+      border-top-right-radius: 25px;
+      margin-top: 50px;
+      padding-top: 30px !important;
+    }
+
+    .footer-container {
+      width: 90%;
+      max-width: 1100px;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .footer-logo {
+      height: 35px;
+      width: auto;
+      filter: brightness(0) invert(1);
+    }
+
+    .footer-brand h5 {
+      margin: 0;
+      font-size: 1.4rem;
+    }
+
+    .footer-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-bottom: 8px;
+      transition: color 0.2s, transform 0.2s;
+    }
+
+    .footer-link:hover {
+      color: #ff5500 !important;
+      transform: translateX(4px);
+    }
+
+    .footer-btn {
+      background-color: rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      text-transform: none;
+      font-weight: 600;
+      margin-top: 5px;
+    }
+
+    .footer-btn:hover {
+      background-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .custom-copyright {
+      background-color: rgba(0, 0, 0, 0.12) !important;
+      font-size: 0.85rem;
+      padding: 15px 0;
+    }
+
+    .font-weight-bold {
+      font-weight: 700;
+    }
+
     body {
       background-color: #f7f9fc;
       font-family: 'Roboto', sans-serif;
@@ -40,6 +106,7 @@
       height: 42px;
       border: 1.5px solid #333;
       border-radius: 50%;
+      cursor: pointer;
     }
 
     .back-btn:hover {
@@ -203,7 +270,7 @@
 
   <header class="top-header">
     <div class="header-left">
-      <a href="mainPE.html" class="back-btn" title="Volver al Inicio">
+      <a href="#" id="btnVolver" class="back-btn" title="Volver al Inicio">
         <i class="material-icons">arrow_back</i>
       </a>
     </div>
@@ -275,6 +342,40 @@
   </div>
 
   <footer class="page-footer custom-footer">
+    <div class="container footer-container">
+      <div class="row style-row">
+        
+        <div class="col s12 m4">
+          <div class="footer-brand">
+            <img src="logo.png" alt="HourCheck Logo" class="footer-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x40?text=HourCheck';">
+            <h5 class="white-text font-weight-bold">HourCheck</h5>
+          </div>
+          <p class="grey-text text-lighten-2">
+            Sistema para la gestión y seguimiento del Servicio Social Estudiantil. Facilitando la validación y control de horas de forma eficiente.
+          </p>
+        </div>
+
+        <div class="col s12 m4 center-on-small">
+          <h5 class="white-text font-weight-bold">Enlaces Rápidos</h5>
+          <ul>
+            <li><a class="grey-text text-lighten-3 footer-link" href="index.html"><i class="material-icons tiny">chevron_right</i> Inicio</a></li>
+            <li><a class="grey-text text-lighten-3 footer-link" href="saberCualP.html"><i class="material-icons tiny">chevron_right</i> Guía de Perfiles</a></li>
+          </ul>
+        </div>
+
+        <div class="col s12 m4">
+          <h5 class="white-text font-weight-bold">Soporte</h5>
+          <p class="grey-text text-lighten-2">
+            ¿Tienes dudas con el registro de tus horas?
+          </p>
+          <a href="mailto:soporte@hourcheck.com" class="btn-flat white-text footer-btn">
+            <i class="material-icons left">help_outline</i> Contactar Soporte
+          </a>
+        </div>
+
+      </div>
+    </div>
+
     <div class="footer-copyright custom-copyright">
       <div class="container center-align white-text">
         © 2026 HourCheck - Todos los derechos reservados.
@@ -317,6 +418,7 @@
     const labelNombre = document.getElementById("labelNombre");
     const avatarIcon = document.getElementById("avatarIcon");
     const btnGuardarPerfil = document.getElementById("btnGuardarPerfil");
+    const btnVolver = document.getElementById("btnVolver");
 
     // Detección de Usuario
     onAuthStateChanged(auth, async (user) => {
@@ -326,11 +428,9 @@
 
         const fallbackNombre = user.displayName || user.email.split('@')[0];
         
-        // 1. Asignación inmediata visual para quitar el "Cargando..."
         nombreInput.value = fallbackNombre;
         nombreHeader.textContent = fallbackNombre;
 
-        // 2. Buscar datos reales en Firestore
         await obtenerDatosRol(user.uid, fallbackNombre);
 
       } else {
@@ -344,7 +444,6 @@
         let docSnap = null;
         let data = {};
 
-        // Lista de colecciones posibles
         const colecciones = ["Usuarios", "Estudiantes", "Docentes", "Instituciones"];
 
         for (const col of colecciones) {
@@ -359,7 +458,6 @@
         if (docSnap && docSnap.exists()) {
           data = docSnap.data();
           
-          // Asignar rol según la colección o según el campo interno 'rol'
           if (data.rol) {
             rolDetectado = data.rol.toLowerCase();
           } else if (coleccionEfectiva === "Docentes") {
@@ -375,7 +473,6 @@
         nombreInput.value = nombreReal;
         nombreHeader.textContent = nombreReal;
 
-        // Configuración de la interfaz según el rol
         adaptarInterfazPorRol(rolDetectado, data);
 
         if (rolDetectado === "estudiante") {
@@ -435,6 +532,19 @@
       }
     }
 
+    // Redirección dinámica según el rol al presionar la flecha
+    btnVolver.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      if (rolDetectado === "docente") {
+        window.location.href = "mainPD.html";
+      } else if (rolDetectado === "institucion" || rolDetectado === "instituciones") {
+        window.location.href = "mainPI.html";
+      } else {
+        window.location.href = "mainPE.html";
+      }
+    });
+
     // Guardar actualización de perfil
     document.getElementById("perfilForm").addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -457,7 +567,6 @@
           payload.codigoInstitucion = extraInput.value.trim();
         }
 
-        // Se guarda en la colección correspondiente
         await setDoc(doc(db, coleccionEfectiva, usuarioActual.uid), payload, { merge: true });
 
         nombreHeader.textContent = nombreInput.value.trim();
