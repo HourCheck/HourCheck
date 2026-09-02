@@ -327,15 +327,17 @@
       box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
     }
 
+    /* Dona interactiva según avance de horas */
     .donut-chart {
       width: 72px;
       height: 72px;
       border-radius: 50%;
-      background: conic-gradient(#2563eb 0% 67%, #f97316 67% 100%);
+      background: conic-gradient(#2563eb 0%, #e2e8f0 0%);
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
+      transition: background 0.3s ease;
     }
 
     .donut-inner {
@@ -356,7 +358,6 @@
       flex-shrink: 0;
     }
 
-    /* Estilo para la nueva tarjeta de Acción (Subir Jornada) */
     .action-badge {
       width: 72px;
       height: 72px;
@@ -452,7 +453,6 @@
       border-bottom: none;
     }
 
-    /* Estilos para la miniatura de la imagen (Evidencia) */
     .img-evidencia {
       width: 60px;
       height: 60px;
@@ -468,7 +468,6 @@
       transform: scale(1.08);
     }
 
-    /* Badges */
     .status-badge {
       display: inline-flex;
       align-items: center;
@@ -523,7 +522,7 @@
     <li><a href="evidencias.html" class="waves-effect"><i class="material-icons">add_circle_outline</i>Subir Jornada</a></li>
   </ul>
 
-  <!-- Encabezado Superiorkuyggfheb -->
+  <!-- Encabezado Superior -->
   <header class="top-header">
     <div class="header-left">
       <a href="#" data-target="slide-out" class="sidenav-trigger btn-menu-trigger">
@@ -574,13 +573,13 @@
     <!-- Tarjetas KPI -->
     <main class="kpi-grid">
       <div class="kpi-card">
-        <div class="donut-chart">
+        <div class="donut-chart" id="donutHoras">
           <div class="donut-inner"></div>
         </div>
         <div>
           <div class="kpi-title">Horas registradas</div>
-          <div class="kpi-value" id="kpiTotalHoras">0 h</div>
-          <div class="kpi-footer">De 150 h requeridas</div>
+          <div class="kpi-value" id="kpiTotalHoras">0 / 150 h</div>
+          <div class="kpi-footer" id="kpiHorasFooter">De 150 h requeridas</div>
         </div>
       </div>
 
@@ -697,6 +696,8 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    const META_HORAS = 150; // Límite estricto de horas requeridas
+
     document.addEventListener('DOMContentLoaded', function() {
       var elems = document.querySelectorAll('.sidenav');
       M.Sidenav.init(elems, { edge: 'left', draggable: true });
@@ -728,7 +729,7 @@
         }
 
         actualizarInterfaz(nombreUsuario || "Estudiante", correoUsuario);
-        escucharHistorialHorasUsuario(user.uid); // Pass unique User ID
+        escucharHistorialHorasUsuario(user.uid);
       } else {
         window.location.href = "loginU.html";
       }
@@ -748,13 +749,14 @@
       if (sidenavEmail) sidenavEmail.textContent = correo;
     }
 
-    // Consulta con where("userId", "==", userId)
+    // Consulta filtrada por UID con límite de 150 hrs
     function escucharHistorialHorasUsuario(userId) {
       const tablaHistorial = document.getElementById("tablaHistorial");
       const kpiTotalHoras = document.getElementById("kpiTotalHoras");
       const kpiTotalEvidencias = document.getElementById("kpiTotalEvidencias");
+      const kpiHorasFooter = document.getElementById("kpiHorasFooter");
+      const donutHoras = document.getElementById("donutHoras");
 
-      // Construcción del Query filtrado por el UID del usuario logueado
       const q = query(
         collection(db, "HorasSociales"),
         where("userId", "==", userId)
@@ -772,8 +774,9 @@
                 No tienes registros de horas guardados aún.
               </td>
             </tr>`;
-          kpiTotalHoras.textContent = "0 h";
+          kpiTotalHoras.textContent = `0 / ${META_HORAS} h`;
           kpiTotalEvidencias.textContent = "0 enviadas";
+          donutHoras.style.background = `conic-gradient(#2563eb 0%, #e2e8f0 0%)`;
           return;
         }
 
@@ -782,7 +785,6 @@
           const horasNum = Number(data.Horas) || 0;
           sumaHoras += horasNum;
 
-          // Crear fila dinámicamente
           const tr = document.createElement("tr");
           tr.innerHTML = `
             <td style="font-weight: 600;">${data.Lugar || 'Sin especificar'}</td>
@@ -804,13 +806,31 @@
           tablaHistorial.appendChild(tr);
         });
 
-        // Inicializar visor de imagen flotante Materialbox
+        // Inicializar visor de imagen Materialbox
         const materialboxedElems = document.querySelectorAll('.materialboxed');
         M.Materialbox.init(materialboxedElems);
 
-        // Actualizar indicadores KPI
-        kpiTotalHoras.textContent = `${sumaHoras} h`;
+        // Control del Límite de 150 Horas
+        const horasVisuales = Math.min(sumaHoras, META_HORAS);
+        const porcentajeAcceso = Math.min((sumaHoras / META_HORAS) * 100, 100);
+
+        // Actualizar Card KPI con el Límite 150
+        kpiTotalHoras.textContent = `${horasVisuales} / ${META_HORAS} h`;
+        
+        if (sumaHoras >= META_HORAS) {
+          kpiHorasFooter.textContent = "¡Meta completada!";
+          kpiHorasFooter.style.color = "#16a34a";
+        } else {
+          kpiHorasFooter.textContent = `Faltan ${META_HORAS - horasVisuales} h`;
+          kpiHorasFooter.style.color = "var(--primary-color)";
+        }
+
+        // Actualizar el diseño circular de la dona según el porcentaje
+        donutHoras.style.background = `conic-gradient(#2563eb ${porcentajeAcceso}%, #e2e8f0 ${porcentajeAcceso}%)`;
+
+        // Actualizar KPI Evidencias
         kpiTotalEvidencias.textContent = `${totalRegistros} enviada${totalRegistros === 1 ? '' : 's'}`;
+
       }, (error) => {
         console.error("Error al leer el historial del usuario:", error);
         tablaHistorial.innerHTML = `

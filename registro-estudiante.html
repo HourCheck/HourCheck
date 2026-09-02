@@ -404,7 +404,8 @@ onAuthStateChanged(auth, (user) => {
       // Marcar activo en Realtime Database
       set(userStatusRtdbRef, {
         activo: true,
-        ultimo_acceso: Date.now()
+        ultimo_acceso: Date.now().toISOString()
+  
       });
 
       // Actualizar estado activo en Firestore

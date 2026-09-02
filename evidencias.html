@@ -328,7 +328,7 @@
   <!-- Firebase JavaScript Modular -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, serverTimestamp, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     const firebaseConfig = {
@@ -343,6 +343,7 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
 
+    const META_HORAS = 150;
     let usuarioActual = null;
 
     // Verificar si hay un usuario logueado
@@ -367,6 +368,21 @@
         lector.onerror = (error) => reject(error);
       });
     };
+
+    // Función para obtener las horas acumuladas en Firestore
+    async function obtenerHorasAcumuladas(userId) {
+      let totalHoras = 0;
+      const q = query(
+        collection(db, "HorasSociales"),
+        where("userId", "==", userId)
+      );
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+        totalHoras += Number(data.Horas) || 0;
+      });
+      return totalHoras;
+    }
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -395,11 +411,37 @@
 
       try {
         btnGuardar.disabled = true;
+        btnGuardar.textContent = "Verificando horas...";
+
+        // 1. Obtener y verificar el límite de horas acumuladas
+        const horasAcumuladas = await obtenerHorasAcumuladas(usuarioActual.uid);
+
+        if (horasAcumuladas >= META_HORAS) {
+          M.toast({html: 'Ya has alcanzado la meta límite de 150 horas.', classes: 'orange rounded'});
+          btnGuardar.disabled = false;
+          btnGuardar.textContent = "Guardar Registro";
+          return;
+        }
+
+        const horasRestantes = META_HORAS - horasAcumuladas;
+
+        if (horasInput > horasRestantes) {
+          M.toast({
+            html: `Solo te faltan ${horasRestantes} h para completar las 150 h. Ajusta las horas ingresadas.`, 
+            classes: 'orange rounded',
+            displayLength: 5000
+          });
+          btnGuardar.disabled = false;
+          btnGuardar.textContent = "Guardar Registro";
+          return;
+        }
+
         btnGuardar.textContent = "Guardando registro...";
 
+        // 2. Convertir evidencia a Base64
         const evidenciaBase64 = await convertirABase64(archivoEvidencia);
 
-        // Guardado de documento con las claves exactas vinculadas al usuario activo
+        // 3. Guardado en Firestore vinculando al UID del usuario activo
         await addDoc(collection(db, "HorasSociales"), {
           userId: usuarioActual.uid,
           email: usuarioActual.email || "",
