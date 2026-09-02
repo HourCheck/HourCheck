@@ -329,6 +329,7 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
+    const rtdb = getDatabase(app);
 
     const registroForm = document.getElementById("registroForm");
     const btnRegistrar = document.getElementById("btnRegistrar");
@@ -379,6 +380,45 @@
         btnRegistrar.textContent = "Registrarse";
       }
     });
+    onAuthStateChanged(auth, (user) => {
+  if (user) {
+    const userStatusRtdbRef = ref(rtdb, `/status/${user.uid}`);
+    const userFirestoreRef = doc(db, "Institucion", user.uid);
+
+    // Escuchar el estado de conexión con los servidores de Firebase
+    const isConnectedRef = ref(rtdb, ".info/connected");
+    
+    onValue(isConnectedRef, async (snapshot) => {
+      if (snapshot.val() === false) {
+        return;
+      }
+
+      // 1. Programar la actualización a 'false' cuando el usuario se desconecte o cierre la pestaña
+      await onDisconnect(userStatusRtdbRef).set({
+        activo: false,
+        ultimo_acceso: Date.now()
+      });
+
+      // 2. Establecer 'true' en Realtime Database al conectarse
+      set(userStatusRtdbRef, {
+        activo: true,
+        ultimo_acceso: Date.now()
+      });
+
+      // 3. Actualizar directamente en Firestore que el usuario está activo
+      await updateDoc(userFirestoreRef, {
+        activo: true
+      });
+    });
+
+    // Escuchar el cambio de desconexión para reflejarlo en Firestore si la app sigue abierta
+    window.addEventListener("beforeunload", async () => {
+      await updateDoc(userFirestoreRef, {
+        activo: false
+      });
+    });
+  }
+  });
   </script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>

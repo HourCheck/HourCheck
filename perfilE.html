@@ -201,7 +201,6 @@
 </head>
 <body>
 
-  <!-- Header -->
   <header class="top-header">
     <div class="header-left">
       <a href="index.html" class="back-btn" title="Volver al Inicio">
@@ -221,17 +220,15 @@
       <div class="col s12 m8 offset-m2 l6 offset-l3">
         <div class="custom-card center-align">
 
-          <!-- Avatar -->
           <div class="avatar-container">
             <div class="avatar-placeholder" id="avatarIcon">
               <i class="material-icons" style="font-size: 3rem;">person</i>
             </div>
           </div>
 
-          <h5 class="profile-name" id="nombreHeader">Cargando...</h5>
-          <span class="profile-badge" id="profileRole">Usuario</span>
+          <h5 class="profile-name" id="nombreHeader">Usuario</h5>
+          <span class="profile-badge" id="profileRole">Estudiante</span>
 
-          <!-- Resumen de Horas (Solo visible para Estudiantes) -->
           <div class="summary-box" id="cajaHoras" style="display: none;">
             <div class="summary-item">
               <h6>HORAS COMPLETADAS</h6>
@@ -243,12 +240,11 @@
             </div>
           </div>
 
-          <!-- Formulario Dinámico -->
           <form id="perfilForm" class="left-align">
 
             <div>
               <label class="form-label" id="labelNombre" for="nombre">Nombre Completo</label>
-              <input id="nombre" type="text" class="custom-input" placeholder="Nombre" required>
+              <input id="nombre" type="text" class="custom-input" placeholder="Tu nombre" required>
             </div>
 
             <div>
@@ -256,9 +252,8 @@
               <input id="email" type="email" class="custom-input" disabled>
             </div>
 
-            <!-- Campo Específico para Docente e Institución -->
             <div id="campoExtra" style="display: none;">
-              <label class="form-label" id="labelExtra" for="extraInput">Especialidad / Cargo</label>
+              <label class="form-label" id="labelExtra" for="extraInput">Detalle</label>
               <input id="extraInput" type="text" class="custom-input" placeholder="...">
             </div>
 
@@ -270,7 +265,6 @@
 
           </form>
 
-          <!-- Cerrar Sesión -->
           <button class="btn waves-effect btn-logout" id="btnCerrarSesion">
             <i class="material-icons left" style="font-size: 1.2rem;">logout</i> Cerrar Sesión
           </button>
@@ -280,7 +274,6 @@
     </div>
   </div>
 
-  <!-- Footer -->
   <footer class="page-footer custom-footer">
     <div class="footer-copyright custom-copyright">
       <div class="container center-align white-text">
@@ -291,7 +284,6 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
-  <!-- Firebase Script Universal -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, doc, getDoc, setDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -310,7 +302,8 @@
     const auth = getAuth(app);
 
     let usuarioActual = null;
-    let rolDetectado = "estudiante"; // Valor por defecto
+    let rolDetectado = "estudiante";
+    let coleccionEfectiva = "Usuarios";
 
     const nombreInput = document.getElementById("nombre");
     const emailInput = document.getElementById("email");
@@ -333,7 +326,11 @@
 
         const fallbackNombre = user.displayName || user.email.split('@')[0];
         
-        // 1. Obtener datos y Rol desde Firestore
+        // 1. Asignación inmediata visual para quitar el "Cargando..."
+        nombreInput.value = fallbackNombre;
+        nombreHeader.textContent = fallbackNombre;
+
+        // 2. Buscar datos reales en Firestore
         await obtenerDatosRol(user.uid, fallbackNombre);
 
       } else {
@@ -341,16 +338,37 @@
       }
     });
 
-    // Obtener información y configurar la vista según el Rol
+    // Búsqueda inteligente en Firestore a través de colecciones
     async function obtenerDatosRol(uid, fallbackNombre) {
       try {
-        const userRef = doc(db, "Usuarios", uid);
-        const docSnap = await getDoc(userRef);
-
+        let docSnap = null;
         let data = {};
-        if (docSnap.exists()) {
+
+        // Lista de colecciones posibles
+        const colecciones = ["Usuarios", "Estudiantes", "Docentes", "Instituciones"];
+
+        for (const col of colecciones) {
+          const snap = await getDoc(doc(db, col, uid));
+          if (snap.exists()) {
+            docSnap = snap;
+            coleccionEfectiva = col;
+            break;
+          }
+        }
+
+        if (docSnap && docSnap.exists()) {
           data = docSnap.data();
-          rolDetectado = (data.rol || "estudiante").toLowerCase();
+          
+          // Asignar rol según la colección o según el campo interno 'rol'
+          if (data.rol) {
+            rolDetectado = data.rol.toLowerCase();
+          } else if (coleccionEfectiva === "Docentes") {
+            rolDetectado = "docente";
+          } else if (coleccionEfectiva === "Instituciones") {
+            rolDetectado = "institucion";
+          } else {
+            rolDetectado = "estudiante";
+          }
         }
 
         const nombreReal = data.nombre || fallbackNombre;
@@ -365,44 +383,41 @@
         }
 
       } catch (error) {
-        console.error("Error al obtener rol:", error);
-        nombreInput.value = fallbackNombre;
-        nombreHeader.textContent = fallbackNombre;
+        console.error("Error al obtener perfil:", error);
         adaptarInterfazPorRol("estudiante", {});
       }
     }
 
-    // Adapta los elementos visibles según el tipo de perfil
+    // Adaptar campos e íconos visibles
     function adaptarInterfazPorRol(rol, data) {
-      profileRole.textContent = rol;
-
-      if (rol === "estudiante") {
-        avatarIcon.innerHTML = `<i class="material-icons" style="font-size: 3rem;">person</i>`;
-        labelNombre.textContent = "Nombre Completo del Estudiante";
-        cajaHoras.style.display = "flex";
-        campoExtra.style.display = "none";
-
-      } else if (rol === "docente") {
+      if (rol === "docente") {
+        profileRole.textContent = "Docente Encargado";
         avatarIcon.innerHTML = `<i class="material-icons" style="font-size: 3rem;">school</i>`;
         labelNombre.textContent = "Nombre del Docente";
-        profileRole.textContent = "Docente Encargado";
         cajaHoras.style.display = "none";
         campoExtra.style.display = "block";
         labelExtra.textContent = "Materia / Especialidad";
         extraInput.value = data.materia || "";
 
       } else if (rol === "institucion" || rol === "instituciones") {
+        profileRole.textContent = "Institución Educativa";
         avatarIcon.innerHTML = `<i class="material-icons" style="font-size: 3rem;">account_balance</i>`;
         labelNombre.textContent = "Nombre de la Institución";
-        profileRole.textContent = "Institución Educativa";
         cajaHoras.style.display = "none";
         campoExtra.style.display = "block";
         labelExtra.textContent = "Código de la Institución";
         extraInput.value = data.codigoInstitucion || "";
+
+      } else {
+        profileRole.textContent = "Estudiante";
+        avatarIcon.innerHTML = `<i class="material-icons" style="font-size: 3rem;">person</i>`;
+        labelNombre.textContent = "Nombre Completo del Estudiante";
+        cajaHoras.style.display = "flex";
+        campoExtra.style.display = "none";
       }
     }
 
-    // Calcular horas solo si es estudiante
+    // Totalizar horas registradas
     async function calcularHorasEstudiante(uid) {
       try {
         const q = query(collection(db, "HorasSociales"), where("userId", "==", uid));
@@ -420,7 +435,7 @@
       }
     }
 
-    // Guardar cambios en el documento "Usuarios"
+    // Guardar actualización de perfil
     document.getElementById("perfilForm").addEventListener("submit", async (e) => {
       e.preventDefault();
 
@@ -442,7 +457,8 @@
           payload.codigoInstitucion = extraInput.value.trim();
         }
 
-        await setDoc(doc(db, "Usuarios", usuarioActual.uid), payload, { merge: true });
+        // Se guarda en la colección correspondiente
+        await setDoc(doc(db, coleccionEfectiva, usuarioActual.uid), payload, { merge: true });
 
         nombreHeader.textContent = nombreInput.value.trim();
         M.toast({html: '¡Perfil actualizado con éxito!', classes: 'green rounded'});
