@@ -9,8 +9,8 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
   <style>
-       /* Footer */
-   .custom-footer {
+    /* Footer */
+    .custom-footer {
       background-color: #1557d0 !important;
       border-top-left-radius: 25px;
       border-top-right-radius: 25px;
@@ -33,7 +33,7 @@
     .footer-logo {
       height: 35px;
       width: auto;
-      filter: brightness(0) invert(1); /* Convierte el logo a blanco si es oscuro */
+      filter: brightness(0) invert(1);
     }
 
     .footer-brand h5 {
@@ -215,9 +215,11 @@
   <div class="main-container">
     <div class="layout-wrapper">
       <div class="brand-section">
-        <div id="boton-position"> <a href="loginU.html?perfil=maestro" class="btn-back waves-effect waves-light" title="Volver">
-                <i class="material-icons">arrow_back</i>
-              </a></div>
+        <div id="boton-position"> 
+          <a href="loginU.html?perfil=maestro" class="btn-back waves-effect waves-light" title="Volver">
+            <i class="material-icons">arrow_back</i>
+          </a>
+        </div>
         <h1 class="main-title">Registro de<br>Docente</h1>
         <img src="Transparente (1).png" alt="HourCheck Logo" class="brand-logo-img">
       </div>
@@ -228,7 +230,6 @@
             <input type="hidden" id="tipoUsuario" name="tipo_usuario" value="docente">
 
             <div class="header-row">
-          
               <div class="flex-grow-input">
                 <label for="nombre" class="input-label">Nombre docente</label>
                 <input type="text" id="nombre" class="custom-input" placeholder="Ingresa tu nombre" required>
@@ -238,10 +239,7 @@
             <div>
               <label for="institucion" class="input-label">Institución</label>
               <select id="institucion" class="custom-select" required>
-                <option value="" disabled selected hidden>Selecciona una opción</option>
-                <option value="Ofelia Herrera">Ofelia Herrera</option>
-                <option value="INJECAR">INJECAR</option>
-                <option value="Federación Suiza">Federación Suiza</option>
+                <option value="" disabled selected hidden>Cargando instituciones...</option>
               </select>
             </div>
 
@@ -263,6 +261,7 @@
       </div>
     </div>
   </div>
+
   <footer class="page-footer custom-footer">
     <div class="container footer-container">
       <div class="row style-row">
@@ -312,7 +311,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
@@ -330,6 +329,41 @@
     const teacherForm = document.getElementById("teacherForm");
     const btnRegistrar = document.getElementById("btnRegistrar");
 
+    // Función para Cargar Instituciones desde Firestore
+    async function cargarInstituciones() {
+      const selectInstitucion = document.getElementById("institucion");
+
+      try {
+        const querySnapshot = await getDocs(collection(db, "Institucion"));
+        
+        if (querySnapshot.empty) {
+          selectInstitucion.innerHTML = '<option value="" disabled selected hidden>No hay instituciones registradas</option>';
+          return;
+        }
+
+        selectInstitucion.innerHTML = '<option value="" disabled selected hidden>Selecciona una opción</option>';
+
+        querySnapshot.forEach((docSnapshot) => {
+          const data = docSnapshot.data();
+          if (data.NameInst) {
+            const option = document.createElement("option");
+            option.value = data.NameInst;
+            option.textContent = data.NameInst;
+            selectInstitucion.appendChild(option);
+          }
+        });
+
+      } catch (error) {
+        console.error("Error al cargar instituciones:", error);
+        M.toast({ html: 'Error al cargar instituciones: ' + error.message, classes: 'red rounded' });
+        selectInstitucion.innerHTML = '<option value="" disabled selected hidden>Error de permisos al cargar</option>';
+      }
+    }
+
+    // Cargar opciones al iniciar
+    cargarInstituciones();
+
+    // Evento de Envío de Formulario
     teacherForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
@@ -352,8 +386,8 @@
           Institucion: institucion,
           NameDocente: nombreDocente,
           fechaRegistro: new Date(),
-password: password,
-rol : Docente
+          password: password,
+          rol: "Docente"
         });
 
         M.toast({html: 'Docente registrado exitosamente. Redirigiendo...', classes: 'green rounded'});

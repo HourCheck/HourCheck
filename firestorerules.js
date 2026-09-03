@@ -7,7 +7,7 @@ service cloud.firestore {
       allow read, write: if request.auth != null;
     }
 
-    // Permite que CUALQUIERA lea las instituciones (necesario para el formulario)
+    // Permite que CUALQUIERA lea las instituciones (necesario para formularios de registro)
     match /Institucion/{document} {
       allow read: if true;
       allow write: if request.auth != null;
@@ -15,6 +15,11 @@ service cloud.firestore {
 
     // Permite el registro y lectura en la colección de Estudiantes
     match /Estudiantes/{studentId} {
+      allow read, write: if request.auth != null;
+    }
+
+    // Permite el registro y lectura en la colección de Docentes
+    match /Docentes/{teacherId} {
       allow read, write: if request.auth != null;
     }
 
