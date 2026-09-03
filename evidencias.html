@@ -153,9 +153,10 @@
       display: block;
     }
 
-    /* Campos de Entrada redondeados */
+    /* Campos de Entrada y Select redondeados */
     .custom-input, 
-    .custom-textarea {
+    .custom-textarea,
+    .custom-select {
       border: 1.5px solid #dcdcdc !important;
       border-radius: 10px !important;
       padding: 0 15px !important;
@@ -166,6 +167,11 @@
       box-shadow: none !important;
     }
 
+    .custom-select {
+      display: block !important;
+      color: #333;
+    }
+
     .custom-textarea {
       height: 90px !important;
       padding: 10px 15px !important;
@@ -173,8 +179,10 @@
     }
 
     .custom-input:focus, 
-    .custom-textarea:focus {
+    .custom-textarea:focus,
+    .custom-select:focus {
       border-color: #ff6b00 !important;
+      outline: none;
     }
 
     /* Ajuste para input de archivo */
@@ -232,6 +240,17 @@
 
           <!-- Formulario -->
           <form id="horasForm">
+
+            <!-- Nuevo Campo: Selección de Categoría -->
+            <div>
+              <label class="form-label" for="categoria">Categoría del Servicio Social</label>
+              <select id="categoria" class="custom-select" required>
+                <option value="" disabled selected>Selecciona una categoría...</option>
+                <option value="Jornadas de limpieza">Jornadas de limpieza</option>
+                <option value="Tutorías de inglés">Tutorías de inglés</option>
+                <option value="Tutorías en primera infancia">Tutorías en primera infancia</option>
+              </select>
+            </div>
 
             <div>
               <label class="form-label" for="lugar">Lugar donde se realizó</label>
@@ -392,11 +411,17 @@
         return;
       }
 
+      const categoriaInput = document.getElementById("categoria").value;
       const lugarInput = document.getElementById("lugar").value.trim();
       const docenteInput = document.getElementById("docente").value.trim();
       const horasInput = parseFloat(document.getElementById("horas").value);
       const descripcionInput = document.getElementById("descripcion").value.trim();
       const archivoEvidencia = document.getElementById("evidencia").files[0];
+
+      if (!categoriaInput) {
+        M.toast({html: 'Por favor selecciona una categoría', classes: 'orange rounded'});
+        return;
+      }
 
       if (!archivoEvidencia) {
         M.toast({html: 'Por favor adjunta la evidencia', classes: 'red rounded'});
@@ -445,6 +470,7 @@
         await addDoc(collection(db, "HorasSociales"), {
           userId: usuarioActual.uid,
           email: usuarioActual.email || "",
+          Categoria: categoriaInput, // <-- Campo de categoría guardado
           Descripcion: descripcionInput,
           "Docente encargado": docenteInput,
           Evidencia: evidenciaBase64,

@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inicio - Docente - HourCheck</title>
+  
+  <!-- Materialize CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <!-- Material Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <style>
+    body {
+      background-color: #f3f6fc;
+      font-family: 'Roboto', sans-serif;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* CSS Personalizado para el Sidenav */
+    .sidenav {
+      width: 300px;
+      border-top-right-radius: 20px;
+      border-bottom-right-radius: 20px;
+    }
+
+    .sidenav .user-view {
+      padding: 32px 32px 10px 32px;
+    }
+
+    .sidenav li > a {
+      font-weight: 600;
+      color: #333333;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      font-size: 0.95rem;
+    }
+
+    .sidenav li > a > i.material-icons {
+      margin: 0;
+      color: #ff5500;
+    }
+
+    .sidenav .subheader {
+      font-weight: 700;
+      color: #9e9e9e;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.8px;
+    }
+
+    /* Estilos Generales de la Interfaz */
+    .custom-navbar {
+      background-color: #ffffff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      padding: 0 30px;
+      height: 64px;
+      line-height: 64px;
+    }
+
+    .nav-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 100%;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .back-nav-btn, .menu-trigger {
+      color: #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      cursor: pointer;
+      transition: color 0.2s, transform 0.2s;
+    }
+
+    .back-nav-btn:hover {
+      color: #1557d0;
+      transform: translateX(-3px);
+    }
+
+    .back-nav-btn i, .menu-trigger i {
+      font-size: 1.8rem;
+    }
+
+    .nav-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #000;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .bell-icon {
+      color: #333;
+      font-size: 1.8rem;
+      cursor: pointer;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      background-color: #3b82f6;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+
+    .user-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      line-height: 1.2;
+    }
+
+    .user-name {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #000;
+    }
+
+    .user-role {
+      font-size: 0.8rem;
+      color: #666;
+    }
+
+    .banner-card {
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 35px 45px;
+      margin-top: 25px;
+      margin-bottom: 25px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .banner-title {
+      font-size: 2.3rem;
+      font-weight: 900;
+      color: #000;
+      margin: 0;
+      line-height: 1.1;
+      letter-spacing: -0.5px;
+    }
+
+    .banner-subtitle {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #222;
+      margin-top: 8px;
+    }
+
+    .banner-icon-container {
+      background-color: #e8f0fe;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .info-card {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 22px;
+      height: 140px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 15px;
+    }
+
+    .icon-orange-circle {
+      width: 75px;
+      height: 75px;
+      background-color: #ff5722;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .card-text-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #000;
+      margin: 0 0 4px 0;
+    }
+
+    .card-text-sub {
+      font-size: 0.9rem;
+      color: #555;
+      margin: 0 0 6px 0;
+    }
+
+    .card-text-bold {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #000;
+      margin: 0;
+    }
+
+    .donut-chart {
+      width: 75px;
+      height: 75px;
+      border-radius: 50%;
+      background: conic-gradient(#1557d0 0% 100%, #e2e8f0 0% 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .donut-chart::after {
+      content: "";
+      width: 45px;
+      height: 45px;
+      background: #ffffff;
+      border-radius: 50%;
+    }
+
+    .gauge-chart {
+      width: 75px;
+      height: 75px;
+      border-radius: 50%;
+      background: conic-gradient(#ff5722 0% 0%, #e2e8f0 0% 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      flex-shrink: 0;
+      transition: background 0.3s ease-in-out;
+    }
+
+    .gauge-chart::after {
+      content: "";
+      width: 45px;
+      height: 45px;
+      background: #ffffff;
+      border-radius: 50%;
+    }
+
+    .students-table-container {
+      background: #ffffff;
+      border: 1.5px solid #222;
+      border-radius: 16px;
+      overflow: hidden;
+      margin-top: 20px;
+      margin-bottom: 40px;
+    }
+
+    .table-header-box {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 30px;
+      border-bottom: 1.5px solid #222;
+      background: #ffffff;
+    }
+
+    .table-header-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .btn-reporte {
+      background-color: #1557d0;
+      color: white;
+      border-radius: 10px;
+      padding: 0 16px;
+      height: 38px;
+      line-height: 38px;
+      text-transform: none;
+      font-weight: 700;
+      font-size: 0.9rem;
+      box-shadow: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      border: none;
+      transition: background-color 0.2s;
+    }
+
+    .btn-reporte:hover {
+      background-color: #0d47a1;
+    }
+
+    .student-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 40px;
+      border-bottom: 1.5px solid #222;
+    }
+
+    .student-row:last-child {
+      border-bottom: none;
+    }
+
+    .student-name {
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: #000;
+    }
+
+    .action-link {
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: #1557d0;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .action-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar Superior -->
+  <nav class="custom-navbar">
+    <div class="nav-wrapper">
+      <div class="nav-left">
+        <!-- Ícono de Menú Lateral -->
+        <a href="#" data-target="slide-out" class="sidenav-trigger menu-trigger" style="display: flex;">
+          <i class="material-icons">menu</i>
+        </a>
+        <!-- Flecha de Regreso a mainPD.html -->
+        <a href="mainPD.html" class="back-nav-btn" title="Volver a Inicio Principal">
+          <i class="material-icons">arrow_back</i>
+        </a>
+        <span class="nav-title">Jornadas de Limpieza</span>
+      </div>
+
+      <div class="nav-right">
+        <i class="material-icons bell-icon">notifications_none</i>
+        
+        <div class="user-profile">
+          <div class="user-avatar">
+            <i class="material-icons">person</i>
+          </div>
+          <div class="user-info">
+            <span class="user-name" id="docenteNombre">Cargando...</span>
+            <span class="user-role">Docente</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Menú Lateral (Sidenav) -->
+  <ul id="slide-out" class="sidenav">
+    <li>
+      <div class="user-view">
+        <div class="background" style="background-color: #f3f6fc;"></div>
+        <a href="#user"><div class="user-avatar" style="width: 50px; height: 50px; font-size: 1.5rem;"><i class="material-icons">person</i></div></a>
+        <a href="#name"><span class="black-text name" id="menuDocenteNombre" style="font-weight: 700; margin-top: 10px;">Docente</span></a>
+        <a href="#email"><span class="grey-text email" id="menuDocenteEmail">docente@hourcheck.com</span></a>
+      </div>
+    </li>
+    <li><a href="mainPD.html"><i class="material-icons">home</i>Inicio Principal</a></li>
+    <li><a href="#!"><i class="material-icons">assignment</i>Gestión de Horas</a></li>
+    <li><a href="#!"><i class="material-icons">bar_chart</i>Estadísticas</a></li>
+    <li><div class="divider"></div></li>
+    <li><a class="subheader">Configuración</a></li>
+    <li><a href="#!"><i class="material-icons">settings</i>Ajustes</a></li>
+    <li><a href="#!" id="btnCerrarSesion"><i class="material-icons">exit_to_app</i>Cerrar Sesión</a></li>
+  </ul>
+
+  <!-- Contenedor Principal -->
+  <div class="container" style="width: 90%; max-width: 1200px;">
+
+    <!-- Banner Principal -->
+    <div class="banner-card">
+      <div>
+        <h1 class="banner-title">Jornadas de limpieza</h1>
+        <div class="banner-subtitle">1° año de Bachillerato General</div>
+      </div>
+      <div class="banner-icon-container">
+        <i class="material-icons" style="font-size: 3.5rem; color: #1557d0;">delete_sweep</i>
+      </div>
+    </div>
+
+    <!-- Cards de Estadísticas -->
+    <div class="row">
+      <!-- Card 1: Próxima Actividad -->
+      <div class="col s12 m4">
+        <div class="info-card">
+          <div class="icon-orange-circle">
+            <i class="material-icons" style="font-size: 2.5rem;">date_range</i>
+          </div>
+          <div>
+            <div class="card-text-title">Próxima Actividad</div>
+            <div class="card-text-sub">15 Sep 2026</div>
+            <div class="card-text-bold">Campaña de limpieza</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2: Estudiantes en la Categoría -->
+      <div class="col s12 m4">
+        <div class="info-card">
+          <div class="donut-chart"></div>
+          <div>
+            <div class="card-text-title">Estudiantes en la categoría</div>
+            <div class="card-text-bold" id="totalEstudiantesTexto">0 estudiantes</div>
+            <div class="card-text-sub">Participando</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3: Evidencias Subidas -->
+      <div class="col s12 m4">
+        <div class="info-card">
+          <div class="gauge-chart" id="gaugeChart"></div>
+          <div>
+            <div class="card-text-title">Evidencias subidas</div>
+            <div class="card-text-bold" id="totalRegistrosTexto">0 registros</div>
+            <div class="card-text-sub">Jornadas de limpieza</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabla de Estudiantes + Botón Generar Reporte -->
+    <div class="students-table-container">
+      <div class="table-header-box">
+        <span class="table-header-title">Estudiantes en Jornadas de Limpieza</span>
+        <button class="btn-reporte" id="btnGenerarReporte">
+          <i class="material-icons" style="font-size: 1.2rem;">description</i>
+          Generar reporte
+        </button>
+      </div>
+
+      <div id="studentsContainer">
+        <div class="student-row" style="justify-content: center;">
+          <span style="color: #666;">Cargando lista de entregas...</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Materialize JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+  <!-- Módulo de Firebase -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, getDocs, doc, getDoc, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+    // Inicializar Sidenav de Materialize
+    document.addEventListener('DOMContentLoaded', function() {
+      const elems = document.querySelectorAll('.sidenav');
+      M.Sidenav.init(elems);
+    });
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
+      authDomain: "hourcheckt.firebaseapp.com",
+      projectId: "hourcheckt",
+      messagingSenderId: "83459752453",
+      appId: "1:83459752453:web:1b81724c28973bf567126c"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    const CATEGORIA_ACTIVA = "Jornadas de limpieza";
+
+    const docenteNombreEl = document.getElementById("docenteNombre");
+    const menuDocenteNombreEl = document.getElementById("menuDocenteNombre");
+    const menuDocenteEmailEl = document.getElementById("menuDocenteEmail");
+    const totalEstudiantesTextoEl = document.getElementById("totalEstudiantesTexto");
+    const totalRegistrosTextoEl = document.getElementById("totalRegistrosTexto");
+    const gaugeChartEl = document.getElementById("gaugeChart");
+    const studentsContainer = document.getElementById("studentsContainer");
+    const btnGenerarReporte = document.getElementById("btnGenerarReporte");
+    const btnCerrarSesion = document.getElementById("btnCerrarSesion");
+
+    let registrosCache = [];
+
+    // Autenticación de Usuario
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        if (menuDocenteEmailEl) menuDocenteEmailEl.textContent = user.email || "";
+
+        try {
+          const docRef = doc(db, "Docentes", user.uid);
+          const docSnap = await getDoc(docRef);
+          if (docSnap.exists() && docSnap.data().nombre) {
+            const nombre = docSnap.data().nombre;
+            docenteNombreEl.textContent = nombre;
+            if (menuDocenteNombreEl) menuDocenteNombreEl.textContent = nombre;
+          } else {
+            const fallback = user.displayName || user.email.split('@')[0];
+            docenteNombreEl.textContent = fallback;
+            if (menuDocenteNombreEl) menuDocenteNombreEl.textContent = fallback;
+          }
+        } catch (e) {
+          const fallback = user.email ? user.email.split('@')[0] : "Docente";
+          docenteNombreEl.textContent = fallback;
+          if (menuDocenteNombreEl) menuDocenteNombreEl.textContent = fallback;
+        }
+
+        await cargarMetricasJornadasLimpieza();
+      } else {
+        window.location.href = "loginU.html";
+      }
+    });
+
+    async function cargarMetricasJornadasLimpieza() {
+      try {
+        const qLimpieza = query(
+          collection(db, "HorasSociales"),
+          where("Categoria", "==", CATEGORIA_ACTIVA)
+        );
+
+        const snapHorasLimpieza = await getDocs(qLimpieza);
+        const totalRegistros = snapHorasLimpieza.size;
+
+        const estudiantesUnicos = new Set();
+        registrosCache = [];
+
+        snapHorasLimpieza.forEach((docSnap) => {
+          const data = docSnap.data();
+          if (data.userId) estudiantesUnicos.add(data.userId);
+          else if (data.email) estudiantesUnicos.add(data.email);
+
+          registrosCache.push({ id: docSnap.id, ...data });
+        });
+
+        const totalEstudiantesCategoria = estudiantesUnicos.size;
+
+        // Actualización de métricas
+        totalEstudiantesTextoEl.textContent = `${totalEstudiantesCategoria} estudiante${totalEstudiantesCategoria === 1 ? '' : 's'}`;
+
+        if (totalRegistros === 1) {
+          totalRegistrosTextoEl.textContent = "1 registro";
+        } else {
+          totalRegistrosTextoEl.textContent = `${totalRegistros} registros`;
+        }
+
+        // Indicador gráfico
+        const porcentajeVisual = totalRegistros > 0 ? Math.min(totalRegistros * 10, 100) : 0;
+        gaugeChartEl.style.background = `conic-gradient(#ff5722 0% ${porcentajeVisual}%, #e2e8f0 ${porcentajeVisual}% 100%)`;
+
+        // Renderizado de tabla
+        renderizarTablaRegistros(registrosCache);
+
+      } catch (error) {
+        console.error("Error al obtener los datos:", error);
+        totalEstudiantesTextoEl.textContent = "0 estudiantes";
+        totalRegistrosTextoEl.textContent = "Error al cargar";
+      }
+    }
+
+    function renderizarTablaRegistros(lista) {
+      studentsContainer.innerHTML = "";
+
+      if (lista.length === 0) {
+        studentsContainer.innerHTML = `
+          <div class="student-row" style="justify-content: center;">
+            <span style="color: #666;">No hay registros entregados para "Jornadas de limpieza".</span>
+          </div>`;
+        return;
+      }
+
+      lista.forEach((item) => {
+        const usuarioNombre = item.email || item.userId || "Estudiante";
+        const horasRealizadas = item.Horas || 0;
+
+        const row = document.createElement("div");
+        row.className = "student-row";
+        row.innerHTML = `
+          <div>
+            <span class="student-name">${usuarioNombre}</span>
+            <span style="display: block; font-size: 0.85rem; color: #666;">
+              Horas reportadas: <strong>${horasRealizadas} hrs</strong>
+            </span>
+          </div>
+          <a class="action-link" onclick="verEvidencia('${item.id}')">Ver actividad</a>
+        `;
+        studentsContainer.appendChild(row);
+      });
+    }
+
+    // Generar Reporte CSV/Excel
+    btnGenerarReporte.addEventListener("click", () => {
+      if (registrosCache.length === 0) {
+        M.toast({html: 'No hay datos disponibles para generar el reporte.', classes: 'orange rounded'});
+        return;
+      }
+
+      let csvContent = "\uFEFF";
+      csvContent += "Estudiante / Email,Categoría,Lugar,Docente Encargado,Horas Reportadas,Descripción\n";
+
+      registrosCache.forEach((item) => {
+        const estudiante = `"${item.email || item.userId || 'N/A'}"`;
+        const categoria = `"${item.Categoria || CATEGORIA_ACTIVA}"`;
+        const lugar = `"${item.Lugar || 'N/A'}"`;
+        const docente = `"${item['Docente encargado'] || 'N/A'}"`;
+        const horas = item.Horas || 0;
+        const descripcion = `"${(item.Descripcion || '').replace(/"/g, '""')}"`;
+
+        csvContent += `${estudiante},${categoria},${lugar},${docente},${horas},${descripcion}\n`;
+      });
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const enlaceDescarga = document.createElement("a");
+      enlaceDescarga.setAttribute("href", url);
+      enlaceDescarga.setAttribute("download", `Reporte_Jornadas_de_Limpieza_${new Date().toISOString().slice(0,10)}.csv`);
+      document.body.appendChild(enlaceDescarga);
+      
+      enlaceDescarga.click();
+      document.body.removeChild(enlaceDescarga);
+
+      M.toast({html: 'Reporte descargado exitosamente.', classes: 'green rounded'});
+    });
+
+    // Cerrar Sesión
+    if (btnCerrarSesion) {
+      btnCerrarSesion.addEventListener("click", (e) => {
+        e.preventDefault();
+        signOut(auth).then(() => {
+          window.location.href = "loginU.html";
+        });
+      });
+    }
+
+    window.verEvidencia = function(registroId) {
+      M.toast({html: `Abriendo registro de evidencia...`, classes: 'rounded blue'});
+    };
+  </script>
+</body>
+</html>

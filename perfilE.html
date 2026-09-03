@@ -9,72 +9,6 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
   <style>
-     .custom-footer {
-      background-color: #1557d0 !important;
-      border-top-left-radius: 25px;
-      border-top-right-radius: 25px;
-      margin-top: 50px;
-      padding-top: 30px !important;
-    }
-
-    .footer-container {
-      width: 90%;
-      max-width: 1100px;
-    }
-
-    .footer-brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 10px;
-    }
-
-    .footer-logo {
-      height: 35px;
-      width: auto;
-      filter: brightness(0) invert(1);
-    }
-
-    .footer-brand h5 {
-      margin: 0;
-      font-size: 1.4rem;
-    }
-
-    .footer-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      margin-bottom: 8px;
-      transition: color 0.2s, transform 0.2s;
-    }
-
-    .footer-link:hover {
-      color: #ff5500 !important;
-      transform: translateX(4px);
-    }
-
-    .footer-btn {
-      background-color: rgba(255, 255, 255, 0.15);
-      border-radius: 12px;
-      text-transform: none;
-      font-weight: 600;
-      margin-top: 5px;
-    }
-
-    .footer-btn:hover {
-      background-color: rgba(255, 255, 255, 0.25);
-    }
-
-    .custom-copyright {
-      background-color: rgba(0, 0, 0, 0.12) !important;
-      font-size: 0.85rem;
-      padding: 15px 0;
-    }
-
-    .font-weight-bold {
-      font-weight: 700;
-    }
-
     body {
       background-color: #f7f9fc;
       font-family: 'Roboto', sans-serif;
@@ -294,7 +228,7 @@
           </div>
 
           <h5 class="profile-name" id="nombreHeader">Usuario</h5>
-          <span class="profile-badge" id="profileRole">Estudiante</span>
+          <span class="profile-badge" id="profileRole">Cargando...</span>
 
           <div class="summary-box" id="cajaHoras" style="display: none;">
             <div class="summary-item">
@@ -342,40 +276,6 @@
   </div>
 
   <footer class="page-footer custom-footer">
-    <div class="container footer-container">
-      <div class="row style-row">
-        
-        <div class="col s12 m4">
-          <div class="footer-brand">
-            <img src="logo.png" alt="HourCheck Logo" class="footer-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x40?text=HourCheck';">
-            <h5 class="white-text font-weight-bold">HourCheck</h5>
-          </div>
-          <p class="grey-text text-lighten-2">
-            Sistema para la gestión y seguimiento del Servicio Social Estudiantil. Facilitando la validación y control de horas de forma eficiente.
-          </p>
-        </div>
-
-        <div class="col s12 m4 center-on-small">
-          <h5 class="white-text font-weight-bold">Enlaces Rápidos</h5>
-          <ul>
-            <li><a class="grey-text text-lighten-3 footer-link" href="index.html"><i class="material-icons tiny">chevron_right</i> Inicio</a></li>
-            <li><a class="grey-text text-lighten-3 footer-link" href="saberCualP.html"><i class="material-icons tiny">chevron_right</i> Guía de Perfiles</a></li>
-          </ul>
-        </div>
-
-        <div class="col s12 m4">
-          <h5 class="white-text font-weight-bold">Soporte</h5>
-          <p class="grey-text text-lighten-2">
-            ¿Tienes dudas con el registro de tus horas?
-          </p>
-          <a href="mailto:soporte@hourcheck.com" class="btn-flat white-text footer-btn">
-            <i class="material-icons left">help_outline</i> Contactar Soporte
-          </a>
-        </div>
-
-      </div>
-    </div>
-
     <div class="footer-copyright custom-copyright">
       <div class="container center-align white-text">
         © 2026 HourCheck - Todos los derechos reservados.
@@ -438,13 +338,13 @@
       }
     });
 
-    // Búsqueda inteligente en Firestore a través de colecciones
+    // Búsqueda en Firestore a través de las colecciones
     async function obtenerDatosRol(uid, fallbackNombre) {
       try {
         let docSnap = null;
         let data = {};
 
-        const colecciones = ["Usuarios", "Estudiantes", "Docentes", "Instituciones"];
+        const colecciones = ["Docentes", "Instituciones", "Estudiantes", "Usuarios"];
 
         for (const col of colecciones) {
           const snap = await getDoc(doc(db, col, uid));
@@ -458,11 +358,9 @@
         if (docSnap && docSnap.exists()) {
           data = docSnap.data();
           
-          if (data.rol) {
-            rolDetectado = data.rol.toLowerCase();
-          } else if (coleccionEfectiva === "Docentes") {
+          if (coleccionEfectiva === "Docentes" || (data.rol && data.rol.toLowerCase() === "docente")) {
             rolDetectado = "docente";
-          } else if (coleccionEfectiva === "Instituciones") {
+          } else if (coleccionEfectiva === "Instituciones" || (data.rol && (data.rol.toLowerCase() === "institucion" || data.rol.toLowerCase() === "instituciones"))) {
             rolDetectado = "institucion";
           } else {
             rolDetectado = "estudiante";
@@ -485,7 +383,7 @@
       }
     }
 
-    // Adaptar campos e íconos visibles
+    // Adaptar campos e íconos visibles según el rol
     function adaptarInterfazPorRol(rol, data) {
       if (rol === "docente") {
         profileRole.textContent = "Docente Encargado";
@@ -496,7 +394,7 @@
         labelExtra.textContent = "Materia / Especialidad";
         extraInput.value = data.materia || "";
 
-      } else if (rol === "institucion" || rol === "instituciones") {
+      } else if (rol === "institucion") {
         profileRole.textContent = "Institución Educativa";
         avatarIcon.innerHTML = `<i class="material-icons" style="font-size: 3rem;">account_balance</i>`;
         labelNombre.textContent = "Nombre de la Institución";
@@ -514,7 +412,7 @@
       }
     }
 
-    // Totalizar horas registradas
+    // Totalizar horas registradas en caso de ser estudiante
     async function calcularHorasEstudiante(uid) {
       try {
         const q = query(collection(db, "HorasSociales"), where("userId", "==", uid));
@@ -532,16 +430,44 @@
       }
     }
 
-    // Redirección dinámica según el rol al presionar la flecha
-    btnVolver.addEventListener("click", (e) => {
+    // Redirección directa en tiempo real al hacer clic en el botón volver
+    btnVolver.addEventListener("click", async (e) => {
       e.preventDefault();
 
-      if (rolDetectado === "docente") {
-        window.location.href = "mainPD.html";
-      } else if (rolDetectado === "institucion" || rolDetectado === "instituciones") {
-        window.location.href = "mainPI.html";
-      } else {
+      if (!usuarioActual) {
+        window.location.href = "loginU.html";
+        return;
+      }
+
+      try {
+        const uid = usuarioActual.uid;
+
+        // 1. Verificar si existe en Docentes
+        const docDocente = await getDoc(doc(db, "Docentes", uid));
+        if (docDocente.exists() || rolDetectado === "docente") {
+          window.location.href = "mainPD.html";
+          return;
+        }
+
+        // 2. Verificar si existe en Instituciones
+        const docInstitucion = await getDoc(doc(db, "Instituciones", uid));
+        if (docInstitucion.exists() || rolDetectado === "institucion") {
+          window.location.href = "mainPI.html";
+          return;
+        }
+
+        // 3. Por defecto enviar a Estudiantes
         window.location.href = "mainPE.html";
+
+      } catch (error) {
+        console.error("Error al determinar la redirección:", error);
+        if (rolDetectado === "docente") {
+          window.location.href = "mainPD.html";
+        } else if (rolDetectado === "institucion") {
+          window.location.href = "mainPI.html";
+        } else {
+          window.location.href = "mainPE.html";
+        }
       }
     });
 
@@ -563,7 +489,7 @@
 
         if (rolDetectado === "docente") {
           payload.materia = extraInput.value.trim();
-        } else if (rolDetectado === "institucion" || rolDetectado === "instituciones") {
+        } else if (rolDetectado === "institucion") {
           payload.codigoInstitucion = extraInput.value.trim();
         }
 
