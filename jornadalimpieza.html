@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Categoria1-HourCheck</title>
+  <title>Inicio - Docente - HourCheck</title>
   
   <!-- Materialize CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
@@ -27,7 +27,31 @@
     }
 
     .sidenav .user-view {
-      padding: 32px 32px 10px 32px;
+      padding: 24px 24px 10px 24px;
+    }
+
+    /* Estilo especial para el botón de regreso dentro del Sidenav */
+    .sidenav-back-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 24px;
+      font-weight: 700;
+      color: #1557d0 !important;
+      background-color: #e8f0fe;
+      border-radius: 12px;
+      margin: 10px 16px 15px 16px;
+      transition: background-color 0.2s, transform 0.2s;
+    }
+
+    .sidenav-back-btn:hover {
+      background-color: #d2e3fc;
+      transform: translateX(-3px);
+    }
+
+    .sidenav-back-btn i {
+      color: #1557d0 !important;
+      margin: 0 !important;
     }
 
     .sidenav li > a {
@@ -74,22 +98,16 @@
       gap: 15px;
     }
 
-    .back-nav-btn, .menu-trigger {
+    .menu-trigger {
       color: #333;
       display: flex;
       align-items: center;
       justify-content: center;
       text-decoration: none;
       cursor: pointer;
-      transition: color 0.2s, transform 0.2s;
     }
 
-    .back-nav-btn:hover {
-      color: #1557d0;
-      transform: translateX(-3px);
-    }
-
-    .back-nav-btn i, .menu-trigger i {
+    .menu-trigger i {
       font-size: 1.8rem;
     }
 
@@ -359,11 +377,7 @@
         <a href="#" data-target="slide-out" class="sidenav-trigger menu-trigger" style="display: flex;">
           <i class="material-icons">menu</i>
         </a>
-        <!-- Flecha de Regreso a mainPD.html -->
-        <a href="mainPD.html" class="back-nav-btn" title="Volver a Inicio Principal">
-          <i class="material-icons">arrow_back</i>
-        </a>
-        <span class="nav-title">Jornadas de Limpieza</span>
+     
       </div>
 
       <div class="nav-right">
@@ -374,7 +388,7 @@
             <i class="material-icons">person</i>
           </div>
           <div class="user-info">
-            <span class="user-name" id="docenteNombre">Cargando...</span>
+            <span class="user-name" id="docenteNombre">Docente</span>
             <span class="user-role">Docente</span>
           </div>
         </div>
@@ -384,6 +398,11 @@
 
   <!-- Menú Lateral (Sidenav) -->
   <ul id="slide-out" class="sidenav">
+    <!-- Botón de Regreso a la página principal -->
+  
+    
+    <li><div class="divider"></div></li>
+
     <li>
       <div class="user-view">
         <div class="background" style="background-color: #f3f6fc;"></div>
@@ -392,13 +411,14 @@
         <a href="#email"><span class="grey-text email" id="menuDocenteEmail">docente@hourcheck.com</span></a>
       </div>
     </li>
-    <li><a href="mainPD.html"><i class="material-icons">home</i>Inicio Principal</a></li>
-    <li><a href="#!"><i class="material-icons">assignment</i>Gestión de Horas</a></li>
-    <li><a href="#!"><i class="material-icons">bar_chart</i>Estadísticas</a></li>
-    <li><div class="divider"></div></li>
-    <li><a class="subheader">Configuración</a></li>
-    <li><a href="#!"><i class="material-icons">settings</i>Ajustes</a></li>
-    <li><a href="#!" id="btnCerrarSesion"><i class="material-icons">exit_to_app</i>Cerrar Sesión</a></li>
+      <li>
+      <a href="mainPD.html" class="sidenav-back-btn">
+        <i class="material-icons">arrow_back</i> Volver a Inicio
+      </a>
+    </li>
+    
+    <li><a href="#!"><i class="material-icons">assignment</i>Generar reporte</a></li>
+    
   </ul>
 
   <!-- Contenedor Principal -->
@@ -408,7 +428,7 @@
     <div class="banner-card">
       <div>
         <h1 class="banner-title">Jornadas de limpieza</h1>
-      
+        <div class="banner-subtitle">1° año de Bachillerato General</div>
       </div>
       <div class="banner-icon-container">
         <i class="material-icons" style="font-size: 3.5rem; color: #1557d0;">delete_sweep</i>
@@ -538,11 +558,9 @@
           docenteNombreEl.textContent = fallback;
           if (menuDocenteNombreEl) menuDocenteNombreEl.textContent = fallback;
         }
-
-        await cargarMetricasJornadasLimpieza();
-      } else {
-        window.location.href = "loginU.html";
       }
+      
+      await cargarMetricasJornadasLimpieza();
     });
 
     async function cargarMetricasJornadasLimpieza() {
@@ -587,7 +605,8 @@
       } catch (error) {
         console.error("Error al obtener los datos:", error);
         totalEstudiantesTextoEl.textContent = "0 estudiantes";
-        totalRegistrosTextoEl.textContent = "Error al cargar";
+        totalRegistrosTextoEl.textContent = "Sin registros";
+        renderizarTablaRegistros([]);
       }
     }
 
