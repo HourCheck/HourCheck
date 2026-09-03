@@ -5,13 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Inicio Docente - HourCheck</title>
   <link rel="icon" type="image/png" href="logo.png">
-  <!-- Materialize CSS CDN -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
   <style>
-         /* Footer */
-   .custom-footer {
+    /* Footer */
+    .custom-footer {
       background-color: #1557d0 !important;
       border-top-left-radius: 25px;
       border-top-right-radius: 25px;
@@ -76,6 +75,7 @@
     .font-weight-bold {
       font-weight: 700;
     }
+    
     body {
       background-color: #f4f6f9;
       font-family: 'Roboto', sans-serif;
@@ -332,7 +332,6 @@
 </head>
 <body>
 
-  <!-- Sidenav -->
   <ul id="slide-out" class="sidenav">
     <li>
       <div class="user-view">
@@ -343,7 +342,6 @@
       </div>
     </li>
     
-    <!-- Apartados del menú -->
     <li><a href="perfilE.html" class="waves-effect"><i class="material-icons">account_circle</i>Perfil</a></li>
     <li><a href="notiD.html" class="waves-effect"><i class="material-icons">notifications</i>Notificaciones</a></li>
     
@@ -354,13 +352,11 @@
     <li><a href="#ingles" class="waves-effect"><i class="material-icons">translate</i>Tutorías de inglés</a></li>
     <li><a href="#infancia" class="waves-effect"><i class="material-icons">child_care</i>Tutorías primera infancia</a></li>
   </ul>
-  <!-- CONTENIDO PRINCIPAL -->
+
   <div class="dashboard-container">
     
-   <!-- Encabezado Superior -->
     <header class="top-header">
       <div class="header-left">
-        <!-- Botón de Hamburguesa con trigger hacia el Sidenav -->
         <a href="#" data-target="slide-out" class="sidenav-trigger btn-menu-trigger">
           <i class="material-icons">menu</i>
         </a>
@@ -368,12 +364,10 @@
       </div>
       
       <div class="header-right">
-        <!-- Ícono de Notificaciones redireccionando a notiD.html -->
         <a href="notiD.html" class="icon-btn">
           <i class="material-icons">notifications_none</i>
         </a>
         
-        <!-- Perfil completo (Foto + Nombre) redireccionando a perfilD.html -->
         <a href="perfilE.html" class="user-profile">
           <div class="avatar">
             <i class="material-icons">person</i>
@@ -387,17 +381,14 @@
       </div>
     </header>
 
-    <!-- Banner Principal -->
     <section class="welcome-banner">
       <div class="banner-content">
-       
-<h2 class="banner-title">¡Bienvenido/a!</h2>
+        <h2 class="banner-title">¡Bienvenido/a!</h2>
         <p class="banner-text">Supervisa y registra el progreso de tus estudiantes, controla sus horas de servicio social y verifica sus actividades y evidencias.</p>
       </div>
       <img src="https://cdni.iconscout.com/illustration/premium/thumb/woman-working-on-laptop-4268388-3561001.png" alt="Ilustración Trabajo" class="banner-illustration">
     </section>
 
-    <!-- Sección de Proyectos -->
     <main class="projects-grid">
       
       <div class="project-card">
@@ -436,11 +427,11 @@
     </main>
 
   </div>
-<footer class="page-footer custom-footer">
+
+  <footer class="page-footer custom-footer">
     <div class="container footer-container">
       <div class="row style-row">
         
-        <!-- Columna 1: Información de la Plataforma -->
         <div class="col s12 m4">
           <div class="footer-brand">
             <img src="logo.png" alt="HourCheck Logo" class="footer-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x40?text=HourCheck';">
@@ -451,7 +442,6 @@
           </p>
         </div>
 
-        <!-- Columna 2: Enlaces Rápidos -->
         <div class="col s12 m4 center-on-small">
           <h5 class="white-text font-weight-bold">Enlaces Rápidos</h5>
           <ul>
@@ -460,7 +450,6 @@
           </ul>
         </div>
 
-        <!-- Columna 3: Soporte y Ayuda -->
         <div class="col s12 m4">
           <h5 class="white-text font-weight-bold">Soporte</h5>
           <p class="grey-text text-lighten-2">
@@ -474,20 +463,23 @@
       </div>
     </div>
 
-    <!-- Sub-footer con Derechos de Autor -->
     <div class="footer-copyright custom-copyright">
       <div class="container center-align white-text">
         © 2026 HourCheck - Todos los derechos reservados.
       </div>
     </div>
   </footer>
-  <!-- Materialize JS -->
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
-<!-- Script Firebase y Manejo de Sesión -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { 
+      getAuth, 
+      onAuthStateChanged, 
+      setPersistence, 
+      browserLocalPersistence 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     // 1. Configuración de Firebase
@@ -504,67 +496,76 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    // Asegurar la persistencia local de la sesión
+    setPersistence(auth, browserLocalPersistence).catch((error) => {
+      console.error("Error ajustando persistencia:", error);
+    });
+
     // 2. Inicializar Sidenav
     document.addEventListener('DOMContentLoaded', function() {
       var elems = document.querySelectorAll('.sidenav');
       M.Sidenav.init(elems, { edge: 'left', draggable: true });
     });
 
-    // 3. Comprobar la sesión activa al cargar la página
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        console.log("==========================================");
-        console.log("1. TU USUARIO ACTUAL:");
-        console.log("   - UID de Auth:", user.uid);
-        console.log("   - Email de Auth:", user.email);
-        console.log("==========================================");
-
-        const correoAuth = user.email ? user.email.toLowerCase().trim() : "";
-        let nombreEncontrado = null;
-
-        try {
-          // Traer TODOS los documentos de la colección 'Docentes' para inspeccionarlos
-          const querySnapshot = await getDocs(collection(db, "Docentes"));
-
-          console.log(`2. DOCUMENTOS ENCONTRADOS EN LA COLECCIÓN 'Docentes' (${querySnapshot.size}):`);
-
-          querySnapshot.forEach((docSnap) => {
-            const data = docSnap.data();
-            console.log(` -> Documento ID: "${docSnap.id}"`);
-            console.log("    Datos guardados:", data);
-
-            // Búsqueda por coincidencia de UID
-            if (docSnap.id === user.uid) {
-              console.log("    ¡COINCIDENCIA POR UID!");
-              nombreEncontrado = obtenerNombreDeObjeto(data);
-            }
-
-            // Búsqueda por coincidencia de correo (ignorando mayúsculas/espacios)
-            for (let clave in data) {
-              const valor = String(data[clave]).toLowerCase().trim();
-              if (valor === correoAuth && correoAuth !== "") {
-                console.log(`    ¡COINCIDENCIA POR CORREO en el campo "${clave}"!`);
-                nombreEncontrado = nombreEncontrado || obtenerNombreDeObjeto(data);
-              }
-            }
-          });
-
-        } catch (error) {
-          console.error("❌ ERROR AL LEER FIRESTORE (¿Reglas de seguridad?):", error);
-          alert("Error de lectura en Firestore. Revisa las reglas de seguridad en la consola de Firebase.");
-        }
-
-        console.log("==========================================");
-        console.log("3. RESULTADO FINAL: Nombre detectado ->", nombreEncontrado);
-        console.log("==========================================");
-
-        actualizarInterfaz(nombreEncontrado || "Docente", user.email);
-      } else {
+    // 3. Función centralizada para verificar y actualizar la interfaz del usuario
+    async function verificarUsuarioYActualizar(user) {
+      if (!user) {
         window.location.href = "loginU.html";
+        return;
+      }
+
+      console.log("==========================================");
+      console.log("1. TU USUARIO ACTUAL:");
+      console.log("   - UID de Auth:", user.uid);
+      console.log("   - Email de Auth:", user.email);
+      console.log("==========================================");
+
+      const correoAuth = user.email ? user.email.toLowerCase().trim() : "";
+      let nombreEncontrado = null;
+
+      try {
+        const querySnapshot = await getDocs(collection(db, "Docentes"));
+        console.log(`2. DOCUMENTOS ENCONTRADOS EN LA COLECCIÓN 'Docentes' (${querySnapshot.size}):`);
+
+        querySnapshot.forEach((docSnap) => {
+          const data = docSnap.data();
+
+          // Búsqueda por coincidencia de UID
+          if (docSnap.id === user.uid) {
+            nombreEncontrado = obtenerNombreDeObjeto(data);
+          }
+
+          // Búsqueda por coincidencia de correo
+          for (let clave in data) {
+            const valor = String(data[clave]).toLowerCase().trim();
+            if (valor === correoAuth && correoAuth !== "") {
+              nombreEncontrado = nombreEncontrado || obtenerNombreDeObjeto(data);
+            }
+          }
+        });
+
+      } catch (error) {
+        console.error("❌ ERROR AL LEER FIRESTORE:", error);
+      }
+
+      actualizarInterfaz(nombreEncontrado || user.displayName || "Docente", user.email);
+    }
+
+    // Escuchador principal de la sesión de Firebase
+    onAuthStateChanged(auth, (user) => {
+      verificarUsuarioYActualizar(user);
+    });
+
+    // SOLUCIÓN AL CACHÉ DEL NAVEGADOR (Soporte al regresar de jornadas de limpieza)
+    window.addEventListener('pageshow', function(event) {
+      if (event.persisted || (performance && performance.getEntriesByType("navigation")[0]?.type === "back_forward")) {
+        if (auth.currentUser) {
+          verificarUsuarioYActualizar(auth.currentUser);
+        }
       }
     });
 
-    // Función auxiliar para extraer el nombre sea cual sea la clave usada
+    // Función auxiliar para extraer el nombre
     function obtenerNombreDeObjeto(obj) {
       for (let clave in obj) {
         const claveLower = clave.toLowerCase();

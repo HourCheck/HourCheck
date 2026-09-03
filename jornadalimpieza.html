@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Inicio - Docente - HourCheck</title>
+  <title>Jornada de Limpieza</title>
   
   <!-- Materialize CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
@@ -377,7 +377,6 @@
         <a href="#" data-target="slide-out" class="sidenav-trigger menu-trigger" style="display: flex;">
           <i class="material-icons">menu</i>
         </a>
-     
       </div>
 
       <div class="nav-right">
@@ -388,7 +387,7 @@
             <i class="material-icons">person</i>
           </div>
           <div class="user-info">
-            <span class="user-name" id="docenteNombre">Docente</span>
+            <span class="user-name" id="docenteNombre">Cargando...</span>
             <span class="user-role">Docente</span>
           </div>
         </div>
@@ -398,9 +397,6 @@
 
   <!-- Menú Lateral (Sidenav) -->
   <ul id="slide-out" class="sidenav">
-    <!-- Botón de Regreso a la página principal -->
-  
-    
     <li><div class="divider"></div></li>
 
     <li>
@@ -411,14 +407,13 @@
         <a href="#email"><span class="grey-text email" id="menuDocenteEmail">docente@hourcheck.com</span></a>
       </div>
     </li>
-      <li>
+    <li>
       <a href="mainPD.html" class="sidenav-back-btn">
         <i class="material-icons">arrow_back</i> Volver a Inicio
       </a>
     </li>
-    
     <li><a href="#!"><i class="material-icons">assignment</i>Generar reporte</a></li>
-    
+    <li><a href="#!" id="btnCerrarSesion" style="color: #d32f2f;"><i class="material-icons" style="color: #d32f2f;">exit_to_app</i>Cerrar Sesión</a></li>
   </ul>
 
   <!-- Contenedor Principal -->
@@ -502,7 +497,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, getDocs, doc, getDoc, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getAuth, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     // Inicializar Sidenav de Materialize
     document.addEventListener('DOMContentLoaded', function() {
@@ -522,6 +517,11 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
 
+    // Asegurar la persistencia de la sesión en el navegador
+    setPersistence(auth, browserLocalPersistence).catch((error) => {
+      console.error("Error al configurar persistencia:", error);
+    });
+
     const CATEGORIA_ACTIVA = "Jornadas de limpieza";
 
     const docenteNombreEl = document.getElementById("docenteNombre");
@@ -536,7 +536,7 @@
 
     let registrosCache = [];
 
-    // Autenticación de Usuario
+    // Autenticación de Usuario con verificación y manejo de redirección
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         if (menuDocenteEmailEl) menuDocenteEmailEl.textContent = user.email || "";
@@ -558,9 +558,12 @@
           docenteNombreEl.textContent = fallback;
           if (menuDocenteNombreEl) menuDocenteNombreEl.textContent = fallback;
         }
+
+        await cargarMetricasJornadasLimpieza();
+      } else {
+        // Redirigir a login si no está autenticado
+        window.location.href = "loginU.html";
       }
-      
-      await cargarMetricasJornadasLimpieza();
     });
 
     async function cargarMetricasJornadasLimpieza() {
