@@ -231,7 +231,7 @@
         <div class="register-card">
           <form id="registroForm" autocomplete="off">
             <input type="hidden" id="tipo_usuario" name="tipo_usuario" value="estudiante">
- 
+
             <div class="header-row">
               <div class="flex-grow-input">
                 <label for="nombre" class="input-label">Nombre Estudiante</label>
@@ -241,11 +241,9 @@
 
             <div>
               <label for="institucion" class="input-label">Institución</label>
+              <!-- El selector ahora se llenará dinámicamente desde Firestore -->
               <select id="institucion" class="custom-select" required>
-                <option value="" disabled selected hidden>Selecciona una opción</option>
-                <option value="Federación Suiza">Federación Suiza</option>
-                <option value="Ofelia Herrera">Ofelia Herrera</option>
-                <option value="Injecar">Injecar</option>
+                <option value="" disabled selected hidden>Cargando instituciones...</option>
               </select>
             </div>
 
@@ -267,7 +265,8 @@
       </div>
     </div>
   </div>
-<footer class="page-footer custom-footer">
+
+  <footer class="page-footer custom-footer">
     <div class="container footer-container">
       <div class="row style-row">
         
@@ -312,116 +311,149 @@
       </div>
     </div>
   </footer>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { getDatabase, ref, onValue, onDisconnect, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+    import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    // 1. Añadimos collection y getDocs para poder realizar el Lookup en la base de datos
+    import { getFirestore, doc, setDoc, updateDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { getDatabase, ref, onValue, onDisconnect, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-// 1. Configuración de Firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
-  authDomain: "hourcheckt.firebaseapp.com",
-  projectId: "hourcheckt",
-  storageBucket: "hourcheckt.firebasestorage.app",
-  messagingSenderId: "83459752453",
-  appId: "1:83459752453:web:1b81724c28973bf567126c"
-};
+    // Configuración de Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
+      authDomain: "hourcheckt.firebaseapp.com",
+      projectId: "hourcheckt",
+      storageBucket: "hourcheckt.firebasestorage.app",
+      messagingSenderId: "83459752453",
+      appId: "1:83459752453:web:1b81724c28973bf567126c"
+    };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const rtdb = getDatabase(app);
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const rtdb = getDatabase(app);
 
-// 2. Control del Formulario de Registro
-const registroForm = document.getElementById("registroForm");
-const btnRegistrar = document.getElementById("btnRegistrar");
+    // 2. Función Lookup para Cargar Instituciones dinámicamente desde Firestore
+    async function cargarInstituciones() {
+      const selectInstitucion = document.getElementById("institucion");
 
-if (registroForm) {
-  registroForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    btnRegistrar.disabled = true;
-    btnRegistrar.textContent = "Registrando...";
-
-    const tipoUsuario = document.getElementById("tipo_usuario").value;
-    const nombre = document.getElementById("nombre").value.trim();
-    const institucion = document.getElementById("institucion").value;
-    const correo = document.getElementById("correo").value.trim();
-    const password = document.getElementById("password").value.trim();
-
-    try {
-      // Crear el usuario en Firebase Authentication
-      const userCredential = await createUserWithEmailAndPassword(auth, correo, password);
-      const uid = userCredential.user.uid;
-
-      // Crear el documento en la colección Estudiantes
-      await setDoc(doc(db, "Estudiantes", uid), {
-        tipoUsuario: tipoUsuario,
-        nombre: nombre,
-        institucion: institucion,
-        correo: correo,
-        activo: true,
-        fechaRegistro: new Date().toISOString()
-      });
-
-      M.toast({ html: 'Estudiante registrado con éxito. Redirigiendo...', classes: 'green rounded' });
-      setTimeout(() => {
-        window.location.href = "loginU.html?perfil=estudiante";
-      }, 1500);
-
-    } catch (error) {
-      console.error("Error al registrar:", error);
-      let mensaje = error.message;
-      if (error.code === 'auth/email-already-in-use') {
-        mensaje = "Este correo ya está registrado.";
-      } else if (error.code === 'auth/weak-password') {
-        mensaje = "La contraseña debe tener al menos 6 caracteres.";
-      }
-      M.toast({ html: 'Error: ' + mensaje, classes: 'red rounded' });
-      btnRegistrar.disabled = false;
-      btnRegistrar.textContent = "Registrarse";
-    }
-  });
-}
-
-// 3. Sistema de Presencia en Tiempo Real (Estado Activo/Inactivo)
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    const userStatusRtdbRef = ref(rtdb, `/status/${user.uid}`);
-    const userFirestoreRef = doc(db, "Estudiantes", user.uid);
-    const isConnectedRef = ref(rtdb, ".info/connected");
-
-    onValue(isConnectedRef, async (snapshot) => {
-      if (snapshot.val() === false) return;
-
-      // Programar estado inactivo al perder conexión
-      await onDisconnect(userStatusRtdbRef).set({
-        activo: false,
-        ultimo_acceso: Date.now()
-      });
-
-      // Marcar activo en Realtime Database
-      set(userStatusRtdbRef, {
-        activo: true,
-        ultimo_acceso: Date.now().toISOString()
-  
-      });
-
-      // Actualizar estado activo en Firestore
       try {
-        await updateDoc(userFirestoreRef, { activo: true });
-      } catch (err) {
-        console.warn("No se pudo actualizar el estado en Firestore:", err);
+        // Consultamos la colección "Institucion"
+        const querySnapshot = await getDocs(collection(db, "Institucion"));
+        
+        // Limpiamos las opciones previas
+        selectInstitucion.innerHTML = '<option value="" disabled selected hidden>Selecciona una opción</option>';
+
+        querySnapshot.forEach((docSnapshot) => {
+          const data = docSnapshot.data();
+          
+          // Verificamos que contenga la variable NameInst que guarda el Director
+          if (data.NameInst) {
+            const option = document.createElement("option");
+            option.value = data.NameInst; // Guarda el nombre de la institución (o puedes colocar docSnapshot.id si prefieres el ID)
+            option.textContent = data.NameInst; // Muestra el NameInst en el selector
+            selectInstitucion.appendChild(option);
+          }
+        });
+
+      } catch (error) {
+        console.error("Error al cargar instituciones: ", error);
+        selectInstitucion.innerHTML = '<option value="" disabled selected hidden>Error al cargar opciones</option>';
+      }
+    }
+
+    // Ejecutar la carga de instituciones al inicializar el módulo
+    cargarInstituciones();
+
+    // 3. Control del Formulario de Registro
+    const registroForm = document.getElementById("registroForm");
+    const btnRegistrar = document.getElementById("btnRegistrar");
+
+    if (registroForm) {
+      registroForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        btnRegistrar.disabled = true;
+        btnRegistrar.textContent = "Registrando...";
+
+        const tipoUsuario = document.getElementById("tipo_usuario").value;
+        const nombre = document.getElementById("nombre").value.trim();
+        const institucion = document.getElementById("institucion").value;
+        const correo = document.getElementById("correo").value.trim();
+        const password = document.getElementById("password").value.trim();
+
+        try {
+          // Crear el usuario en Firebase Authentication
+          const userCredential = await createUserWithEmailAndPassword(auth, correo, password);
+          const uid = userCredential.user.uid;
+
+          // Crear el documento en la colección Estudiantes
+          await setDoc(doc(db, "Estudiantes", uid), {
+            tipoUsuario: tipoUsuario,
+            nombre: nombre,
+            institucion: institucion,
+            correo: correo,
+            activo: true,
+            fechaRegistro: new Date().toISOString()
+          });
+
+          M.toast({ html: 'Estudiante registrado con éxito. Redirigiendo...', classes: 'green rounded' });
+          setTimeout(() => {
+            window.location.href = "loginU.html?perfil=estudiante";
+          }, 1500);
+
+        } catch (error) {
+          console.error("Error al registrar:", error);
+          let mensaje = error.message;
+          if (error.code === 'auth/email-already-in-use') {
+            mensaje = "Este correo ya está registrado.";
+          } else if (error.code === 'auth/weak-password') {
+            mensaje = "La contraseña debe tener al menos 6 caracteres.";
+          }
+          M.toast({ html: 'Error: ' + mensaje, classes: 'red rounded' });
+          btnRegistrar.disabled = false;
+          btnRegistrar.textContent = "Registrarse";
+        }
+      });
+    }
+
+    // 4. Sistema de Presencia en Tiempo Real (Estado Activo/Inactivo)
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const userStatusRtdbRef = ref(rtdb, `/status/${user.uid}`);
+        const userFirestoreRef = doc(db, "Estudiantes", user.uid);
+        const isConnectedRef = ref(rtdb, ".info/connected");
+
+        onValue(isConnectedRef, async (snapshot) => {
+          if (snapshot.val() === false) return;
+
+          // Programar estado inactivo al perder conexión
+          await onDisconnect(userStatusRtdbRef).set({
+            activo: false,
+            ultimo_acceso: Date.now()
+          });
+
+          // Marcar activo en Realtime Database
+          set(userStatusRtdbRef, {
+            activo: true,
+            ultimo_acceso: Date.now().toISOString()
+          });
+
+          // Actualizar estado activo en Firestore
+          try {
+            await updateDoc(userFirestoreRef, { activo: true });
+          } catch (err) {
+            console.warn("No se pudo actualizar el estado en Firestore:", err);
+          }
+        });
+
+        // Cambiar estado a inactivo si la pestaña o navegador se cierra
+        window.addEventListener("beforeunload", async () => {
+          await updateDoc(userFirestoreRef, { activo: false });
+        });
       }
     });
-
-    // Cambiar estado a inactivo si la pestaña o navegador se cierra
-    window.addEventListener("beforeunload", async () => {
-      await updateDoc(userFirestoreRef, { activo: false });
-    });
-  }
-});
   </script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
