@@ -33,7 +33,7 @@
     .footer-logo {
       height: 35px;
       width: auto;
-      filter: brightness(0) invert(1); /* Convierte el logo a blanco si es oscuro */
+      filter: brightness(0) invert(1);
     }
 
     .footer-brand h5 {
@@ -342,15 +342,17 @@
       </div>
     </li>
     
-    <li><a href="perfilE.html" class="waves-effect"><i class="material-icons">account_circle</i>Perfil</a></li>
+    <li><a href="perfilD.html" class="waves-effect"><i class="material-icons">account_circle</i>Perfil</a></li>
     <li><a href="notiD.html" class="waves-effect"><i class="material-icons">notifications</i>Notificaciones</a></li>
     
     <li><div class="divider"></div></li>
     <li><a class="subheader">Proyectos y Actividades</a></li>
     
     <li><a href="jornadalimpieza.html" class="waves-effect"><i class="material-icons">cleaning_services</i>Jornadas de limpieza</a></li>
-    <li><a href="#ingles" class="waves-effect"><i class="material-icons">translate</i>Tutorías de inglés</a></li>
-    <li><a href="#infancia" class="waves-effect"><i class="material-icons">child_care</i>Tutorías primera infancia</a></li>
+    <li><a href="tutoriasingles.html" class="waves-effect"><i class="material-icons">translate</i>Tutorías de inglés</a></li>
+    <li><a href="tutoriasinfancia.html" class="waves-effect"><i class="material-icons">child_care</i>Tutorías primera infancia</a></li>
+    <li><div class="divider"></div></li>
+    <li><a href="#!" id="btnCerrarSesion" class="waves-effect" style="color: #d32f2f;"><i class="material-icons" style="color: #d32f2f;">exit_to_app</i>Cerrar Sesión</a></li>
   </ul>
 
   <div class="dashboard-container">
@@ -368,7 +370,7 @@
           <i class="material-icons">notifications_none</i>
         </a>
         
-        <a href="perfilE.html" class="user-profile">
+        <a href="perfilD.html" class="user-profile">
           <div class="avatar">
             <i class="material-icons">person</i>
           </div>
@@ -397,7 +399,7 @@
         </div>
         <div class="card-info">
           <h3 class="card-title">Jornadas de<br>limpieza</h3>
-          <span class="card-status">20/45</span>
+          <span class="card-status" id="statusLimpieza">Cargando...</span>
           <a href="jornadalimpieza.html" class="card-link">Ver más</a>
         </div>
       </div>
@@ -407,9 +409,9 @@
           <img src="https://cdn-icons-png.flaticon.com/512/3389/3389081.png" alt="Tutorías de inglés">
         </div>
         <div class="card-info">
-          <h3 class="card-title">Tutorías de inglés</h3>
-          <span class="card-status">5/10 realizadas</span>
-          <a href="#" class="card-link">Ver más</a>
+          <h3 class="card-title">Tutorías de<br>inglés</h3>
+          <span class="card-status" id="statusIngles">Cargando...</span>
+          <a href="tutoriasingles.html" class="card-link">Ver más</a>
         </div>
       </div>
 
@@ -419,8 +421,8 @@
         </div>
         <div class="card-info">
           <h3 class="card-title">Tutorías en<br>primera infancia</h3>
-          <span class="card-status">10/10 realizadas</span>
-          <a href="#" class="card-link">Ver más</a>
+          <span class="card-status" id="statusInfancia">Cargando...</span>
+          <a href="tutoriasinfancia.html" class="card-link">Ver más</a>
         </div>
       </div>
 
@@ -445,7 +447,7 @@
         <div class="col s12 m4 center-on-small">
           <h5 class="white-text font-weight-bold">Enlaces Rápidos</h5>
           <ul>
-            <li><a class="grey-text text-lighten-3 footer-link" href="index.html"><i class="material-icons tiny">chevron_right</i> Inicio</a></li>
+            <li><a class="grey-text text-lighten-3 footer-link" href="mainPD.html"><i class="material-icons tiny">chevron_right</i> Inicio</a></li>
             <li><a class="grey-text text-lighten-3 footer-link" href="saberCualP.html"><i class="material-icons tiny">chevron_right</i> Guía de Perfiles</a></li>
           </ul>
         </div>
@@ -477,6 +479,7 @@
     import { 
       getAuth, 
       onAuthStateChanged, 
+      signOut,
       setPersistence, 
       browserLocalPersistence 
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -496,46 +499,34 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // Asegurar la persistencia local de la sesión
     setPersistence(auth, browserLocalPersistence).catch((error) => {
       console.error("Error ajustando persistencia:", error);
     });
 
-    // 2. Inicializar Sidenav
     document.addEventListener('DOMContentLoaded', function() {
       var elems = document.querySelectorAll('.sidenav');
       M.Sidenav.init(elems, { edge: 'left', draggable: true });
     });
 
-    // 3. Función centralizada para verificar y actualizar la interfaz del usuario
     async function verificarUsuarioYActualizar(user) {
       if (!user) {
         window.location.href = "loginU.html";
         return;
       }
 
-      console.log("==========================================");
-      console.log("1. TU USUARIO ACTUAL:");
-      console.log("   - UID de Auth:", user.uid);
-      console.log("   - Email de Auth:", user.email);
-      console.log("==========================================");
-
       const correoAuth = user.email ? user.email.toLowerCase().trim() : "";
       let nombreEncontrado = null;
 
       try {
         const querySnapshot = await getDocs(collection(db, "Docentes"));
-        console.log(`2. DOCUMENTOS ENCONTRADOS EN LA COLECCIÓN 'Docentes' (${querySnapshot.size}):`);
 
         querySnapshot.forEach((docSnap) => {
           const data = docSnap.data();
 
-          // Búsqueda por coincidencia de UID
           if (docSnap.id === user.uid) {
             nombreEncontrado = obtenerNombreDeObjeto(data);
           }
 
-          // Búsqueda por coincidencia de correo
           for (let clave in data) {
             const valor = String(data[clave]).toLowerCase().trim();
             if (valor === correoAuth && correoAuth !== "") {
@@ -545,18 +536,40 @@
         });
 
       } catch (error) {
-        console.error("❌ ERROR AL LEER FIRESTORE:", error);
+        console.error("Error al leer Firestore:", error);
       }
 
       actualizarInterfaz(nombreEncontrado || user.displayName || "Docente", user.email);
+      cargarEstadisticas();
     }
 
-    // Escuchador principal de la sesión de Firebase
+    async function cargarEstadisticas() {
+      try {
+        const snap = await getDocs(collection(db, "HorasSociales"));
+        let countLimpieza = 0;
+        let countIngles = 0;
+        let countInfancia = 0;
+
+        snap.forEach((doc) => {
+          const data = doc.data();
+          const cat = (data.categoria || "").toLowerCase();
+          if (cat.includes("limpieza")) countLimpieza++;
+          else if (cat.includes("ingl")) countIngles++;
+          else if (cat.includes("infancia") || cat.includes("primera")) countInfancia++;
+        });
+
+        document.getElementById("statusLimpieza").textContent = `${countLimpieza} registros`;
+        document.getElementById("statusIngles").textContent = `${countIngles} registros`;
+        document.getElementById("statusInfancia").textContent = `${countInfancia} registros`;
+      } catch (e) {
+        console.error("Error al cargar contadores:", e);
+      }
+    }
+
     onAuthStateChanged(auth, (user) => {
       verificarUsuarioYActualizar(user);
     });
 
-    // SOLUCIÓN AL CACHÉ DEL NAVEGADOR (Soporte al regresar de jornadas de limpieza)
     window.addEventListener('pageshow', function(event) {
       if (event.persisted || (performance && performance.getEntriesByType("navigation")[0]?.type === "back_forward")) {
         if (auth.currentUser) {
@@ -565,7 +578,6 @@
       }
     });
 
-    // Función auxiliar para extraer el nombre
     function obtenerNombreDeObjeto(obj) {
       for (let clave in obj) {
         const claveLower = clave.toLowerCase();
@@ -588,6 +600,16 @@
 
       if (sidenavName) sidenavName.textContent = nombre;
       if (sidenavEmail) sidenavEmail.textContent = correo;
+    }
+
+    const btnCerrarSesion = document.getElementById("btnCerrarSesion");
+    if (btnCerrarSesion) {
+      btnCerrarSesion.addEventListener("click", (e) => {
+        e.preventDefault();
+        signOut(auth).then(() => {
+          window.location.href = "loginU.html";
+        });
+      });
     }
   </script>
 </body>

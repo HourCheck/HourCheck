@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jornada de Limpieza</title>
+  <title>Tutorías en Primera Infancia</title>
   
   <!-- Materialize CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
@@ -19,7 +19,6 @@
       padding: 0;
     }
 
-    /* CSS Personalizado para el Sidenav */
     .sidenav {
       width: 300px;
       border-top-right-radius: 20px;
@@ -30,7 +29,6 @@
       padding: 24px 24px 10px 24px;
     }
 
-    /* Estilo especial para el botón de regreso dentro del Sidenav */
     .sidenav-back-btn {
       display: flex;
       align-items: center;
@@ -63,20 +61,6 @@
       font-size: 0.95rem;
     }
 
-    .sidenav li > a > i.material-icons {
-      margin: 0;
-      color: #ff5500;
-    }
-
-    .sidenav .subheader {
-      font-weight: 700;
-      color: #9e9e9e;
-      text-transform: uppercase;
-      font-size: 0.75rem;
-      letter-spacing: 0.8px;
-    }
-
-    /* Estilos Generales de la Interfaz */
     .custom-navbar {
       background-color: #ffffff;
       box-shadow: 0 1px 3px rgba(0,0,0,0.05);
@@ -109,12 +93,6 @@
 
     .menu-trigger i {
       font-size: 1.8rem;
-    }
-
-    .nav-title {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: #000;
     }
 
     .nav-right {
@@ -373,7 +351,6 @@
   <nav class="custom-navbar">
     <div class="nav-wrapper">
       <div class="nav-left">
-        <!-- Ícono de Menú Lateral -->
         <a href="#" data-target="slide-out" class="sidenav-trigger menu-trigger" style="display: flex;">
           <i class="material-icons">menu</i>
         </a>
@@ -395,7 +372,7 @@
     </div>
   </nav>
 
-  <!-- Menú Lateral (Sidenav) -->
+  <!-- Menú Lateral -->
   <ul id="slide-out" class="sidenav">
     <li><div class="divider"></div></li>
 
@@ -422,17 +399,16 @@
     <!-- Banner Principal -->
     <div class="banner-card">
       <div>
-        <h1 class="banner-title">Jornadas de limpieza</h1>
-      
+        <h1 class="banner-title">Tutorías en primera infancia</h1>
+        <div class="banner-subtitle">1° año de Bachillerato General</div>
       </div>
       <div class="banner-icon-container">
-        <i class="material-icons" style="font-size: 3.5rem; color: #1557d0;">delete_sweep</i>
+        <i class="material-icons" style="font-size: 3.5rem; color: #1557d0;">child_care</i>
       </div>
     </div>
 
     <!-- Cards de Estadísticas -->
     <div class="row">
-      <!-- Card 1: Próxima Actividad -->
       <div class="col s12 m4">
         <div class="info-card">
           <div class="icon-orange-circle">
@@ -440,13 +416,12 @@
           </div>
           <div>
             <div class="card-text-title">Próxima Actividad</div>
-            <div class="card-text-sub">15 Sep 2026</div>
-            <div class="card-text-bold">Campaña de limpieza</div>
+            <div class="card-text-sub">22 Sep 2026</div>
+            <div class="card-text-bold">Atención pedagógica</div>
           </div>
         </div>
       </div>
 
-      <!-- Card 2: Estudiantes en la Categoría -->
       <div class="col s12 m4">
         <div class="info-card">
           <div class="donut-chart"></div>
@@ -458,23 +433,22 @@
         </div>
       </div>
 
-      <!-- Card 3: Evidencias Subidas -->
       <div class="col s12 m4">
         <div class="info-card">
           <div class="gauge-chart" id="gaugeChart"></div>
           <div>
             <div class="card-text-title">Evidencias subidas</div>
             <div class="card-text-bold" id="totalRegistrosTexto">0 registros</div>
-            <div class="card-text-sub">Jornadas de limpieza</div>
+            <div class="card-text-sub">Primera infancia</div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Tabla de Estudiantes + Botón Generar Reporte -->
+    <!-- Tabla de Estudiantes -->
     <div class="students-table-container">
       <div class="table-header-box">
-        <span class="table-header-title">Estudiantes en Jornadas de Limpieza</span>
+        <span class="table-header-title">Estudiantes en Tutorías en primera infancia</span>
         <button class="btn-reporte" id="btnGenerarReporte">
           <i class="material-icons" style="font-size: 1.2rem;">description</i>
           Generar reporte
@@ -490,16 +464,13 @@
 
   </div>
 
-  <!-- Materialize JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
-  <!-- Módulo de Firebase -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, getDocs, doc, getDoc, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     import { getAuth, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-    // Inicializar Sidenav de Materialize
     document.addEventListener('DOMContentLoaded', function() {
       const elems = document.querySelectorAll('.sidenav');
       M.Sidenav.init(elems);
@@ -517,12 +488,12 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
 
-    // Asegurar la persistencia de la sesión en el navegador
     setPersistence(auth, browserLocalPersistence).catch((error) => {
       console.error("Error al configurar persistencia:", error);
     });
 
-    const CATEGORIA_ACTIVA = "Jornadas de limpieza";
+    // 🔑 Nombre exacto de la categoría en Firestore
+    const CATEGORIA_ACTIVA = "Tutorías en primera infancia";
 
     const docenteNombreEl = document.getElementById("docenteNombre");
     const menuDocenteNombreEl = document.getElementById("menuDocenteNombre");
@@ -536,7 +507,6 @@
 
     let registrosCache = [];
 
-    // Autenticación de Usuario con verificación y manejo de redirección
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         if (menuDocenteEmailEl) menuDocenteEmailEl.textContent = user.email || "";
@@ -559,27 +529,26 @@
           if (menuDocenteNombreEl) menuDocenteNombreEl.textContent = fallback;
         }
 
-        await cargarMetricasJornadasLimpieza();
+        await cargarMetricas();
       } else {
-        // Redirigir a login si no está autenticado
         window.location.href = "loginU.html";
       }
     });
 
-    async function cargarMetricasJornadasLimpieza() {
+    async function cargarMetricas() {
       try {
-        const qLimpieza = query(
+        const qCategoria = query(
           collection(db, "HorasSociales"),
           where("Categoria", "==", CATEGORIA_ACTIVA)
         );
 
-        const snapHorasLimpieza = await getDocs(qLimpieza);
-        const totalRegistros = snapHorasLimpieza.size;
+        const snapHoras = await getDocs(qCategoria);
+        const totalRegistros = snapHoras.size;
 
         const estudiantesUnicos = new Set();
         registrosCache = [];
 
-        snapHorasLimpieza.forEach((docSnap) => {
+        snapHoras.forEach((docSnap) => {
           const data = docSnap.data();
           if (data.userId) estudiantesUnicos.add(data.userId);
           else if (data.email) estudiantesUnicos.add(data.email);
@@ -589,7 +558,6 @@
 
         const totalEstudiantesCategoria = estudiantesUnicos.size;
 
-        // Actualización de métricas
         totalEstudiantesTextoEl.textContent = `${totalEstudiantesCategoria} estudiante${totalEstudiantesCategoria === 1 ? '' : 's'}`;
 
         if (totalRegistros === 1) {
@@ -598,11 +566,9 @@
           totalRegistrosTextoEl.textContent = `${totalRegistros} registros`;
         }
 
-        // Indicador gráfico
         const porcentajeVisual = totalRegistros > 0 ? Math.min(totalRegistros * 10, 100) : 0;
         gaugeChartEl.style.background = `conic-gradient(#ff5722 0% ${porcentajeVisual}%, #e2e8f0 ${porcentajeVisual}% 100%)`;
 
-        // Renderizado de tabla
         renderizarTablaRegistros(registrosCache);
 
       } catch (error) {
@@ -619,7 +585,7 @@
       if (lista.length === 0) {
         studentsContainer.innerHTML = `
           <div class="student-row" style="justify-content: center;">
-            <span style="color: #666;">No hay registros entregados para "Jornadas de limpieza".</span>
+            <span style="color: #666;">No hay registros entregados para "${CATEGORIA_ACTIVA}".</span>
           </div>`;
         return;
       }
@@ -643,7 +609,6 @@
       });
     }
 
-    // Generar Reporte CSV/Excel
     btnGenerarReporte.addEventListener("click", () => {
       if (registrosCache.length === 0) {
         M.toast({html: 'No hay datos disponibles para generar el reporte.', classes: 'orange rounded'});
@@ -668,7 +633,7 @@
       const url = URL.createObjectURL(blob);
       const enlaceDescarga = document.createElement("a");
       enlaceDescarga.setAttribute("href", url);
-      enlaceDescarga.setAttribute("download", `Reporte_Jornadas_de_Limpieza_${new Date().toISOString().slice(0,10)}.csv`);
+      enlaceDescarga.setAttribute("download", `Reporte_Tutorias_Primera_Infancia_${new Date().toISOString().slice(0,10)}.csv`);
       document.body.appendChild(enlaceDescarga);
       
       enlaceDescarga.click();
@@ -677,7 +642,6 @@
       M.toast({html: 'Reporte descargado exitosamente.', classes: 'green rounded'});
     });
 
-    // Cerrar Sesión
     if (btnCerrarSesion) {
       btnCerrarSesion.addEventListener("click", (e) => {
         e.preventDefault();
