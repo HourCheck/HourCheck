@@ -455,156 +455,165 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+  import { getFirestore, doc, getDoc, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
-      authDomain: "hourcheckt.firebaseapp.com",
-      projectId: "hourcheckt",
-      storageBucket: "hourcheckt.firebasestorage.app",
-      messagingSenderId: "83459752453",
-      appId: "1:83459752453:web:1b81724c28973bf567126c"
-    };
+  const firebaseConfig = {
+    apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
+    authDomain: "hourcheckt.firebaseapp.com",
+    projectId: "hourcheckt",
+    storageBucket: "hourcheckt.firebasestorage.app",
+    messagingSenderId: "83459752453",
+    appId: "1:83459752453:web:1b81724c28973bf567126c"
+  };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
 
-    document.addEventListener('DOMContentLoaded', function() {
-      var elems = document.querySelectorAll('.sidenav');
-      if (typeof M !== 'undefined' && M.Sidenav) {
-        M.Sidenav.init(elems, { edge: 'left', draggable: true });
-      }
-      renderDoughnutChart(72); // Inicialización del gráfico con 72%
-    });
+  document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('.sidenav');
+    if (typeof M !== 'undefined' && M.Sidenav) {
+      M.Sidenav.init(elems, { edge: 'left', draggable: true });
+    }
+    renderDoughnutChart(72);
+  });
 
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        let instData = null;
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      let instData = null;
+      let idInstitucionReal = null; // Guardará el ID exacto de la institución
 
-        try {
-          const docRef = doc(db, "Institucion", user.uid);
-          const docSnap = await getDoc(docRef);
+      try {
+        const docRef = doc(db, "Institucion", user.uid);
+        const docSnap = await getDoc(docRef);
 
-          if (docSnap.exists()) {
-            instData = docSnap.data();
-          } else {
-            const q = query(collection(db, "Institucion"), where("CorreoInst", "==", user.email));
-            const querySnapshot = await getDocs(q);
-            if (!querySnapshot.empty) {
-              instData = querySnapshot.docs[0].data();
-            }
+        if (docSnap.exists()) {
+          instData = docSnap.data();
+          idInstitucionReal = docSnap.id; // ID directo del usuario
+        } else {
+          const q = query(collection(db, "Institucion"), where("CorreoInst", "==", user.email));
+          const querySnapshot = await getDocs(q);
+          if (!querySnapshot.empty) {
+            const firstDoc = querySnapshot.docs[0];
+            instData = firstDoc.data();
+            idInstitucionReal = firstDoc.id; // Captura el ID real del documento
           }
+        }
 
-          if (instData) {
-            actualizarInterfaz({
-              nombreDirector: instData.NameDirector || "Director/a",
-              correoInst: instData.CorreoInst || user.email,
-              nombreInst: instData.NameInst || "Institución Educativa"
-            });
-          } else {
-            actualizarInterfaz({
-              nombreDirector: "Director/a",
-              correoInst: user.email,
-              nombreInst: "Institución No Encontrada"
-            });
-          }
-
-          // Cargar contadores de Estudiantes y Docentes
-          cargarContadoresMiembros(user.uid);
-
-        } catch (error) {
-          console.error("❌ Error al consultar Firestore:", error);
+        if (instData && idInstitucionReal) {
           actualizarInterfaz({
-            nombreDirector: "Error de lectura",
+            nombreDirector: instData.NameDirector || "Director/a",
+            correoInst: instData.CorreoInst || user.email,
+            nombreInst: instData.NameInst || "Institución Educativa"
+          });
+
+          // Se pasa el ID REAL del documento a las consultas
+          cargarContadoresMiembros(idInstitucionReal);
+        } else {
+          actualizarInterfaz({
+            nombreDirector: "Director/a",
             correoInst: user.email,
-            nombreInst: "Verifique permisos de Firebase"
+            nombreInst: "Institución No Encontrada"
           });
         }
-      } else {
-        window.location.href = "loginU.html";
+
+      } catch (error) {
+        console.error("❌ Error al consultar Firestore:", error);
+        actualizarInterfaz({
+          nombreDirector: "Error de lectura",
+          correoInst: user.email,
+          nombreInst: "Verifique permisos de Firebase"
+        });
       }
-    });
-
-    function actualizarInterfaz({ nombreDirector, correoInst, nombreInst }) {
-      const sidenavName = document.getElementById("user-name");
-      const sidenavEmail = document.getElementById("user-email");
-      const sidenavInst = document.getElementById("user-inst");
-
-      if (sidenavName) sidenavName.textContent = nombreDirector;
-      if (sidenavEmail) sidenavEmail.textContent = correoInst;
-      if (sidenavInst) sidenavInst.textContent = nombreInst;
-
-      const userNameHeader = document.querySelector(".header-right .user-info .user-name");
-      if (userNameHeader) userNameHeader.textContent = nombreDirector;
-
-      const bannerTitle = document.querySelector(".welcome-banner .banner-title");
-      if (bannerTitle) bannerTitle.textContent = `¡Bienvenido/a, ${nombreDirector}!`;
+    } else {
+      window.location.href = "loginU.html";
     }
+  });
 
-    // Consulta en Firestore filtrando por el ID de la institución
-    async function cargarContadoresMiembros(instId) {
-      try {
-        const qEstudiantes = query(collection(db, "Estudiantes"), where("institucion", "==", instId));
-        const snapEstudiantes = await getDocs(qEstudiantes);
-        document.getElementById("cant-estudiantes").textContent = snapEstudiantes.size;
+  function actualizarInterfaz({ nombreDirector, correoInst, nombreInst }) {
+    const sidenavName = document.getElementById("user-name");
+    const sidenavEmail = document.getElementById("user-email");
+    const sidenavInst = document.getElementById("user-inst");
 
-        const qDocentes = query(collection(db, "Docentes"), where("institucion", "==", instId));
-        const snapDocentes = await getDocs(qDocentes);
-        document.getElementById("cant-docentes").textContent = snapDocentes.size;
-      } catch (e) {
-        console.error("Error obteniendo miembros de la institución:", e);
+    if (sidenavName) sidenavName.textContent = nombreDirector;
+    if (sidenavEmail) sidenavEmail.textContent = correoInst;
+    if (sidenavInst) sidenavInst.textContent = nombreInst;
+
+    const userNameHeader = document.querySelector(".header-right .user-info .user-name");
+    if (userNameHeader) userNameHeader.textContent = nombreDirector;
+
+    const bannerTitle = document.querySelector(".welcome-banner .banner-title");
+    if (bannerTitle) bannerTitle.textContent = `¡Bienvenido/a, ${nombreDirector}!`;
+  }
+
+  // Consulta en Firestore filtrando por el ID del documento de la institución
+  async function cargarContadoresMiembros(instId) {
+    try {
+      // 1. Conteo de Estudiantes pertenecientes a la institución
+      const qEstudiantes = query(collection(db, "Estudiantes"), where("institucion", "==", instId));
+      const snapEstudiantes = await getDocs(qEstudiantes);
+      const elemEstudiantes = document.getElementById("cant-estudiantes");
+      if (elemEstudiantes) elemEstudiantes.textContent = snapEstudiantes.size;
+
+      // 2. Conteo de Docentes pertenecientes a la institución
+      const qDocentes = query(collection(db, "Docentes"), where("institucion", "==", instId));
+      const snapDocentes = await getDocs(qDocentes);
+      const elemDocentes = document.getElementById("cant-docentes");
+      if (elemDocentes) elemDocentes.textContent = snapDocentes.size;
+
+    } catch (e) {
+      console.error("Error obteniendo miembros de la institución:", e);
+    }
+  }
+
+  // Renderizado de Gráfica
+  function renderDoughnutChart(porcentaje) {
+    const ctx = document.getElementById('doughnutChart').getContext('2d');
+    
+    const centerTextPlugin = {
+      id: 'centerText',
+      beforeDraw: function(chart) {
+        const width = chart.width,
+              height = chart.height,
+              ctx = chart.ctx;
+        ctx.restore();
+        const fontSize = (height / 114).toFixed(2);
+        ctx.font = "bold " + fontSize + "em sans-serif";
+        ctx.textBaseline = "middle";
+        ctx.fillStyle = "#1557d0";
+        
+        const text = porcentaje + "%",
+              textX = Math.round((width - ctx.measureText(text).width) / 2),
+              textY = height / 2;
+        
+        ctx.fillText(text, textX, textY);
+        ctx.save();
       }
-    }
+    };
 
-    // Renderizado de Gráfica de Donut con Texto Central Superpuesto
-    function renderDoughnutChart(porcentaje) {
-      const ctx = document.getElementById('doughnutChart').getContext('2d');
-      
-      const centerTextPlugin = {
-        id: 'centerText',
-        beforeDraw: function(chart) {
-          const width = chart.width,
-                height = chart.height,
-                ctx = chart.ctx;
-          ctx.restore();
-          const fontSize = (height / 114).toFixed(2);
-          ctx.font = "bold " + fontSize + "em sans-serif";
-          ctx.textBaseline = "middle";
-          ctx.fillStyle = "#1557d0";
-          
-          const text = porcentaje + "%",
-                textX = Math.round((width - ctx.measureText(text).width) / 2),
-                textY = height / 2;
-          
-          ctx.fillText(text, textX, textY);
-          ctx.save();
+    new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        datasets: [{
+          data: [porcentaje, 100 - porcentaje],
+          backgroundColor: ['#1557d0', '#e0e0e0'],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        cutout: '78%',
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          tooltip: { enabled: false },
+          legend: { display: false }
         }
-      };
-
-      new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-          datasets: [{
-            data: [porcentaje, 100 - porcentaje],
-            backgroundColor: ['#1557d0', '#e0e0e0'],
-            borderWidth: 0
-          }]
-        },
-        options: {
-          cutout: '78%',
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            tooltip: { enabled: false },
-            legend: { display: false }
-          }
-        },
-        plugins: [centerTextPlugin]
-      });
-    }
-  </script>
+      },
+      plugins: [centerTextPlugin]
+    });
+  }
+</script>
 </body>
 </html>
