@@ -347,7 +347,9 @@
           
           if (data.NameInst) {
             const option = document.createElement("option");
-            option.value = data.NameInst;
+            // Se asigna el ID del documento como valor de la opción
+            option.value = docSnapshot.id;
+            // Se muestra el nombre de la institución al usuario
             option.textContent = data.NameInst;
             selectInstitucion.appendChild(option);
           }
@@ -375,7 +377,7 @@
 
         const tipoUsuario = document.getElementById("tipo_usuario").value;
         const nombre = document.getElementById("nombre").value.trim();
-        const institucion = document.getElementById("institucion").value;
+        const idInstitucion = document.getElementById("institucion").value;
         const correo = document.getElementById("correo").value.trim();
         const password = document.getElementById("password").value.trim();
 
@@ -384,11 +386,11 @@
           const userCredential = await createUserWithEmailAndPassword(auth, correo, password);
           const uid = userCredential.user.uid;
 
-          // Crear el documento en la colección Estudiantes
+          // Crear el documento en la colección Estudiantes almacenando el ID de la institución
           await setDoc(doc(db, "Estudiantes", uid), {
             tipoUsuario: tipoUsuario,
             nombre: nombre,
-            institucion: institucion,
+            institucion: idInstitucion,
             correo: correo,
             activo: true,
             fechaRegistro: new Date().toISOString()

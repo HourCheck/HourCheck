@@ -5,8 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Inicio Docente - HourCheck</title>
   <link rel="icon" type="image/png" href="logo.png">
+  
+  <!-- CSS Materialize -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
+  <!-- Iconos de Materialize con HTTPS explícito para evitar bloqueos -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
   <style>
     /* Footer */
@@ -485,7 +489,7 @@
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // 1. Configuración de Firebase
+    // Configuración de Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
       authDomain: "hourcheckt.firebaseapp.com",
@@ -552,15 +556,21 @@
 
         snap.forEach((doc) => {
           const data = doc.data();
-          const cat = (data.categoria || "").toLowerCase();
-          if (cat.includes("limpieza")) countLimpieza++;
-          else if (cat.includes("ingl")) countIngles++;
-          else if (cat.includes("infancia") || cat.includes("primera")) countInfancia++;
+          // Evalúa tanto 'Categoria' (mayúscula) como 'categoria' (minúscula)
+          const cat = String(data.Categoria || data.categoria || "").toLowerCase();
+
+          if (cat.includes("limpieza")) {
+            countLimpieza++;
+          } else if (cat.includes("ingl") || cat.includes("ingles")) {
+            countIngles++;
+          } else if (cat.includes("infancia") || cat.includes("primera")) {
+            countInfancia++;
+          }
         });
 
-        document.getElementById("statusLimpieza").textContent = `${countLimpieza} registros`;
-        document.getElementById("statusIngles").textContent = `${countIngles} registros`;
-        document.getElementById("statusInfancia").textContent = `${countInfancia} registros`;
+        document.getElementById("statusLimpieza").textContent = `${countLimpieza} registro${countLimpieza === 1 ? '' : 's'}`;
+        document.getElementById("statusIngles").textContent = `${countIngles} registro${countIngles === 1 ? '' : 's'}`;
+        document.getElementById("statusInfancia").textContent = `${countInfancia} registro${countInfancia === 1 ? '' : 's'}`;
       } catch (e) {
         console.error("Error al cargar contadores:", e);
       }

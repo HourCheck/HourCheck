@@ -7,7 +7,6 @@
   <link rel="icon" type="image/png" href="logo.png">
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
   <style>
@@ -89,7 +88,6 @@
       margin: 0 auto;
     }
 
-    /* Navbar superior */
     .top-header {
       display: flex;
       justify-content: space-between;
@@ -171,7 +169,6 @@
       color: #666;
     }
 
-    
     .sidenav {
       width: 300px;
       border-top-right-radius: 20px;
@@ -204,7 +201,6 @@
       letter-spacing: 0.8px;
     }
 
-    /* Banner de Bienvenida */
     .welcome-banner {
       background-color: #1557d0;
       border-radius: 25px;
@@ -243,78 +239,23 @@
       z-index: 2;
     }
 
-    /* Grid de Tarjetas de Proyectos */
-    .projects-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 25px;
+    /* Estilos para el gráfico con porcentaje incrustado */
+    .chart-container {
+      position: relative;
+      width: 170px;
+      height: 170px;
+      margin: 10px auto;
     }
 
-    .project-card {
-      background: #ffffff;
-      border-radius: 25px;
-      padding: 25px;
+    .metric-box {
       display: flex;
       align-items: center;
-      gap: 20px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.03);
-      transition: transform 0.2s, box-shadow 0.2s;
+      padding: 12px 15px;
+      background: #f8fafc;
+      border-radius: 12px;
+      margin-top: 10px;
     }
 
-    .project-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.06);
-    }
-
-    .card-icon-wrapper {
-      width: 90px;
-      height: 90px;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .card-icon-wrapper img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-    }
-
-    .card-info {
-      display: flex;
-      flex-direction: column;
-      flex-grow: 1;
-    }
-
-    .card-title {
-      font-size: 1.1rem;
-      font-weight: 800;
-      color: #000;
-      margin: 0 0 12px 0;
-      line-height: 1.2;
-    }
-
-    .card-status {
-      font-size: 0.95rem;
-      color: #555;
-      margin-bottom: 12px;
-      font-weight: 500;
-    }
-
-    .card-link {
-      color: #0047e0;
-      font-weight: 700;
-      font-size: 1rem;
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-
-    .card-link:hover {
-      color: #002ca3;
-    }
-
-    /* Adaptación Responsiva */
     @media (max-width: 768px) {
       .welcome-banner {
         flex-direction: column;
@@ -325,9 +266,6 @@
         margin-top: 20px;
         width: 200px;
       }
-      .projects-grid {
-        grid-template-columns: 1fr;
-      }
     }
   </style>
 </head>
@@ -336,26 +274,22 @@
   <ul id="slide-out" class="sidenav">
     <li>
       <div class="user-view">
-  <div class="background" style="background-color: #1557d0;"></div>  
-  <a href="#user">
-    <div class="avatar"><i class="material-icons">person</i></div>
-  </a>
-  <!-- Nombre del Director (NameDirector) -->
-  <a href="#name">
-    <span id="user-name" class="white-text name" style="font-weight:700;">Cargando...</span>
-  </a>
-  <!-- Correo Institucional (CorreoInst) -->
-  <a href="#email">
-    <span id="user-email" class="white-text email">Cargando...</span>
-  </a>
-  <!-- Institución (NameInst) -->
-  <a href="#institution">
-    <span id="user-inst" class="white-text institution" style="font-size: 13px; opacity: 0.9;">Cargando...</span>
-  </a>
-</div>
+        <div class="background" style="background-color: #1557d0;"></div>  
+        <a href="#user">
+          <div class="avatar"><i class="material-icons">person</i></div>
+        </a>
+        <a href="#name">
+          <span id="user-name" class="white-text name" style="font-weight:700;">Cargando...</span>
+        </a>
+        <a href="#email">
+          <span id="user-email" class="white-text email">Cargando...</span>
+        </a>
+        <a href="#institution">
+          <span id="user-inst" class="white-text institution" style="font-size: 13px; opacity: 0.9;">Cargando...</span>
+        </a>
+      </div>
     </li>
     
-    <!-- Apartados del menú -->
     <li><a href="perfilD.html" class="waves-effect"><i class="material-icons">account_circle</i>Perfil</a></li>
     <li><a href="notiD.html" class="waves-effect"><i class="material-icons">notifications</i>Notificaciones</a></li>
     
@@ -370,10 +304,8 @@
   <!-- CONTENIDO PRINCIPAL -->
   <div class="dashboard-container">
     
-    <!-- Encabezado Superior -->
     <header class="top-header">
       <div class="header-left">
-        <!-- Botón de Hamburguesa con trigger hacia el Sidenav -->
         <a href="#" data-target="slide-out" class="sidenav-trigger btn-menu-trigger">
           <i class="material-icons">menu</i>
         </a>
@@ -396,230 +328,283 @@
       </div>
     </header>
 
-   <!-- Banner Principal -->
-<section class="welcome-banner" style="background: linear-gradient(135deg, #1557d0, #2867f0); padding: 30px; border-radius: 16px; color: white; display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(21, 87, 208, 0.2);">
-  <div class="banner-content">
-    <h2 class="banner-title" style="margin: 0 0 10px 0; font-size: 1.8rem; font-weight: bold;">¡Bienvenido/a!</h2>
-    <p class="banner-text" style="margin: 0; font-size: 0.95rem; opacity: 0.9; max-width: 600px;">Supervisa y registra el progreso de tus estudiantes, controla sus encargados y verifica sus actividades y evidencias.</p>
-  </div>
-  <img src="https://cdnai.iconscout.com/ai-image/premium/thumb/ai-hombre-de-negocios-trabajando-en-una-computadora-portatil-illustration-png-download-jpg-13171712.png" alt="Ilustración Trabajo" class="banner-illustration" style="height: 110px; object-fit: contain;">
-</section>
-
-<div class="row" style="display: flex; flex-wrap: wrap;">
-
-  <div class="col s12 m4" style="display: flex;">
-    <div class="card white custom-card" style="border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #f0f0f0; width: 100%; display: flex; flex-direction: column; justify-content: space-between;">
-      <div class="card-content" style="padding: 20px; display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
-        <span class="card-title grey-text text-darken-4" style="font-size: 0.85rem; font-weight: bold; letter-spacing: 0.5px;">■ PROGRESO GENERAL</span>
-        <div class="center-align" style="margin-top: 15px;">
-          <canvas id="barChart" height="130"></canvas>
-          <div style="margin-top: 10px;">
-            <h4 style="color: #1565c0; font-weight: bold; margin: 5px 0 0 0; font-size: 1.8rem;">72%</h4>
-            <span class="grey-text" style="font-size: 0.8rem;">Progreso total</span>
-          </div>
-        </div>
+    <!-- Banner Principal -->
+    <section class="welcome-banner" style="background: linear-gradient(135deg, #1557d0, #2867f0); padding: 30px; border-radius: 16px; color: white; display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(21, 87, 208, 0.2);">
+      <div class="banner-content">
+        <h2 class="banner-title" style="margin: 0 0 10px 0; font-size: 1.8rem; font-weight: bold;">¡Bienvenido/a!</h2>
+        <p class="banner-text" style="margin: 0; font-size: 0.95rem; opacity: 0.9; max-width: 600px;">Supervisa y registra el progreso de tus estudiantes, controla sus encargados y verifica sus actividades y evidencias.</p>
       </div>
-    </div>
-  </div>
+      <img src="https://cdnai.iconscout.com/ai-image/premium/thumb/ai-hombre-de-negocios-trabajando-en-una-computadora-portatil-illustration-png-download-jpg-13171712.png" alt="Ilustración Trabajo" class="banner-illustration" style="height: 110px; object-fit: contain;">
+    </section>
 
-  <div class="col s12 m4" style="display: flex;">
-    <div class="card white custom-card" style="border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #f0f0f0; width: 100%;">
-      <div class="card-content" style="padding: 20px;">
-        <span class="card-title grey-text text-darken-4" style="font-size: 0.85rem; font-weight: bold; letter-spacing: 0.5px;">◆ CUMPLIMIENTO</span>
-        <table class="table-custom highlight" style="margin-top: 10px;">
-          <tbody>
-            <tr style="border-bottom: 1px solid #f0f0f0;">
-              <td style="font-size: 0.75rem; padding: 8px 2px; color: #555;">En progreso</td>
-              <td class="right-align" style="font-weight: bold; padding: 8px 2px; color: #2c3e50;">86</td>
-            </tr>
-            <tr style="border-bottom: 1px solid #f0f0f0;">
-              <td style="font-size: 0.75rem; padding: 8px 2px; color: #555;">Próximos a completar</td>
-              <td class="right-align" style="font-weight: bold; padding: 8px 2px; color: #2c3e50;">18</td>
-            </tr>
-            <tr style="border-bottom: 1px solid #f0f0f0;">
-              <td style="font-size: 0.75rem; padding: 8px 2px; color: #555;">Sin actividad reciente</td>
-              <td class="right-align" style="font-weight: bold; padding: 8px 2px; color: #e53935;">9</td>
-            </tr>
-            <tr>
-              <td style="font-size: 0.75rem; padding: 8px 2px; color: #555;">Evidencias pendientes</td>
-              <td class="right-align" style="font-weight: bold; padding: 8px 2px; color: #fb8c00;">24</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
+    <div class="row" style="display: flex; flex-wrap: wrap;">
 
-  <div class="col s12 m4" style="display: flex;">
-    <div class="card white custom-card" style="border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #f0f0f0; width: 100%;">
-      <div class="card-content" style="padding: 20px;">
-        <span class="card-title grey-text text-darken-4" style="font-size: 0.85rem; font-weight: bold; letter-spacing: 0.5px;">▲ REPORTES DE MAESTROS</span>
-        <div class="badge-card valign-wrapper" style="margin-top: 35px;">
-          <div style="background-color: #fff3e0; border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; margin-right: 15px; flex-shrink: 0;">
-            <i class="material-icons orange-text text-darken-2" style="font-size: 28px;">assignment_late</i>
-          </div>
-          <div>
-            <h4 style="margin: 0; font-weight: bold; color: #2c3e50; font-size: 1.8rem;">15</h4>
-            <span class="grey-text" style="font-size: 0.8rem;">Reportes pendientes</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-</div>
- <footer class="page-footer custom-footer">
-    <div class="container footer-container">
-      <div class="row style-row">
+      <!-- COLUMNA 1: PROGRESO GENERAL Y MIEMBROS DE LA INSTITUCIÓN -->
+      <div class="col s12 m6" style="display: flex; flex-direction: column; gap: 20px;">
         
-        <div class="col s12 m4">
-          <div class="footer-brand">
-            <img src="logo.png" alt="HourCheck Logo" class="footer-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x40?text=HourCheck';">
-            <h5 class="white-text font-weight-bold">HourCheck</h5>
+        <!-- Tarjeta Progreso General -->
+        <div class="card white custom-card" style="border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #f0f0f0; margin: 0;">
+          <div class="card-content" style="padding: 20px;">
+            <span class="card-title grey-text text-darken-4" style="font-size: 0.85rem; font-weight: bold; letter-spacing: 0.5px;">■ PROGRESO GENERAL</span>
+            <div class="center-align">
+              <div class="chart-container">
+                <canvas id="doughnutChart"></canvas>
+              </div>
+              <span class="grey-text" style="font-size: 0.85rem; font-weight: 500;">Meta Global Alcanzada</span>
+            </div>
           </div>
-          <p class="grey-text text-lighten-2">
-            Sistema para la gestión y seguimiento del Servicio Social Estudiantil. Facilitando la validación y control de horas de forma eficiente.
-          </p>
         </div>
 
-        <div class="col s12 m4 center-on-small">
-          <h5 class="white-text font-weight-bold">Enlaces Rápidos</h5>
-          <ul>
-            <li><a class="grey-text text-lighten-3 footer-link" href="index.html"><i class="material-icons tiny">chevron_right</i> Inicio</a></li>
-            <li><a class="grey-text text-lighten-3 footer-link" href="saberCualP.html"><i class="material-icons tiny">chevron_right</i> Guía de Perfiles</a></li>
-          </ul>
-        </div>
+        <!-- Nueva Tarjeta: Estudiantes y Docentes de la Institución -->
+        <div class="card white custom-card" style="border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #f0f0f0; margin: 0;">
+          <div class="card-content" style="padding: 20px;">
+            <span class="card-title grey-text text-darken-4" style="font-size: 0.85rem; font-weight: bold; letter-spacing: 0.5px;">👥 MIEMBROS DE LA INSTITUCIÓN</span>
+            
+            <div class="metric-box">
+              <div style="background-color: #e3f2fd; border-radius: 50%; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; margin-right: 15px; flex-shrink: 0;">
+                <i class="material-icons blue-text text-darken-2" style="font-size: 24px;">school</i>
+              </div>
+              <div>
+                <h4 id="cant-estudiantes" style="margin: 0; font-weight: bold; color: #2c3e50; font-size: 1.5rem;">0</h4>
+                <span class="grey-text" style="font-size: 0.8rem;">Estudiantes Registrados</span>
+              </div>
+            </div>
 
-        <div class="col s12 m4">
-          <h5 class="white-text font-weight-bold">Soporte</h5>
-          <p class="grey-text text-lighten-2">
-            ¿Tienes dudas con el registro de tus horas?
-          </p>
-          <a href="mailto:soporte@hourcheck.com" class="btn-flat white-text footer-btn">
-            <i class="material-icons left">help_outline</i> Contactar Soporte
-          </a>
+            <div class="metric-box">
+              <div style="background-color: #e8f5e9; border-radius: 50%; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; margin-right: 15px; flex-shrink: 0;">
+                <i class="material-icons green-text text-darken-2" style="font-size: 24px;">record_voice_over</i>
+              </div>
+              <div>
+                <h4 id="cant-docentes" style="margin: 0; font-weight: bold; color: #2c3e50; font-size: 1.5rem;">0</h4>
+                <span class="grey-text" style="font-size: 0.8rem;">Docentes Asignados</span>
+              </div>
+            </div>
+
+          </div>
         </div>
 
       </div>
+
+      <!-- COLUMNA 2: REPORTES -->
+      <div class="col s12 m6" style="display: flex;">
+        <div class="card white custom-card" style="border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #f0f0f0; width: 100%;">
+          <div class="card-content" style="padding: 20px;">
+            <span class="card-title grey-text text-darken-4" style="font-size: 0.85rem; font-weight: bold; letter-spacing: 0.5px;">▲ REPORTES DE MAESTROS</span>
+            <div class="badge-card valign-wrapper" style="margin-top: 35px;">
+              <div style="background-color: #fff3e0; border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; margin-right: 15px; flex-shrink: 0;">
+                <i class="material-icons orange-text text-darken-2" style="font-size: 28px;">assignment_late</i>
+              </div>
+              <div>
+                <h4 style="margin: 0; font-weight: bold; color: #2c3e50; font-size: 1.8rem;">15</h4>
+                <span class="grey-text" style="font-size: 0.8rem;">Reportes pendientes</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
 
-    <div class="footer-copyright custom-copyright">
-      <div class="container center-align white-text">
-        © 2026 HourCheck - Todos los derechos reservados.
+    <footer class="page-footer custom-footer">
+      <div class="container footer-container">
+        <div class="row style-row">
+          
+          <div class="col s12 m4">
+            <div class="footer-brand">
+              <img src="logo.png" alt="HourCheck Logo" class="footer-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x40?text=HourCheck';">
+              <h5 class="white-text font-weight-bold">HourCheck</h5>
+            </div>
+            <p class="grey-text text-lighten-2">
+              Sistema para la gestión y seguimiento del Servicio Social Estudiantil. Facilitando la validación y control de horas de forma eficiente.
+            </p>
+          </div>
+
+          <div class="col s12 m4 center-on-small">
+            <h5 class="white-text font-weight-bold">Enlaces Rápidos</h5>
+            <ul>
+              <li><a class="grey-text text-lighten-3 footer-link" href="index.html"><i class="material-icons tiny">chevron_right</i> Inicio</a></li>
+              <li><a class="grey-text text-lighten-3 footer-link" href="saberCualP.html"><i class="material-icons tiny">chevron_right</i> Guía de Perfiles</a></li>
+            </ul>
+          </div>
+
+          <div class="col s12 m4">
+            <h5 class="white-text font-weight-bold">Soporte</h5>
+            <p class="grey-text text-lighten-2">
+              ¿Tienes dudas con el registro de tus horas?
+            </p>
+            <a href="mailto:soporte@hourcheck.com" class="btn-flat white-text footer-btn">
+              <i class="material-icons left">help_outline</i> Contactar Soporte
+            </a>
+          </div>
+
+        </div>
       </div>
-    </div>
-  </footer>
+
+      <div class="footer-copyright custom-copyright">
+        <div class="container center-align white-text">
+          © 2026 HourCheck - Todos los derechos reservados.
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
   <!-- Materialize JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <!-- Inicialización de Materialize Sidenav -->
-  <script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
+      authDomain: "hourcheckt.firebaseapp.com",
+      projectId: "hourcheckt",
+      storageBucket: "hourcheckt.firebasestorage.app",
+      messagingSenderId: "83459752453",
+      appId: "1:83459752453:web:1b81724c28973bf567126c"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
     document.addEventListener('DOMContentLoaded', function() {
       var elems = document.querySelectorAll('.sidenav');
-      var instances = M.Sidenav.init(elems, {
-        edge: 'left', // Se desliza desde la izquierda
-        draggable: true // Permite arrastrar en dispositivos táctiles
-      });
+      if (typeof M !== 'undefined' && M.Sidenav) {
+        M.Sidenav.init(elems, { edge: 'left', draggable: true });
+      }
+      renderDoughnutChart(72); // Inicialización del gráfico con 72%
     });
-  </script>
-    
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// 1. Configuración de Firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
-  authDomain: "hourcheckt.firebaseapp.com",
-  projectId: "hourcheckt",
-  storageBucket: "hourcheckt.firebasestorage.app",
-  messagingSenderId: "83459752453",
-  appId: "1:83459752453:web:1b81724c28973bf567126c"
-};
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        let instData = null;
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+        try {
+          const docRef = doc(db, "Institucion", user.uid);
+          const docSnap = await getDoc(docRef);
 
-// 2. Inicializar Sidenav
-document.addEventListener('DOMContentLoaded', function() {
-  var elems = document.querySelectorAll('.sidenav');
-  if (typeof M !== 'undefined' && M.Sidenav) {
-    M.Sidenav.init(elems, { edge: 'left', draggable: true });
-  }
-});
+          if (docSnap.exists()) {
+            instData = docSnap.data();
+          } else {
+            const q = query(collection(db, "Institucion"), where("CorreoInst", "==", user.email));
+            const querySnapshot = await getDocs(q);
+            if (!querySnapshot.empty) {
+              instData = querySnapshot.docs[0].data();
+            }
+          }
 
-// 3. Comprobar la sesión activa al cargar la página
-onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    const userEmail = user.email ? user.email.toLowerCase().trim() : "";
-    let instData = null;
+          if (instData) {
+            actualizarInterfaz({
+              nombreDirector: instData.NameDirector || "Director/a",
+              correoInst: instData.CorreoInst || user.email,
+              nombreInst: instData.NameInst || "Institución Educativa"
+            });
+          } else {
+            actualizarInterfaz({
+              nombreDirector: "Director/a",
+              correoInst: user.email,
+              nombreInst: "Institución No Encontrada"
+            });
+          }
 
-    try {
-      // Intento 1: Buscar documento por ID directo (UID del usuario)
-      const docRef = doc(db, "Institucion", user.uid);
-      const docSnap = await getDoc(docRef);
+          // Cargar contadores de Estudiantes y Docentes
+          cargarContadoresMiembros(user.uid);
 
-      if (docSnap.exists()) {
-        instData = docSnap.data();
-      } else {
-        // Intento 2: Buscar por campo 'CorreoInst' en caso de que el ID no sea el UID
-        const q = query(collection(db, "Institucion"), where("CorreoInst", "==", user.email));
-        const querySnapshot = await getDocs(q);
-        
-        if (!querySnapshot.empty) {
-          instData = querySnapshot.docs[0].data();
+        } catch (error) {
+          console.error("❌ Error al consultar Firestore:", error);
+          actualizarInterfaz({
+            nombreDirector: "Error de lectura",
+            correoInst: user.email,
+            nombreInst: "Verifique permisos de Firebase"
+          });
         }
-      }
-
-      if (instData) {
-        actualizarInterfaz({
-          nombreDirector: instData.NameDirector || "Director/a",
-          correoInst: instData.CorreoInst || user.email,
-          nombreInst: instData.NameInst || "Institución Educativa"
-        });
       } else {
-        actualizarInterfaz({
-          nombreDirector: "Director/a",
-          correoInst: user.email,
-          nombreInst: "Institución No Encontrada"
-        });
+        window.location.href = "loginU.html";
       }
+    });
 
-    } catch (error) {
-      console.error("❌ Error al consultar Firestore:", error);
-      actualizarInterfaz({
-        nombreDirector: "Error de lectura",
-        correoInst: user.email,
-        nombreInst: "Verifique permisos de Firebase"
+    function actualizarInterfaz({ nombreDirector, correoInst, nombreInst }) {
+      const sidenavName = document.getElementById("user-name");
+      const sidenavEmail = document.getElementById("user-email");
+      const sidenavInst = document.getElementById("user-inst");
+
+      if (sidenavName) sidenavName.textContent = nombreDirector;
+      if (sidenavEmail) sidenavEmail.textContent = correoInst;
+      if (sidenavInst) sidenavInst.textContent = nombreInst;
+
+      const userNameHeader = document.querySelector(".header-right .user-info .user-name");
+      if (userNameHeader) userNameHeader.textContent = nombreDirector;
+
+      const bannerTitle = document.querySelector(".welcome-banner .banner-title");
+      if (bannerTitle) bannerTitle.textContent = `¡Bienvenido/a, ${nombreDirector}!`;
+    }
+
+    // Consulta en Firestore filtrando por el ID de la institución
+    async function cargarContadoresMiembros(instId) {
+      try {
+        const qEstudiantes = query(collection(db, "Estudiantes"), where("institucion", "==", instId));
+        const snapEstudiantes = await getDocs(qEstudiantes);
+        document.getElementById("cant-estudiantes").textContent = snapEstudiantes.size;
+
+        const qDocentes = query(collection(db, "Docentes"), where("institucion", "==", instId));
+        const snapDocentes = await getDocs(qDocentes);
+        document.getElementById("cant-docentes").textContent = snapDocentes.size;
+      } catch (e) {
+        console.error("Error obteniendo miembros de la institución:", e);
+      }
+    }
+
+    // Renderizado de Gráfica de Donut con Texto Central Superpuesto
+    function renderDoughnutChart(porcentaje) {
+      const ctx = document.getElementById('doughnutChart').getContext('2d');
+      
+      const centerTextPlugin = {
+        id: 'centerText',
+        beforeDraw: function(chart) {
+          const width = chart.width,
+                height = chart.height,
+                ctx = chart.ctx;
+          ctx.restore();
+          const fontSize = (height / 114).toFixed(2);
+          ctx.font = "bold " + fontSize + "em sans-serif";
+          ctx.textBaseline = "middle";
+          ctx.fillStyle = "#1557d0";
+          
+          const text = porcentaje + "%",
+                textX = Math.round((width - ctx.measureText(text).width) / 2),
+                textY = height / 2;
+          
+          ctx.fillText(text, textX, textY);
+          ctx.save();
+        }
+      };
+
+      new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          datasets: [{
+            data: [porcentaje, 100 - porcentaje],
+            backgroundColor: ['#1557d0', '#e0e0e0'],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          cutout: '78%',
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            tooltip: { enabled: false },
+            legend: { display: false }
+          }
+        },
+        plugins: [centerTextPlugin]
       });
     }
-  } else {
-    window.location.href = "loginU.html";
-  }
-});
-
-// --- FUNCION AUXILIAR PARA ACTUALIZAR LA INTERFAZ ---
-
-function actualizarInterfaz({ nombreDirector, correoInst, nombreInst }) {
-  // Sidenav (Menú lateral)
-  const sidenavName = document.getElementById("user-name");
-  const sidenavEmail = document.getElementById("user-email");
-  const sidenavInst = document.getElementById("user-inst");
-
-  if (sidenavName) sidenavName.textContent = nombreDirector;
-  if (sidenavEmail) sidenavEmail.textContent = correoInst;
-  if (sidenavInst) sidenavInst.textContent = nombreInst;
-
-  // Header superior
-  const userNameHeader = document.querySelector(".header-right .user-info .user-name");
-  if (userNameHeader) userNameHeader.textContent = nombreDirector;
-
-  // Banner principal
-  const bannerTitle = document.querySelector(".welcome-banner .banner-title");
-  if (bannerTitle) bannerTitle.textContent = `¡Bienvenido/a, ${nombreDirector}!`;
-}
   </script>
 </body>
 </html>
