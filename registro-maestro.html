@@ -309,106 +309,109 @@
   </footer>
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import { getFirestore, doc, setDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { getFirestore, doc, setDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
-      authDomain: "hourcheckt.firebaseapp.com",
-      projectId: "hourcheckt",
-      storageBucket: "hourcheckt.firebasestorage.app",
-      messagingSenderId: "83459752453",
-      appId: "1:83459752453:web:1b81724c28973bf567126c"
-    };
+  const firebaseConfig = {
+    apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
+    authDomain: "hourcheckt.firebaseapp.com",
+    projectId: "hourcheckt",
+    storageBucket: "hourcheckt.firebasestorage.app",
+    messagingSenderId: "83459752453",
+    appId: "1:83459752453:web:1b81724c28973bf567126c"
+  };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
 
-    const teacherForm = document.getElementById("teacherForm");
-    const btnRegistrar = document.getElementById("btnRegistrar");
+  const teacherForm = document.getElementById("teacherForm");
+  const btnRegistrar = document.getElementById("btnRegistrar");
 
-    // Función para Cargar Instituciones desde Firestore
-    async function cargarInstituciones() {
-      const selectInstitucion = document.getElementById("institucion");
+  // Función para Cargar Instituciones desde Firestore
+  async function cargarInstituciones() {
+    const selectInstitucion = document.getElementById("institucion");
 
-      try {
-        const querySnapshot = await getDocs(collection(db, "Institucion"));
-        
-        if (querySnapshot.empty) {
-          selectInstitucion.innerHTML = '<option value="" disabled selected hidden>No hay instituciones registradas</option>';
-          return;
-        }
-
-        selectInstitucion.innerHTML = '<option value="" disabled selected hidden>Selecciona una opción</option>';
-
-        querySnapshot.forEach((docSnapshot) => {
-          const data = docSnapshot.data();
-          if (data.NameInst) {
-            const option = document.createElement("option");
-            option.value = data.NameInst;
-            option.textContent = data.NameInst;
-            selectInstitucion.appendChild(option);
-          }
-        });
-
-      } catch (error) {
-        console.error("Error al cargar instituciones:", error);
-        M.toast({ html: 'Error al cargar instituciones: ' + error.message, classes: 'red rounded' });
-        selectInstitucion.innerHTML = '<option value="" disabled selected hidden>Error de permisos al cargar</option>';
+    try {
+      const querySnapshot = await getDocs(collection(db, "Institucion"));
+      
+      if (querySnapshot.empty) {
+        selectInstitucion.innerHTML = '<option value="" disabled selected hidden>No hay instituciones registradas</option>';
+        return;
       }
+
+      selectInstitucion.innerHTML = '<option value="" disabled selected hidden>Selecciona una opción</option>';
+
+      querySnapshot.forEach((docSnapshot) => {
+        const data = docSnapshot.data();
+        if (data.NameInst) {
+          const option = document.createElement("option");
+          
+          // CAMBIO 1: El value almacena el ID del documento, el texto muestra el Nombre
+          option.value = docSnapshot.id; 
+          option.textContent = data.NameInst;
+          
+          selectInstitucion.appendChild(option);
+        }
+      });
+
+    } catch (error) {
+      console.error("Error al cargar instituciones:", error);
+      M.toast({ html: 'Error al cargar instituciones: ' + error.message, classes: 'red rounded' });
+      selectInstitucion.innerHTML = '<option value="" disabled selected hidden>Error de permisos al cargar</option>';
     }
+  }
 
-    // Cargar opciones al iniciar
-    cargarInstituciones();
+  // Cargar opciones al iniciar
+  cargarInstituciones();
 
-    // Evento de Envío de Formulario
-    teacherForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
+  // Evento de Envío de Formulario
+  teacherForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-      btnRegistrar.disabled = true;
-      btnRegistrar.textContent = "Registrando...";
+    btnRegistrar.disabled = true;
+    btnRegistrar.textContent = "Registrando...";
 
-      const nombreDocente = document.getElementById("nombre").value.trim();
-      const institucion = document.getElementById("institucion").value;
-      const correo = document.getElementById("correo").value.trim();
-      const password = document.getElementById("password").value.trim();
+    const nombreDocente = document.getElementById("nombre").value.trim();
+    const institucionId = document.getElementById("institucion").value; // Obtiene el ID
+    const correo = document.getElementById("correo").value.trim();
+    const password = document.getElementById("password").value.trim();
 
-      try {
-        // 1. Crear usuario en Auth
-        const userCredential = await createUserWithEmailAndPassword(auth, correo, password);
-        const uid = userCredential.user.uid;
+    try {
+      // 1. Crear usuario en Auth
+      const userCredential = await createUserWithEmailAndPassword(auth, correo, password);
+      const uid = userCredential.user.uid;
 
-        // 2. Guardar datos en la colección Docentes
-        await setDoc(doc(db, "Docentes", uid), {
-          Correo: correo,
-          Institucion: institucion,
-          NameDocente: nombreDocente,
-          fechaRegistro: new Date(),
-          password: password,
-          rol: "Docente"
-        });
+      // 2. Guardar datos en la colección Docentes
+      await setDoc(doc(db, "Docentes", uid), {
+        Correo: correo,
+        Institucion: institucionId, // CAMBIO 2: Guarda el ID del documento en lugar del nombre
+        NameDocente: nombreDocente,
+        fechaRegistro: new Date(),
+        password: password,
+        rol: "Docente"
+      });
 
-        M.toast({html: 'Docente registrado exitosamente. Redirigiendo...', classes: 'green rounded'});
-        setTimeout(() => {
-          window.location.href = "loginU.html?perfil=maestro";
-        }, 1500);
+      M.toast({html: 'Docente registrado exitosamente. Redirigiendo...', classes: 'green rounded'});
+      setTimeout(() => {
+        window.location.href = "loginU.html?perfil=maestro";
+      }, 1500);
 
-      } catch (error) {
-        console.error("Error al registrar docente:", error);
-        let mensaje = error.message;
-        if (error.code === 'auth/email-already-in-use') {
-          mensaje = "Este correo ya está registrado.";
-        } else if (error.code === 'auth/weak-password') {
-          mensaje = "La contraseña debe tener al menos 6 caracteres.";
-        }
-        M.toast({html: 'Error: ' + mensaje, classes: 'red rounded'});
-        btnRegistrar.disabled = false;
-        btnRegistrar.textContent = "Registrarse";
+    } catch (error) {
+      console.error("Error al registrar docente:", error);
+      let mensaje = error.message;
+      if (error.code === 'auth/email-already-in-use') {
+        mensaje = "Este correo ya está registrado.";
+      } else if (error.code === 'auth/weak-password') {
+        mensaje = "La contraseña debe tener al menos 6 caracteres.";
       }
-    });
-  </script>
+      M.toast({html: 'Error: ' + mensaje, classes: 'red rounded'});
+      btnRegistrar.disabled = false;
+      btnRegistrar.textContent = "Registrarse";
+    }
+  });
+</script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
