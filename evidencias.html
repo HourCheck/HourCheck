@@ -6,7 +6,7 @@
   <title>Registro de Horas Sociales - HourCheck</title>
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material-Icons" rel="stylesheet">
 
   <style>
     /* Estilos del Footer */
@@ -136,7 +136,6 @@
       object-fit: contain;
     }
 
-    /* Targeta / Card estilo UI */
     .custom-card {
       background: #ffffff;
       border-radius: 20px;
@@ -153,7 +152,6 @@
       display: block;
     }
 
-    /* Campos de Entrada y Select redondeados */
     .custom-input, 
     .custom-textarea,
     .custom-select {
@@ -185,7 +183,6 @@
       outline: none;
     }
 
-    /* Ajuste para input de archivo */
     .file-field .btn {
       border-radius: 8px;
       background-color: #e2e8f0;
@@ -198,7 +195,6 @@
       background-color: #cbd5e1;
     }
 
-    /* Botón Naranja Principal */
     .btn-orange {
       background-color: #ff6b00;
       border-radius: 12px;
@@ -218,7 +214,6 @@
 </head>
 <body>
 
-  
   <header class="top-header">
     <div class="header-left">
       <a href="mainPE.html" class="back-btn" title="Volver al Inicio">
@@ -241,7 +236,6 @@
           <!-- Formulario -->
           <form id="horasForm">
 
-            <!-- Nuevo Campo: Selección de Categoría -->
             <div>
               <label class="form-label" for="categoria">Categoría del Servicio Social</label>
               <select id="categoria" class="custom-select" required>
@@ -378,7 +372,6 @@
     const form = document.getElementById("horasForm");
     const btnGuardar = document.getElementById("btnGuardar");
 
-    // Función asíncrona segura para Base64
     const convertirABase64 = (archivo) => {
       return new Promise((resolve, reject) => {
         const lector = new FileReader();
@@ -388,18 +381,21 @@
       });
     };
 
-    // Función para obtener las horas acumuladas en Firestore
     async function obtenerHorasAcumuladas(userId) {
       let totalHoras = 0;
-      const q = query(
-        collection(db, "HorasSociales"),
-        where("userId", "==", userId)
-      );
-      const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((docSnap) => {
-        const data = docSnap.data();
-        totalHoras += Number(data.Horas) || 0;
-      });
+      try {
+        const q = query(
+          collection(db, "HorasSociales"),
+          where("userId", "==", userId)
+        );
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((docSnap) => {
+          const data = docSnap.data();
+          totalHoras += Number(data.Horas) || 0;
+        });
+      } catch (err) {
+        console.warn("No se pudieron verificar las horas acumuladas previas:", err);
+      }
       return totalHoras;
     }
 
@@ -428,7 +424,6 @@
         return;
       }
 
-      // Validar tamaño de archivo para no saturar Firestore (máximo 1 MB para Base64)
       if (archivoEvidencia.size > 1024 * 1024) {
         M.toast({html: 'La evidencia debe pesar menos de 1 MB', classes: 'orange rounded'});
         return;
@@ -438,7 +433,6 @@
         btnGuardar.disabled = true;
         btnGuardar.textContent = "Verificando horas...";
 
-        // 1. Obtener y verificar el límite de horas acumuladas
         const horasAcumuladas = await obtenerHorasAcumuladas(usuarioActual.uid);
 
         if (horasAcumuladas >= META_HORAS) {
@@ -463,14 +457,12 @@
 
         btnGuardar.textContent = "Guardando registro...";
 
-        // 2. Convertir evidencia a Base64
         const evidenciaBase64 = await convertirABase64(archivoEvidencia);
 
-        // 3. Guardado en Firestore vinculando al UID del usuario activo
         await addDoc(collection(db, "HorasSociales"), {
           userId: usuarioActual.uid,
           email: usuarioActual.email || "",
-          Categoria: categoriaInput, // <-- Campo de categoría guardado
+          Categoria: categoriaInput,
           Descripcion: descripcionInput,
           "Docente encargado": docenteInput,
           Evidencia: evidenciaBase64,
@@ -488,7 +480,7 @@
 
       } catch (error) {
         console.error("Error al registrar en Firestore:", error);
-        M.toast({html: 'Error al registrar la jornada. Inténtalo de nuevo.', classes: 'red rounded'});
+        M.toast({html: 'Error: ' + error.message, classes: 'red rounded'});
         btnGuardar.disabled = false;
         btnGuardar.textContent = "Guardar Registro";
       }
