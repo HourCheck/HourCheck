@@ -23,5 +23,10 @@ service cloud.firestore {
       allow read, write: if request.auth != null;
     }
 
+    // Permite el registro y consulta en la colección de HorasSociales
+    match /HorasSociales/{documentId} {
+      allow read, write: if request.auth != null;
+    }
+
   }
 }

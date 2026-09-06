@@ -5,11 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Registro de Horas Sociales - HourCheck</title>
   
+  <!-- CSS de Materialize -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-  <link href="https://fonts.googleapis.com/icon?family=Material-Icons" rel="stylesheet">
+  
+  <!-- Iconos de Materialize (Google Material Icons) con protocolo https explícito -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
   <style>
-    /* Estilos del Footer */
     .custom-footer {
       background-color: #1557d0 !important;
       border-top-left-radius: 25px;
@@ -115,10 +117,6 @@
       color: #1557d0;
     }
 
-    .back-btn i {
-      font-size: 24px;
-    }
-
     .header-right {
       display: flex;
       align-items: center;
@@ -191,9 +189,6 @@
       height: 42px;
       line-height: 42px;
     }
-    .file-field .btn:hover {
-      background-color: #cbd5e1;
-    }
 
     .btn-orange {
       background-color: #ff6b00;
@@ -205,10 +200,6 @@
       font-weight: bold;
       text-transform: none;
       box-shadow: none;
-    }
-    .btn-orange:hover {
-      background-color: #e66000;
-      box-shadow: 0 4px 12px rgba(255, 107, 0, 0.3);
     }
   </style>
 </head>
@@ -233,7 +224,6 @@
       <div class="col s12 m8 offset-m2 l6 offset-l3">
         <div class="custom-card">
 
-          <!-- Formulario -->
           <form id="horasForm">
 
             <div>
@@ -279,7 +269,6 @@
               </div>
             </div>
 
-            <!-- Botón de Envío -->
             <div style="margin-top: 15px;">
               <button class="btn waves-effect waves-light btn-orange" type="submit" id="btnGuardar">
                 Guardar Registro
@@ -293,10 +282,9 @@
     </div>
   </div>
 
-  <!-- FOOTER -->
   <footer class="page-footer custom-footer">
     <div class="container footer-container">
-      <div class="row style-row">
+      <div class="row">
         
         <div class="col s12 m4">
           <div class="footer-brand">
@@ -304,11 +292,11 @@
             <h5 class="white-text font-weight-bold">HourCheck</h5>
           </div>
           <p class="grey-text text-lighten-2">
-            Sistema para la gestión y seguimiento del Servicio Social Estudiantil. Facilitando la validación y control de horas de forma eficiente.
+            Sistema para la gestión y seguimiento del Servicio Social Estudiantil.
           </p>
         </div>
 
-        <div class="col s12 m4 center-on-small">
+        <div class="col s12 m4">
           <h5 class="white-text font-weight-bold">Enlaces Rápidos</h5>
           <ul>
             <li><a class="grey-text text-lighten-3 footer-link" href="index.html"><i class="material-icons tiny">chevron_right</i> Inicio</a></li>
@@ -336,9 +324,10 @@
     </div>
   </footer>
 
+  <!-- Script JS de Materialize -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
-  <!-- Firebase JavaScript Modular -->
+  <!-- Firebase Script Modular -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, addDoc, serverTimestamp, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -359,13 +348,15 @@
     const META_HORAS = 150;
     let usuarioActual = null;
 
-    // Verificar si hay un usuario logueado
+    // Verificar si el usuario ha iniciado sesión
     onAuthStateChanged(auth, (user) => {
       if (user) {
         usuarioActual = user;
       } else {
         M.toast({html: 'Debes iniciar sesión primero', classes: 'red rounded'});
-        window.location.href = "loginU.html"; 
+        setTimeout(() => {
+          window.location.href = "loginU.html"; 
+        }, 1500);
       }
     });
 
@@ -394,7 +385,7 @@
           totalHoras += Number(data.Horas) || 0;
         });
       } catch (err) {
-        console.warn("No se pudieron verificar las horas acumuladas previas:", err);
+        console.warn("Consulta previa omitida o sin índice:", err);
       }
       return totalHoras;
     }
@@ -403,7 +394,7 @@
       e.preventDefault();
 
       if (!usuarioActual) {
-        M.toast({html: 'No hay una sesión activa', classes: 'red rounded'});
+        M.toast({html: 'No hay una sesión activa en Firebase', classes: 'red rounded'});
         return;
       }
 
@@ -424,8 +415,9 @@
         return;
       }
 
-      if (archivoEvidencia.size > 1024 * 1024) {
-        M.toast({html: 'La evidencia debe pesar menos de 1 MB', classes: 'orange rounded'});
+      // Límite de tamaño para Firestore (máximo 1 MB por documento)
+      if (archivoEvidencia.size > 800 * 1024) {
+        M.toast({html: 'La imagen o PDF excede el peso máximo permitido (800 KB).', classes: 'orange rounded'});
         return;
       }
 
@@ -436,7 +428,7 @@
         const horasAcumuladas = await obtenerHorasAcumuladas(usuarioActual.uid);
 
         if (horasAcumuladas >= META_HORAS) {
-          M.toast({html: 'Ya has alcanzado la meta límite de 150 horas.', classes: 'orange rounded'});
+          M.toast({html: 'Ya has completado la meta de 150 horas.', classes: 'orange rounded'});
           btnGuardar.disabled = false;
           btnGuardar.textContent = "Guardar Registro";
           return;
@@ -446,16 +438,16 @@
 
         if (horasInput > horasRestantes) {
           M.toast({
-            html: `Solo te faltan ${horasRestantes} h para completar las 150 h. Ajusta las horas ingresadas.`, 
+            html: `Te restan ${horasRestantes} h para la meta. Ingresa un valor menor.`, 
             classes: 'orange rounded',
-            displayLength: 5000
+            displayLength: 4000
           });
           btnGuardar.disabled = false;
           btnGuardar.textContent = "Guardar Registro";
           return;
         }
 
-        btnGuardar.textContent = "Guardando registro...";
+        btnGuardar.textContent = "Guardando...";
 
         const evidenciaBase64 = await convertirABase64(archivoEvidencia);
 
@@ -471,16 +463,22 @@
           fechaCreacion: serverTimestamp()
         });
 
-        M.toast({html: '¡Jornada registrada exitosamente!', classes: 'green rounded'});
+        M.toast({html: '¡Jornada registrada con éxito!', classes: 'green rounded'});
         form.reset();
 
         setTimeout(() => {
           window.location.href = "mainPE.html";
-        }, 1500);
+        }, 1200);
 
       } catch (error) {
-        console.error("Error al registrar en Firestore:", error);
-        M.toast({html: 'Error: ' + error.message, classes: 'red rounded'});
+        console.error("Error exacto de Firebase:", error);
+        
+        if (error.code === "permission-denied") {
+          M.toast({html: 'Error: Permisos insuficientes en Firestore. Revisa las reglas en Firebase Console.', classes: 'red rounded', displayLength: 6000});
+        } else {
+          M.toast({html: 'Ocurrió un error: ' + error.message, classes: 'red rounded'});
+        }
+
         btnGuardar.disabled = false;
         btnGuardar.textContent = "Guardar Registro";
       }
