@@ -10,7 +10,6 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
   <style>
-    /* Configuración base para asegurar footer al fondo y ancho completo */
     body {
       background-color: #f4f6f9;
       font-family: 'Roboto', sans-serif;
@@ -26,11 +25,10 @@
       width: 100%;
       margin: 0 auto;
       padding: 20px;
-      flex: 1 0 auto; /* Empuja el footer al fondo si hay poco contenido */
+      flex: 1 0 auto;
       box-sizing: border-box;
     }
 
-    /* Footer ajustado al 100% de la pantalla */
     .custom-footer {
       background-color: #1557d0 !important;
       border-top-left-radius: 25px;
@@ -268,7 +266,6 @@
       flex-wrap: wrap;
     }
 
-    /* Adaptación Responsive (Móviles y Tablets) */
     @media (max-width: 992px) {
       .dashboard-grid {
         flex-direction: column;
@@ -292,7 +289,7 @@
       }
 
       .header-right .user-info {
-        display: none; /* Oculta texto de usuario en móviles pequeños para evitar desbordes */
+        display: none;
       }
     }
   </style>
@@ -379,7 +376,7 @@
               <div class="chart-container">
                 <canvas id="doughnutChart"></canvas>
               </div>
-              <span class="grey-text" style="font-size: 0.85rem; font-weight: 500;">Meta Global Alcanzada</span>
+              <span class="grey-text" id="info-horas-meta" style="font-size: 0.85rem; font-weight: 500;">Calculando progreso...</span>
             </div>
           </div>
         </div>
@@ -434,7 +431,7 @@
     </div>
   </div>
 
-  <!-- FOOTER (Fuera del contenedor para abarcar el 100% del ancho) -->
+  <!-- FOOTER -->
   <footer class="page-footer custom-footer">
     <div class="container footer-container">
       <div class="row">
@@ -500,12 +497,13 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    let myDoughnutChart = null; // Instancia global para poder re-renderizar la gráfica
+
     document.addEventListener('DOMContentLoaded', function() {
       var elems = document.querySelectorAll('.sidenav');
       if (typeof M !== 'undefined' && M.Sidenav) {
         M.Sidenav.init(elems, { edge: 'left', draggable: true });
       }
-      renderDoughnutChart(72);
     });
 
     onAuthStateChanged(auth, async (user) => {
@@ -537,14 +535,14 @@
               nombreInst: instData.NameInst || "Institución Educativa"
             });
 
-            cargarContadoresMiembros(idInstitucionReal, user.uid);
+            cargarDatosYProgreso(idInstitucionReal, user.uid);
           } else {
             actualizarInterfaz({
               nombreDirector: "Director/a",
               correoInst: user.email,
               nombreInst: "Institución No Encontrada"
             });
-            cargarContadoresMiembros(user.uid, user.uid);
+            cargarDatosYProgreso(user.uid, user.uid);
           }
 
         } catch (error) {
@@ -576,29 +574,64 @@
       if (bannerTitle) bannerTitle.textContent = `¡Bienvenido/a, ${nombreDirector}!`;
     }
 
-    async function cargarContadoresMiembros(instId, userUid) {
+    // Consulta contadores y calcula el progreso global según HorasSociales
+    async function cargarDatosYProgreso(instId, userUid) {
       try {
+        // 1. Obtener Estudiantes
         const qEstudiantes = query(collection(db, "Estudiantes"), where("institucion", "==", instId));
         const snapEstudiantes = await getDocs(qEstudiantes);
-        const elemEstudiantes = document.getElementById("cant-estudiantes");
-        if (elemEstudiantes) elemEstudiantes.textContent = snapEstudiantes.size;
-
-        let snapDocentes = await getDocs(query(collection(db, "Docentes"), where("Institucion", "==", instId)));
+        const cantEstudiantes = snapEstudiantes.size;
         
+        const elemEstudiantes = document.getElementById("cant-estudiantes");
+        if (elemEstudiantes) elemEstudiantes.textContent = cantEstudiantes;
+
+        // 2. Obtener Docentes
+        let snapDocentes = await getDocs(query(collection(db, "Docentes"), where("Institucion", "==", instId)));
         if (snapDocentes.empty && instId !== userUid) {
           snapDocentes = await getDocs(query(collection(db, "Docentes"), where("Institucion", "==", userUid)));
         }
-
         const elemDocentes = document.getElementById("cant-docentes");
         if (elemDocentes) elemDocentes.textContent = snapDocentes.size;
 
+        // 3. Obtener Horas Completadas desde 'HorasSociales'
+        let totalHorasCompletadas = 0;
+        let snapHoras = await getDocs(query(collection(db, "HorasSociales"), where("institucion", "==", instId)));
+        
+        if (snapHoras.empty && instId !== userUid) {
+          snapHoras = await getDocs(query(collection(db, "HorasSociales"), where("institucion", "==", userUid)));
+        }
+
+        snapHoras.forEach(docSnap => {
+          const data = docSnap.data();
+          totalHorasCompletadas += Number(data.Horas) || 0;
+        });
+
+        // 4. Cálculo de Meta Global (Estudiantes * 150)
+        const metaGlobalHoras = cantEstudiantes * 150;
+        let porcentajeCalculado = 0;
+
+        if (metaGlobalHoras > 0) {
+          porcentajeCalculado = (totalHorasCompletadas / metaGlobalHoras) * 100;
+          if (porcentajeCalculado > 100) porcentajeCalculado = 100; // Límite 100%
+        }
+
+        // Actualizar etiqueta del progreso
+        const infoHorasElem = document.getElementById("info-horas-meta");
+        if (infoHorasElem) {
+          infoHorasElem.textContent = `${totalHorasCompletadas} de ${metaGlobalHoras} hrs alcanzadas`;
+        }
+
+        // Renderizar/Actualizar Gráfica
+        renderDoughnutChart(porcentajeCalculado);
+
       } catch (e) {
-        console.error("Error obteniendo miembros de la institución:", e);
+        console.error("Error obteniendo miembros y horas sociales de la institución:", e);
       }
     }
 
     function renderDoughnutChart(porcentaje) {
       const ctx = document.getElementById('doughnutChart').getContext('2d');
+      const porcentajeRedondeado = Math.round(porcentaje);
       
       const centerTextPlugin = {
         id: 'centerText',
@@ -612,7 +645,7 @@
           ctx.textBaseline = "middle";
           ctx.fillStyle = "#1557d0";
           
-          const text = porcentaje + "%",
+          const text = porcentajeRedondeado + "%",
                 textX = Math.round((width - ctx.measureText(text).width) / 2),
                 textY = height / 2;
           
@@ -621,11 +654,15 @@
         }
       };
 
-      new Chart(ctx, {
+      if (myDoughnutChart) {
+        myDoughnutChart.destroy(); // Destruye gráfico anterior para reinicializar con nuevos datos
+      }
+
+      myDoughnutChart = new Chart(ctx, {
         type: 'doughnut',
         data: {
           datasets: [{
-            data: [porcentaje, 100 - porcentaje],
+            data: [porcentajeRedondeado, 100 - porcentajeRedondeado],
             backgroundColor: ['#1557d0', '#e0e0e0'],
             borderWidth: 0
           }]
