@@ -19,69 +19,63 @@
       padding: 0;
     }
 
-    .sidenav {
-      width: 300px;
-      border-top-right-radius: 20px;
-      border-bottom-right-radius: 20px;
-    }
-
-    .sidenav .user-view {
-      padding: 24px 24px 10px 24px;
-    }
-
-    .sidenav-back-btn {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 24px;
-      font-weight: 700;
-      color: #1557d0 !important;
-      background-color: #e8f0fe;
-      border-radius: 12px;
-      margin: 10px 16px 15px 16px;
-      transition: background-color 0.2s, transform 0.2s;
-    }
-
-    .sidenav-back-btn:hover {
-      background-color: #d2e3fc;
-      transform: translateX(-3px);
-    }
-
-    .sidenav-back-btn i {
-      color: #1557d0 !important;
-      margin: 0 !important;
-    }
-
-    .sidenav li > a {
-      font-weight: 600;
-      color: #333333;
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      font-size: 0.95rem;
-    }
-
-    .custom-navbar {
+ /* Header Superior */
+    .top-header {
       background-color: #ffffff;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-      padding: 0 30px;
-      height: 64px;
-      line-height: 64px;
-    }
-
-    .nav-wrapper {
+      padding: 15px 40px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      height: 100%;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
 
-    .nav-left {
+    .header-left {
       display: flex;
       align-items: center;
       gap: 15px;
     }
 
+    .back-btn {
+      color: #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      transition: transform 0.2s;
+    }
+
+    .back-btn:hover {
+      transform: translateX(-3px);
+      color: #1557d0;
+    }
+
+    .back-btn i {
+      font-size: 30px;
+    }
+
+    .header-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #000;
+      margin: 0;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo-img {
+      height: 38px;
+      width: auto;
+      object-fit: contain;
+    }
     .menu-trigger {
       color: #333;
       display: flex;
@@ -371,54 +365,22 @@
 </head>
 <body>
 
-  <!-- Navbar Superior -->
-  <nav class="custom-navbar">
-    <div class="nav-wrapper">
-      <div class="nav-left">
-        <a href="#" data-target="slide-out" class="sidenav-trigger menu-trigger" style="display: flex;">
-          <i class="material-icons">menu</i>
-        </a>
-      </div>
+ <header class="top-header">
+    <div class="header-left">
+      <!-- Flecha de regreso al index.html -->
+      <a href="mainPD.html" class="back-btn" title="Volver al Inicio">
+        <i class="material-icons">arrow_back</i>
+      </a>
+      
+    </div>
 
-      <div class="nav-right">
-        <i class="material-icons bell-icon">notifications_none</i>
-        
-        <div class="user-profile">
-          <div class="user-avatar">
-            <i class="material-icons">person</i>
-          </div>
-          <div class="user-info">
-            <span class="user-name" id="docenteNombre">Cargando...</span>
-            <span class="user-role">Docente</span>
-          </div>
-        </div>
+    <!-- Logo a la derecha -->
+    <div class="header-right">
+      <div class="logo-container">
+        <img src="logo.png" alt="HourCheck Logo" class="logo-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x40?text=HourCheck';">
       </div>
     </div>
-  </nav>
-
-  <!-- Menú Lateral -->
-  <ul id="slide-out" class="sidenav">
-    <li><div class="divider"></div></li>
-    <li><a class="subheader">Gestión de Reportes</a></li>
-    <li><a href="reporteD.html" class="waves-effect"><i class="material-icons" style="color: #1557d0;">assessment</i>Generar Reporte PDF</a></li>
-    <li><div class="divider"></div></li>
-
-    <li>
-      <div class="user-view">
-        <div class="background" style="background-color: #f3f6fc;"></div>
-        <a href="#user"><div class="user-avatar" style="width: 50px; height: 50px; font-size: 1.5rem;"><i class="material-icons">person</i></div></a>
-        <a href="#name"><span class="black-text name" id="menuDocenteNombre" style="font-weight: 700; margin-top: 10px;">Docente</span></a>
-        <a href="#email"><span class="grey-text email" id="menuDocenteEmail">docente@hourcheck.com</span></a>
-      </div>
-    </li>
-    <li>
-      <a href="mainPD.html" class="sidenav-back-btn">
-        <i class="material-icons">arrow_back</i> Volver a Inicio
-      </a>
-    </li>
-    <li><a href="#!"><i class="material-icons">assignment</i>Generar reporte</a></li>
-    <li><a href="#!" id="btnCerrarSesion" style="color: #d32f2f;"><i class="material-icons" style="color: #d32f2f;">exit_to_app</i>Cerrar Sesión</a></li>
-  </ul>
+  </header>
 
   <!-- Contenedor Principal -->
   <div class="container" style="width: 90%; max-width: 1200px;">

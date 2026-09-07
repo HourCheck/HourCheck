@@ -505,13 +505,13 @@
     <li>
       <div class="user-view">
         <div class="background" style="background-color: #1e40af;"></div>
-        <a href="perfilE.html"><div class="avatar"><i class="material-icons">person</i></div></a>
-        <a href="perfilE.html"><span class="white-text name" style="font-weight:700;">Cargando...</span></a>
-        <a href="perfilE.html"><span class="white-text email">Cargando...</span></a>
+        <a href="perfilU.html"><div class="avatar"><i class="material-icons">person</i></div></a>
+        <a href="perfilU.html"><span class="white-text name" style="font-weight:700;">Cargando...</span></a>
+        <a href="perfilU.html"><span class="white-text email">Cargando...</span></a>
       </div>
     </li>
     
-    <li><a href="perfilE.html" class="waves-effect"><i class="material-icons">account_circle</i>Perfil</a></li>
+    <li><a href="perfilU.html" class="waves-effect"><i class="material-icons">account_circle</i>Perfil</a></li>
     <li><a href="notiE.html" class="waves-effect"><i class="material-icons">notifications</i>Notificaciones</a></li>
     
     <li><div class="divider"></div></li>
@@ -679,167 +679,99 @@
 
   <!-- Script Firebase con Carga de Datos Filtrados por Usuario -->
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, collection, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { 
+  getAuth, 
+  onAuthStateChanged, 
+  signOut 
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { 
+  getFirestore, 
+  collection, 
+  query, 
+  where, 
+  onSnapshot 
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    const firebaseConfig = {
+// Configuración de tu proyecto en Firebase
+ const firebaseConfig = {
       apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
       authDomain: "hourcheckt.firebaseapp.com",
       projectId: "hourcheckt",
+      storageBucket: "hourcheckt.firebasestorage.app",
       messagingSenderId: "83459752453",
       appId: "1:83459752453:web:1b81724c28973bf567126c"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
 
-    const META_HORAS = 150; // Límite estricto de horas requeridas
+// Inicializar Servicios
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-    document.addEventListener('DOMContentLoaded', function() {
-      var elems = document.querySelectorAll('.sidenav');
-      M.Sidenav.init(elems, { edge: 'left', draggable: true });
-    });
+// Referencias a elementos del DOM
+const contenedorHoras = document.getElementById("listaHoras");
+const btnCerrarSesion = document.getElementById("btnCerrarSesion");
 
-    // Control de Sesión y Filtrado por UID
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        let nombreUsuario = user.displayName;
-        let correoUsuario = user.email;
+// Listener del estado de autenticación
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    // Usuario autenticado: cargar sus registros
+    cargarHorasSociales(user.uid);
+  } else {
+    // Si no está autenticado, redirigir al login
+    window.location.href = "login.html";
+  }
+});
 
-        if (!nombreUsuario) {
-          try {
-            let docRef = doc(db, "Estudiantes", user.uid);
-            let docSnap = await getDoc(docRef);
+// Función para obtener y mostrar las horas registradas en tiempo real
+function cargarHorasSociales(userId) {
+  const q = query(
+    collection(db, "HorasSociales"),
+    where("userId", "==", userId)
+  );
 
-            if (docSnap.exists()) {
-              nombreUsuario = docSnap.data().nombre;
-            } else {
-              docRef = doc(db, "Docentes", user.uid);
-              docSnap = await getDoc(docRef);
-              if (docSnap.exists()) {
-                nombreUsuario = docSnap.data().nombre;
-              }
-            }
-          } catch (error) {
-            console.error("Error al obtener los datos del usuario:", error);
-          }
-        }
+  onSnapshot(q, (snapshot) => {
+    contenedorHoras.innerHTML = "";
 
-        actualizarInterfaz(nombreUsuario || "Estudiante", correoUsuario);
-        escucharHistorialHorasUsuario(user.uid);
-      } else {
-        window.location.href = "loginU.html";
-      }
-    });
-
-    function actualizarInterfaz(nombre, correo) {
-      const bannerTitle = document.querySelector(".banner-title");
-      if (bannerTitle) bannerTitle.textContent = `¡Bienvenido, ${nombre}!`;
-
-      const userNameHeader = document.querySelector(".top-header .user-name");
-      if (userNameHeader) userNameHeader.textContent = nombre;
-
-      const sidenavName = document.querySelector(".sidenav .name");
-      const sidenavEmail = document.querySelector(".sidenav .email");
-
-      if (sidenavName) sidenavName.textContent = nombre;
-      if (sidenavEmail) sidenavEmail.textContent = correo;
+    if (snapshot.empty) {
+      contenedorHoras.innerHTML = "<p>No tienes registros de horas sociales aún.</p>";
+      return;
     }
 
-    // Consulta filtrada por UID con límite de 150 hrs
-    function escucharHistorialHorasUsuario(userId) {
-      const tablaHistorial = document.getElementById("tablaHistorial");
-      const kpiTotalHoras = document.getElementById("kpiTotalHoras");
-      const kpiTotalEvidencias = document.getElementById("kpiTotalEvidencias");
-      const kpiHorasFooter = document.getElementById("kpiHorasFooter");
-      const donutHoras = document.getElementById("donutHoras");
+    snapshot.forEach((doc) => {
+      const data = doc.data();
+      
+      const tarjeta = document.createElement("div");
+      tarjeta.classList.add("card", "mb-3");
+      
+      tarjeta.innerHTML = `
+        <div class="card-body">
+          <h5 class="card-title">${data.Categoria || 'Sin Categoría'} - ${data.Horas || 0} Horas</h5>
+          <p class="card-text"><strong>Lugar:</strong> ${data.Lugar || 'N/A'}</p>
+          <p class="card-text"><strong>Encargado:</strong> ${data["Docente encargado"] || 'N/A'}</p>
+          <p class="card-text"><strong>Descripción:</strong> ${data.Descripcion || 'Sin descripción'}</p>
+          ${data.Evidencia ? `<img src="${data.Evidencia}" alt="Evidencia" style="max-width:200px;" class="img-fluid rounded mt-2"/>` : ''}
+        </div>
+      `;
+      
+      contenedorHoras.appendChild(tarjeta);
+    });
+  }, (error) => {
+    console.error("Error al obtener los registros: ", error);
+  });
+}
 
-      const q = query(
-        collection(db, "HorasSociales"),
-        where("userId", "==", userId)
-      );
-
-      onSnapshot(q, (snapshot) => {
-        tablaHistorial.innerHTML = "";
-        let sumaHoras = 0;
-        let totalRegistros = snapshot.size;
-
-        if (snapshot.empty) {
-          tablaHistorial.innerHTML = `
-            <tr>
-              <td colspan="5" class="center-align" style="color: var(--text-muted); padding: 30px;">
-                No tienes registros de horas guardados aún.
-              </td>
-            </tr>`;
-          kpiTotalHoras.textContent = `0 / ${META_HORAS} h`;
-          kpiTotalEvidencias.textContent = "0 enviadas";
-          donutHoras.style.background = `conic-gradient(#2563eb 0%, #e2e8f0 0%)`;
-          return;
-        }
-
-        snapshot.forEach((docSnap) => {
-          const data = docSnap.data();
-          const horasNum = Number(data.Horas) || 0;
-          sumaHoras += horasNum;
-
-          const tr = document.createElement("tr");
-          tr.innerHTML = `
-            <td style="font-weight: 600;">${data.Lugar || 'Sin especificar'}</td>
-            <td style="color: var(--text-muted);">${data["Docente encargado"] || 'N/A'}</td>
-            <td><strong>${horasNum} h</strong></td>
-            <td>
-              ${data.Evidencia 
-                ? `<img src="${data.Evidencia}" alt="Evidencia" class="img-evidencia materialboxed" />`
-                : `<span style="color: var(--text-muted);">Sin evidencia</span>`
-              }
-            </td>
-            <td>
-              <span class="status-badge status-comprobado">
-                <span class="dot"></span>Comprobado
-              </span>
-            </td>
-          `;
-
-          tablaHistorial.appendChild(tr);
-        });
-
-        // Inicializar visor de imagen Materialbox
-        const materialboxedElems = document.querySelectorAll('.materialboxed');
-        M.Materialbox.init(materialboxedElems);
-
-        // Control del Límite de 150 Horas
-        const horasVisuales = Math.min(sumaHoras, META_HORAS);
-        const porcentajeAcceso = Math.min((sumaHoras / META_HORAS) * 100, 100);
-
-        // Actualizar Card KPI con el Límite 150
-        kpiTotalHoras.textContent = `${horasVisuales} / ${META_HORAS} h`;
-        
-        if (sumaHoras >= META_HORAS) {
-          kpiHorasFooter.textContent = "¡Meta completada!";
-          kpiHorasFooter.style.color = "#16a34a";
-        } else {
-          kpiHorasFooter.textContent = `Faltan ${META_HORAS - horasVisuales} h`;
-          kpiHorasFooter.style.color = "var(--primary-color)";
-        }
-
-        // Actualizar el diseño circular de la dona según el porcentaje
-        donutHoras.style.background = `conic-gradient(#2563eb ${porcentajeAcceso}%, #e2e8f0 ${porcentajeAcceso}%)`;
-
-        // Actualizar KPI Evidencias
-        kpiTotalEvidencias.textContent = `${totalRegistros} enviada${totalRegistros === 1 ? '' : 's'}`;
-
-      }, (error) => {
-        console.error("Error al leer el historial del usuario:", error);
-        tablaHistorial.innerHTML = `
-          <tr>
-            <td colspan="5" class="center-align red-text" style="padding: 20px;">
-              Error al cargar los registros del usuario.
-            </td>
-          </tr>`;
-      });
-    }
+// Evento para cerrar sesión
+if (btnCerrarSesion) {
+  btnCerrarSesion.addEventListener("click", () => {
+    signOut(auth).then(() => {
+      window.location.href = "login.html";
+    }).catch((error) => {
+      console.error("Error al cerrar sesión:", error);
+    });
+  });
+}
   </script>
 </body>
 </html>

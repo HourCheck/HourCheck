@@ -227,9 +227,10 @@
             </div>
           </div>
 
-          <h5 class="profile-name" id="nombreHeader">Usuario</h5>
+          <h5 class="profile-name" id="nombreHeader">Cargando...</h5>
           <span class="profile-badge" id="profileRole">Cargando...</span>
 
+          <!-- Caja de horas (Exclusiva para Estudiantes) -->
           <div class="summary-box" id="cajaHoras" style="display: none;">
             <div class="summary-item">
               <h6>HORAS COMPLETADAS</h6>
@@ -241,21 +242,10 @@
             </div>
           </div>
 
+          <!-- Formulario dinámico -->
           <form id="perfilForm" class="left-align">
-
-            <div>
-              <label class="form-label" id="labelNombre" for="nombre">Nombre Completo</label>
-              <input id="nombre" type="text" class="custom-input" placeholder="Tu nombre" required>
-            </div>
-
-            <div>
-              <label class="form-label" for="email">Correo Electrónico</label>
-              <input id="email" type="email" class="custom-input" disabled>
-            </div>
-
-            <div id="campoExtra" style="display: none;">
-              <label class="form-label" id="labelExtra" for="extraInput">Detalle</label>
-              <input id="extraInput" type="text" class="custom-input" placeholder="...">
+            <div id="dynamicFields">
+              <!-- Se renderiza desde JS según la colección -->
             </div>
 
             <div style="margin-top: 20px;">
@@ -263,7 +253,6 @@
                 Guardar Cambios
               </button>
             </div>
-
           </form>
 
           <button class="btn waves-effect btn-logout" id="btnCerrarSesion">
@@ -304,47 +293,35 @@
 
     let usuarioActual = null;
     let rolDetectado = "estudiante";
-    let coleccionEfectiva = "Usuarios";
+    let coleccionEfectiva = "Estudiantes";
 
-    const nombreInput = document.getElementById("nombre");
-    const emailInput = document.getElementById("email");
     const nombreHeader = document.getElementById("nombreHeader");
     const profileRole = document.getElementById("profileRole");
     const cajaHoras = document.getElementById("cajaHoras");
     const totalHorasEl = document.getElementById("totalHoras");
-    const campoExtra = document.getElementById("campoExtra");
-    const labelExtra = document.getElementById("labelExtra");
-    const extraInput = document.getElementById("extraInput");
-    const labelNombre = document.getElementById("labelNombre");
     const avatarIcon = document.getElementById("avatarIcon");
     const btnGuardarPerfil = document.getElementById("btnGuardarPerfil");
     const btnVolver = document.getElementById("btnVolver");
+    const dynamicFields = document.getElementById("dynamicFields");
 
-    // Detección de Usuario
+    // Detección de sesión activa
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         usuarioActual = user;
-        emailInput.value = user.email || "";
-
-        const fallbackNombre = user.displayName || user.email.split('@')[0];
-        
-        nombreInput.value = fallbackNombre;
-        nombreHeader.textContent = fallbackNombre;
-
-        await obtenerDatosRol(user.uid, fallbackNombre);
-
+        await cargarDatosUsuario(user.uid);
       } else {
         window.location.href = "loginU.html";
       }
     });
 
-    // Búsqueda en Firestore a través de las colecciones
-    async function obtenerDatosRol(uid, fallbackNombre) {
+    // Búsqueda en Firestore según las colecciones
+    async function cargarDatosUsuario(uid) {
       try {
         let docSnap = null;
         let data = {};
 
-        const colecciones = ["Docentes", "Instituciones", "Estudiantes", "Usuarios"];
+        // Mapeo exacto de colecciones de Firebase
+        const colecciones = ["Docentes", "Institucion", "Estudiantes"];
 
         for (const col of colecciones) {
           const snap = await getDoc(doc(db, col, uid));
@@ -357,62 +334,104 @@
 
         if (docSnap && docSnap.exists()) {
           data = docSnap.data();
-          
-          if (coleccionEfectiva === "Docentes" || (data.rol && data.rol.toLowerCase() === "docente")) {
+          if (coleccionEfectiva === "Docentes") {
             rolDetectado = "docente";
-          } else if (coleccionEfectiva === "Instituciones" || (data.rol && (data.rol.toLowerCase() === "institucion" || data.rol.toLowerCase() === "instituciones"))) {
+          } else if (coleccionEfectiva === "Institucion") {
             rolDetectado = "institucion";
           } else {
             rolDetectado = "estudiante";
           }
+        } else {
+          coleccionEfectiva = "Estudiantes";
+          rolDetectado = "estudiante";
         }
 
-        const nombreReal = data.nombre || fallbackNombre;
-        nombreInput.value = nombreReal;
-        nombreHeader.textContent = nombreReal;
-
-        adaptarInterfazPorRol(rolDetectado, data);
+        renderizarFormulario(rolDetectado, data);
 
         if (rolDetectado === "estudiante") {
           await calcularHorasEstudiante(uid);
         }
 
       } catch (error) {
-        console.error("Error al obtener perfil:", error);
-        adaptarInterfazPorRol("estudiante", {});
+        console.error("Error al obtener los datos del usuario:", error);
+        M.toast({html: 'Error al cargar perfil', classes: 'red rounded'});
       }
     }
 
-    // Adaptar campos e íconos visibles según el rol
-    function adaptarInterfazPorRol(rol, data) {
+    // Renderizar campos dinámicos e íconos basándonos en la estructura de Firestore
+    function renderizarFormulario(rol, data) {
+      dynamicFields.innerHTML = ""; // Limpiar campos existentes
+
       if (rol === "docente") {
         profileRole.textContent = "Docente Encargado";
         avatarIcon.innerHTML = `<i class="material-icons" style="font-size: 3rem;">school</i>`;
-        labelNombre.textContent = "Nombre del Docente";
+        nombreHeader.textContent = data.NameDocente || "Docente";
+
+        dynamicFields.innerHTML = `
+          <div>
+            <label class="form-label" for="NameDocente">Nombre Completo del Docente</label>
+            <input id="NameDocente" type="text" class="custom-input" value="${data.NameDocente || ''}" required>
+          </div>
+          <div>
+            <label class="form-label" for="Correo">Correo Electrónico</label>
+            <input id="Correo" type="email" class="custom-input" value="${data.Correo || usuarioActual.email}" disabled>
+          </div>
+          <div>
+            <label class="form-label" for="Institucion">Institución</label>
+            <input id="Institucion" type="text" class="custom-input" value="${data.Institucion || ''}">
+          </div>
+        `;
         cajaHoras.style.display = "none";
-        campoExtra.style.display = "block";
-        labelExtra.textContent = "Materia / Especialidad";
-        extraInput.value = data.materia || "";
 
       } else if (rol === "institucion") {
         profileRole.textContent = "Institución Educativa";
         avatarIcon.innerHTML = `<i class="material-icons" style="font-size: 3rem;">account_balance</i>`;
-        labelNombre.textContent = "Nombre de la Institución";
-        cajaHoras.style.display = "none";
-        campoExtra.style.display = "block";
-        labelExtra.textContent = "Código de la Institución";
-        extraInput.value = data.codigoInstitucion || "";
+        nombreHeader.textContent = data.NameInst || "Institución";
 
-      } else {
+        dynamicFields.innerHTML = `
+          <div>
+            <label class="form-label" for="NameInst">Nombre de la Institución</label>
+            <input id="NameInst" type="text" class="custom-input" value="${data.NameInst || ''}" required>
+          </div>
+          <div>
+            <label class="form-label" for="NameDirector">Nombre del Director/a</label>
+            <input id="NameDirector" type="text" class="custom-input" value="${data.NameDirector || ''}">
+          </div>
+          <div>
+            <label class="form-label" for="CorreoInst">Correo Institucional</label>
+            <input id="CorreoInst" type="email" class="custom-input" value="${data.CorreoInst || usuarioActual.email}" disabled>
+          </div>
+          <div>
+            <label class="form-label" for="codigoInf">Código Infraestructura</label>
+            <input id="codigoInf" type="text" class="custom-input" value="${data.codigoInf || ''}">
+          </div>
+        `;
+        cajaHoras.style.display = "none";
+
+      } else { // Estudiante
         profileRole.textContent = "Estudiante";
         avatarIcon.innerHTML = `<i class="material-icons" style="font-size: 3rem;">person</i>`;
-        labelNombre.textContent = "Nombre Completo del Estudiante";
+        nombreHeader.textContent = data.nombre || "Estudiante";
+
+        dynamicFields.innerHTML = `
+          <div>
+            <label class="form-label" for="nombre">Nombre Completo del Estudiante</label>
+            <input id="nombre" type="text" class="custom-input" value="${data.nombre || ''}" required>
+          </div>
+          <div>
+            <label class="form-label" for="correo">Correo Electrónico</label>
+            <input id="correo" type="email" class="custom-input" value="${data.correo || usuarioActual.email}" disabled>
+          </div>
+          <div>
+            <label class="form-label" for="institucion">Institución Educativa</label>
+            <input id="institucion" type="text" class="custom-input" value="${data.institucion || ''}">
+          </div>
+        `;
         cajaHoras.style.display = "flex";
-        campoExtra.style.display = "none";
       }
     }
 
-    // Totalizar horas registradas en caso de ser estudiante
+    // Calcular la suma de horas para los estudiantes
     async function calcularHorasEstudiante(uid) {
       try {
         const q = query(collection(db, "HorasSociales"), where("userId", "==", uid));
@@ -420,7 +439,7 @@
         
         let total = 0;
         querySnapshot.forEach((doc) => {
-          total += Number(doc.data().Horas || 0);
+          total += Number(doc.data().Horas || doc.data().horas || 0);
         });
 
         totalHorasEl.textContent = `${total} hrs`;
@@ -430,48 +449,20 @@
       }
     }
 
-    // Redirección directa en tiempo real al hacer clic en el botón volver
-    btnVolver.addEventListener("click", async (e) => {
+    // Navegación inteligente de retorno
+    btnVolver.addEventListener("click", (e) => {
       e.preventDefault();
 
-      if (!usuarioActual) {
-        window.location.href = "loginU.html";
-        return;
-      }
-
-      try {
-        const uid = usuarioActual.uid;
-
-        // 1. Verificar si existe en Docentes
-        const docDocente = await getDoc(doc(db, "Docentes", uid));
-        if (docDocente.exists() || rolDetectado === "docente") {
-          window.location.href = "mainPD.html";
-          return;
-        }
-
-        // 2. Verificar si existe en Instituciones
-        const docInstitucion = await getDoc(doc(db, "Instituciones", uid));
-        if (docInstitucion.exists() || rolDetectado === "institucion") {
-          window.location.href = "mainPI.html";
-          return;
-        }
-
-        // 3. Por defecto enviar a Estudiantes
+      if (coleccionEfectiva === "Docentes") {
+        window.location.href = "mainPD.html";
+      } else if (coleccionEfectiva === "Institucion") {
+        window.location.href = "mainPI.html";
+      } else {
         window.location.href = "mainPE.html";
-
-      } catch (error) {
-        console.error("Error al determinar la redirección:", error);
-        if (rolDetectado === "docente") {
-          window.location.href = "mainPD.html";
-        } else if (rolDetectado === "institucion") {
-          window.location.href = "mainPI.html";
-        } else {
-          window.location.href = "mainPE.html";
-        }
       }
     });
 
-    // Guardar actualización de perfil
+    // Evento de guardar actualización
     document.getElementById("perfilForm").addEventListener("submit", async (e) => {
       e.preventDefault();
 
@@ -481,25 +472,39 @@
         btnGuardarPerfil.disabled = true;
         btnGuardarPerfil.textContent = "Guardando...";
 
-        const payload = {
-          nombre: nombreInput.value.trim(),
-          email: usuarioActual.email,
-          rol: rolDetectado
-        };
+        let payload = {};
 
-        if (rolDetectado === "docente") {
-          payload.materia = extraInput.value.trim();
-        } else if (rolDetectado === "institucion") {
-          payload.codigoInstitucion = extraInput.value.trim();
+        // Construir datos a actualizar respetando las colecciones exactas
+        if (coleccionEfectiva === "Docentes") {
+          payload = {
+            NameDocente: document.getElementById("NameDocente").value.trim(),
+            Institucion: document.getElementById("Institucion").value.trim()
+          };
+          nombreHeader.textContent = payload.NameDocente;
+
+        } else if (coleccionEfectiva === "Institucion") {
+          payload = {
+            NameInst: document.getElementById("NameInst").value.trim(),
+            NameDirector: document.getElementById("NameDirector").value.trim(),
+            codigoInf: document.getElementById("codigoInf").value.trim()
+          };
+          nombreHeader.textContent = payload.NameInst;
+
+        } else { // Estudiante
+          payload = {
+            nombre: document.getElementById("nombre").value.trim(),
+            institucion: document.getElementById("institucion").value.trim()
+          };
+          nombreHeader.textContent = payload.nombre;
         }
 
+        // Actualizar datos en Firestore
         await setDoc(doc(db, coleccionEfectiva, usuarioActual.uid), payload, { merge: true });
 
-        nombreHeader.textContent = nombreInput.value.trim();
-        M.toast({html: '¡Perfil actualizado con éxito!', classes: 'green rounded'});
+        M.toast({html: '¡Perfil actualizado correctamente!', classes: 'green rounded'});
 
       } catch (error) {
-        console.error("Error al actualizar datos:", error);
+        console.error("Error al guardar cambios:", error);
         M.toast({html: 'Error al actualizar el perfil', classes: 'red rounded'});
       } finally {
         btnGuardarPerfil.disabled = false;

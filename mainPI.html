@@ -177,6 +177,32 @@
       color: #666;
     }
 
+    /* Estilos para el menú desplegable del usuario */
+    #user-dropdown {
+      border-radius: 12px;
+      min-width: 180px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      overflow: hidden;
+    }
+
+    #user-dropdown li > a {
+      color: #333;
+      display: flex;
+      align-items: center;
+      font-weight: 500;
+      font-size: 0.9rem;
+      padding: 12px 16px;
+    }
+
+    #user-dropdown li > a > i {
+      margin-right: 12px;
+      color: #1557d0;
+    }
+
+    #user-dropdown li > a.logout-item > i {
+      color: #d32f2f;
+    }
+
     .sidenav {
       width: 300px;
       border-top-right-radius: 20px;
@@ -296,6 +322,7 @@
 </head>
 <body>
   
+  <!-- SIDENAV -->
   <ul id="slide-out" class="sidenav">
     <li>
       <div class="user-view">
@@ -315,7 +342,7 @@
       </div>
     </li>
     
-    <li><a href="perfilD.html" class="waves-effect"><i class="material-icons">account_circle</i>Perfil</a></li>
+    <li><a href="perfilU.html" class="waves-effect"><i class="material-icons">account_circle</i>Perfil</a></li>
     <li><a href="notiD.html" class="waves-effect"><i class="material-icons">notifications</i>Notificaciones</a></li>
     
     <li><div class="divider"></div></li>
@@ -324,6 +351,21 @@
     <li><a href="#limpieza" class="waves-effect"><i class="material-icons">cleaning_services</i>Jornadas de limpieza</a></li>
     <li><a href="#ingles" class="waves-effect"><i class="material-icons">translate</i>Tutorías de inglés</a></li>
     <li><a href="#infancia" class="waves-effect"><i class="material-icons">child_care</i>Tutorías primera infancia</a></li>
+  </ul>
+
+  <!-- DROPDOWN DEL PERFIL (SUPERIOR DERECHO) -->
+  <ul id="user-dropdown" class="dropdown-content">
+    <li>
+      <a href="perfilU.html">
+        <i class="material-icons">person</i>Perfil
+      </a>
+    </li>
+    <li class="divider" tabindex="-1"></li>
+    <li>
+      <a href="#" id="btn-logout" class="logout-item">
+        <i class="material-icons">exit_to_app</i>Cerrar sesión
+      </a>
+    </li>
   </ul>
 
   <!-- CONTENIDO PRINCIPAL -->
@@ -340,7 +382,8 @@
         <div class="icon-btn">
           <i class="material-icons" onclick="location.href='notiD.html'">notifications_none</i>
         </div>
-        <div class="user-profile" onclick="location.href='perfilD.html'">
+        <!-- Trigger del Dropdown de Perfil -->
+        <div class="user-profile dropdown-trigger" data-target="user-dropdown">
           <div class="avatar">
             <i class="material-icons">person</i>
           </div>
@@ -481,7 +524,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { getFirestore, doc, getDoc, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -497,12 +540,37 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    let myDoughnutChart = null; // Instancia global para poder re-renderizar la gráfica
+    let myDoughnutChart = null;
 
     document.addEventListener('DOMContentLoaded', function() {
-      var elems = document.querySelectorAll('.sidenav');
+      // Inicializar Sidenav
+      var sidenavElems = document.querySelectorAll('.sidenav');
       if (typeof M !== 'undefined' && M.Sidenav) {
-        M.Sidenav.init(elems, { edge: 'left', draggable: true });
+        M.Sidenav.init(sidenavElems, { edge: 'left', draggable: true });
+      }
+
+      // Inicializar Dropdown del Usuario
+      var dropdownElems = document.querySelectorAll('.dropdown-trigger');
+      if (typeof M !== 'undefined' && M.Dropdown) {
+        M.Dropdown.init(dropdownElems, {
+          alignment: 'right',
+          constrainWidth: false,
+          coverTrigger: false
+        });
+      }
+
+      // Manejar Cierre de Sesión
+      const logoutBtn = document.getElementById('btn-logout');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', async (e) => {
+          e.preventDefault();
+          try {
+            await signOut(auth);
+            window.location.href = "index.html";
+          } catch (error) {
+            console.error("Error al cerrar sesión:", error);
+          }
+        });
       }
     });
 
@@ -574,10 +642,8 @@
       if (bannerTitle) bannerTitle.textContent = `¡Bienvenido/a, ${nombreDirector}!`;
     }
 
-    // Consulta contadores y calcula el progreso global según HorasSociales
     async function cargarDatosYProgreso(instId, userUid) {
       try {
-        // 1. Obtener Estudiantes
         const qEstudiantes = query(collection(db, "Estudiantes"), where("institucion", "==", instId));
         const snapEstudiantes = await getDocs(qEstudiantes);
         const cantEstudiantes = snapEstudiantes.size;
@@ -585,7 +651,6 @@
         const elemEstudiantes = document.getElementById("cant-estudiantes");
         if (elemEstudiantes) elemEstudiantes.textContent = cantEstudiantes;
 
-        // 2. Obtener Docentes
         let snapDocentes = await getDocs(query(collection(db, "Docentes"), where("Institucion", "==", instId)));
         if (snapDocentes.empty && instId !== userUid) {
           snapDocentes = await getDocs(query(collection(db, "Docentes"), where("Institucion", "==", userUid)));
@@ -593,7 +658,6 @@
         const elemDocentes = document.getElementById("cant-docentes");
         if (elemDocentes) elemDocentes.textContent = snapDocentes.size;
 
-        // 3. Obtener Horas Completadas desde 'HorasSociales'
         let totalHorasCompletadas = 0;
         let snapHoras = await getDocs(query(collection(db, "HorasSociales"), where("institucion", "==", instId)));
         
@@ -606,22 +670,19 @@
           totalHorasCompletadas += Number(data.Horas) || 0;
         });
 
-        // 4. Cálculo de Meta Global (Estudiantes * 150)
         const metaGlobalHoras = cantEstudiantes * 150;
         let porcentajeCalculado = 0;
 
         if (metaGlobalHoras > 0) {
           porcentajeCalculado = (totalHorasCompletadas / metaGlobalHoras) * 100;
-          if (porcentajeCalculado > 100) porcentajeCalculado = 100; // Límite 100%
+          if (porcentajeCalculado > 100) porcentajeCalculado = 100;
         }
 
-        // Actualizar etiqueta del progreso
         const infoHorasElem = document.getElementById("info-horas-meta");
         if (infoHorasElem) {
           infoHorasElem.textContent = `${totalHorasCompletadas} de ${metaGlobalHoras} hrs alcanzadas`;
         }
 
-        // Renderizar/Actualizar Gráfica
         renderDoughnutChart(porcentajeCalculado);
 
       } catch (e) {
@@ -655,7 +716,7 @@
       };
 
       if (myDoughnutChart) {
-        myDoughnutChart.destroy(); // Destruye gráfico anterior para reinicializar con nuevos datos
+        myDoughnutChart.destroy();
       }
 
       myDoughnutChart = new Chart(ctx, {
