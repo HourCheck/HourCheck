@@ -508,7 +508,7 @@
             nombreInst: instData.NameInst || "Institución Educativa"
           });
 
-          // Se pasa el UID del usuario en sesión
+          // Se consulta filtrando tanto por ID de documento de institución como por UID directo
           cargarContadoresMiembros(idInstitucionReal, user.uid);
         } else {
           actualizarInterfaz({
@@ -516,7 +516,6 @@
             correoInst: user.email,
             nombreInst: "Institución No Encontrada"
           });
-          // Aunque no exista en "Institucion", intenta buscar por user.uid directamente
           cargarContadoresMiembros(user.uid, user.uid);
         }
 
@@ -549,18 +548,23 @@
     if (bannerTitle) bannerTitle.textContent = `¡Bienvenido/a, ${nombreDirector}!`;
   }
 
-  // Consulta en Firestore filtrando por la sesión activa
+  // Consulta en Firestore filtrando por la clave 'Institucion' del docente
   async function cargarContadoresMiembros(instId, userUid) {
     try {
-      // 1. Conteo de Estudiantes pertenecientes a la institución
+      // 1. Conteo de Estudiantes
       const qEstudiantes = query(collection(db, "Estudiantes"), where("institucion", "==", instId));
       const snapEstudiantes = await getDocs(qEstudiantes);
       const elemEstudiantes = document.getElementById("cant-estudiantes");
       if (elemEstudiantes) elemEstudiantes.textContent = snapEstudiantes.size;
 
-      // 2. Conteo de Docentes donde el campo 'Institucion' coincide exactamente con el UID de la sesión iniciada
-      const qDocentes = query(collection(db, "Docentes"), where("Institucion", "==", userUid));
-      const snapDocentes = await getDocs(qDocentes);
+      // 2. Conteo de Docentes donde el campo 'Institucion' sea igual al ID de la institución o UID del usuario
+      let snapDocentes = await getDocs(query(collection(db, "Docentes"), where("Institucion", "==", instId)));
+      
+      // Si la búsqueda por ID de institución no devuelve resultados, realiza el intento directo por UID
+      if (snapDocentes.empty && instId !== userUid) {
+        snapDocentes = await getDocs(query(collection(db, "Docentes"), where("Institucion", "==", userUid)));
+      }
+
       const elemDocentes = document.getElementById("cant-docentes");
       if (elemDocentes) elemDocentes.textContent = snapDocentes.size;
 
