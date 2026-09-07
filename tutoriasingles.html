@@ -19,7 +19,7 @@
       padding: 0;
     }
 
- /* Header Superior */
+    /* Header Superior */
     .top-header {
       background-color: #ffffff;
       padding: 15px 40px;
@@ -53,13 +53,6 @@
       font-size: 30px;
     }
 
-    .header-title {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: #000;
-      margin: 0;
-    }
-
     .header-right {
       display: flex;
       align-items: center;
@@ -75,66 +68,6 @@
       height: 38px;
       width: auto;
       object-fit: contain;
-    }
-    .menu-trigger {
-      color: #333;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-decoration: none;
-      cursor: pointer;
-    }
-
-    .menu-trigger i {
-      font-size: 1.8rem;
-    }
-
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .bell-icon {
-      color: #333;
-      font-size: 1.8rem;
-      cursor: pointer;
-    }
-
-    .user-profile {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-    }
-
-    .user-avatar {
-      width: 40px;
-      height: 40px;
-      background-color: #3b82f6;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-    }
-
-    .user-info {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      line-height: 1.2;
-    }
-
-    .user-name {
-      font-weight: 700;
-      font-size: 0.95rem;
-      color: #000;
-    }
-
-    .user-role {
-      font-size: 0.8rem;
-      color: #666;
     }
 
     .banner-card {
@@ -156,13 +89,6 @@
       margin: 0;
       line-height: 1.1;
       letter-spacing: -0.5px;
-    }
-
-    .banner-subtitle {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #222;
-      margin-top: 8px;
     }
 
     .banner-icon-container {
@@ -261,12 +187,31 @@
       border-radius: 50%;
     }
 
+    /* Buscador */
+    .search-box-container {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 10px 20px;
+      margin-top: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .search-box-container input {
+      border: none !important;
+      box-shadow: none !important;
+      margin: 0 !important;
+      height: 2.5rem !important;
+    }
+
     .students-table-container {
       background: #ffffff;
       border: 1.5px solid #222;
       border-radius: 16px;
       overflow: hidden;
-      margin-top: 20px;
+      margin-top: 15px;
       margin-bottom: 40px;
     }
 
@@ -338,7 +283,6 @@
       text-decoration: underline;
     }
 
-    /* Estilos del Modal de Evidencias */
     #modalEvidencia {
       border-radius: 16px;
       max-width: 600px;
@@ -365,16 +309,13 @@
 </head>
 <body>
 
- <header class="top-header">
+  <header class="top-header">
     <div class="header-left">
-      <!-- Flecha de regreso al index.html -->
       <a href="mainPD.html" class="back-btn" title="Volver al Inicio">
         <i class="material-icons">arrow_back</i>
       </a>
-      
     </div>
 
-    <!-- Logo a la derecha -->
     <div class="header-right">
       <div class="logo-container">
         <img src="logo.png" alt="HourCheck Logo" class="logo-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x40?text=HourCheck';">
@@ -431,6 +372,12 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- Buscador por Estudiante -->
+    <div class="search-box-container">
+      <i class="material-icons" style="color: #666;">search</i>
+      <input type="text" id="inputBuscadorEstudiante" placeholder="Buscar estudiante por nombre o correo...">
     </div>
 
     <!-- Tabla de Estudiantes -->
@@ -510,6 +457,7 @@
     const studentsContainer = document.getElementById("studentsContainer");
     const btnGenerarReporte = document.getElementById("btnGenerarReporte");
     const btnCerrarSesion = document.getElementById("btnCerrarSesion");
+    const inputBuscadorEstudiante = document.getElementById("inputBuscadorEstudiante");
 
     let registrosCache = [];
 
@@ -522,16 +470,16 @@
           const docSnap = await getDoc(docRef);
           if (docSnap.exists() && docSnap.data().nombre) {
             const nombre = docSnap.data().nombre;
-            docenteNombreEl.textContent = nombre;
+            if (docenteNombreEl) docenteNombreEl.textContent = nombre;
             if (menuDocenteNombreEl) menuDocenteNombreEl.textContent = nombre;
           } else {
             const fallback = user.displayName || user.email.split('@')[0];
-            docenteNombreEl.textContent = fallback;
+            if (docenteNombreEl) docenteNombreEl.textContent = fallback;
             if (menuDocenteNombreEl) menuDocenteNombreEl.textContent = fallback;
           }
         } catch (e) {
           const fallback = user.email ? user.email.split('@')[0] : "Docente";
-          docenteNombreEl.textContent = fallback;
+          if (docenteNombreEl) docenteNombreEl.textContent = fallback;
           if (menuDocenteNombreEl) menuDocenteNombreEl.textContent = fallback;
         }
 
@@ -591,13 +539,14 @@
       if (lista.length === 0) {
         studentsContainer.innerHTML = `
           <div class="student-row" style="justify-content: center;">
-            <span style="color: #666;">No hay registros entregados para "${CATEGORIA_ACTIVA}".</span>
+            <span style="color: #666;">No hay registros coincidentes.</span>
           </div>`;
         return;
       }
 
       lista.forEach((item) => {
-        const usuarioNombre = item.email || item.userId || "Estudiante";
+        // CAMBIO CLAVE: Prioriza el campo 'nombre' que proviene de Firestore
+        const usuarioNombre = item.nombre || item.email || item.userId || "Estudiante";
         const horasRealizadas = item.Horas || 0;
 
         const row = document.createElement("div");
@@ -615,6 +564,21 @@
       });
     }
 
+    // Evento de búsqueda por nombre o correo
+    if (inputBuscadorEstudiante) {
+      inputBuscadorEstudiante.addEventListener("input", (e) => {
+        const textoBusqueda = e.target.value.toLowerCase().trim();
+
+        const registrosFiltrados = registrosCache.filter((item) => {
+          const nombreEstudiante = (item.nombre || "").toLowerCase();
+          const emailEstudiante = (item.email || "").toLowerCase();
+          return nombreEstudiante.includes(textoBusqueda) || emailEstudiante.includes(textoBusqueda);
+        });
+
+        renderizarTablaRegistros(registrosFiltrados);
+      });
+    }
+
     btnGenerarReporte.addEventListener("click", () => {
       if (registrosCache.length === 0) {
         M.toast({html: 'No hay datos disponibles para generar el reporte.', classes: 'orange rounded'});
@@ -622,17 +586,18 @@
       }
 
       let csvContent = "\uFEFF";
-      csvContent += "Estudiante / Email,Categoría,Lugar,Docente Encargado,Horas Reportadas,Descripción\n";
+      csvContent += "Estudiante / Nombre,Email,Categoría,Lugar,Docente Encargado,Horas Reportadas,Descripción\n";
 
       registrosCache.forEach((item) => {
-        const estudiante = `"${item.email || item.userId || 'N/A'}"`;
+        const nombreEstudiante = `"${item.nombre || 'N/A'}"`;
+        const estudianteEmail = `"${item.email || item.userId || 'N/A'}"`;
         const categoria = `"${item.Categoria || CATEGORIA_ACTIVA}"`;
         const lugar = `"${item.Lugar || 'N/A'}"`;
         const docente = `"${item['Docente encargado'] || 'N/A'}"`;
         const horas = item.Horas || 0;
         const descripcion = `"${(item.Descripcion || '').replace(/"/g, '""')}"`;
 
-        csvContent += `${estudiante},${categoria},${lugar},${docente},${horas},${descripcion}\n`;
+        csvContent += `${nombreEstudiante},${estudianteEmail},${categoria},${lugar},${docente},${horas},${descripcion}\n`;
       });
 
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -665,7 +630,9 @@
         return;
       }
 
-      document.getElementById("modalEstudiante").textContent = registro.email || registro.userId || "Estudiante";
+      const nombreEstudiante = registro.nombre || registro.email || registro.userId || "Estudiante";
+
+      document.getElementById("modalEstudiante").textContent = nombreEstudiante;
       document.getElementById("modalDetalles").textContent = `Horas: ${registro.Horas || 0} hrs | Descripción: ${registro.Descripcion || 'Sin descripción'}`;
 
       const imgContainer = document.getElementById("modalImagenContainer");
