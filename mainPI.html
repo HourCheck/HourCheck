@@ -10,17 +10,39 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
   <style>
-     .custom-footer {
+    /* Configuración base para asegurar footer al fondo y ancho completo */
+    body {
+      background-color: #f4f6f9;
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      min-height: 100vh;
+      flex-direction: column;
+    }
+
+    .dashboard-container {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 20px;
+      flex: 1 0 auto; /* Empuja el footer al fondo si hay poco contenido */
+      box-sizing: border-box;
+    }
+
+    /* Footer ajustado al 100% de la pantalla */
+    .custom-footer {
       background-color: #1557d0 !important;
       border-top-left-radius: 25px;
       border-top-right-radius: 25px;
       margin-top: 50px;
       padding-top: 30px !important;
+      width: 100%;
     }
 
     .footer-container {
       width: 90%;
-      max-width: 1100px;
+      max-width: 1200px;
     }
 
     .footer-brand {
@@ -74,18 +96,6 @@
 
     .font-weight-bold {
       font-weight: 700;
-    }
-
-    body {
-      background-color: #f4f6f9;
-      font-family: 'Roboto', sans-serif;
-      margin: 0;
-      padding: 20px;
-    }
-
-    .dashboard-container {
-      max-width: 1200px;
-      margin: 0 auto;
     }
 
     .top-header {
@@ -202,17 +212,15 @@
     }
 
     .welcome-banner {
-      background-color: #1557d0;
-      border-radius: 25px;
-      padding: 35px 40px;
+      background: linear-gradient(135deg, #1557d0, #2867f0);
+      border-radius: 16px;
+      padding: 30px;
       color: #ffffff;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      margin-bottom: 35px;
-      box-shadow: 0 10px 20px rgba(21, 87, 208, 0.15);
-      position: relative;
-      overflow: hidden;
+      justify-content: space-between;
+      margin-bottom: 25px;
+      box-shadow: 0 4px 15px rgba(21, 87, 208, 0.2);
     }
 
     .banner-content {
@@ -221,25 +229,24 @@
     }
 
     .banner-title {
-      font-size: 2.2rem;
-      font-weight: 800;
-      margin: 0 0 12px 0;
+      font-size: 1.8rem;
+      font-weight: bold;
+      margin: 0 0 10px 0;
     }
 
     .banner-text {
-      font-size: 1rem;
+      font-size: 0.95rem;
       line-height: 1.4;
       opacity: 0.9;
       margin: 0;
     }
 
     .banner-illustration {
-      width: 280px;
-      height: auto;
+      height: 110px;
+      object-fit: contain;
       z-index: 2;
     }
 
-    /* Estilos para el gráfico con porcentaje incrustado */
     .chart-container {
       position: relative;
       width: 170px;
@@ -256,15 +263,36 @@
       margin-top: 10px;
     }
 
-    @media (max-width: 768px) {
+    .dashboard-grid {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    /* Adaptación Responsive (Móviles y Tablets) */
+    @media (max-width: 992px) {
+      .dashboard-grid {
+        flex-direction: column;
+      }
+      
+      .dashboard-grid > .col {
+        width: 100% !important;
+        margin-left: 0 !important;
+        margin-bottom: 20px;
+      }
+
       .welcome-banner {
         flex-direction: column;
         text-align: center;
-        padding: 30px 20px;
+        padding: 25px 20px;
       }
+
       .banner-illustration {
-        margin-top: 20px;
-        width: 200px;
+        margin-top: 15px;
+        height: 90px;
+      }
+
+      .header-right .user-info {
+        display: none; /* Oculta texto de usuario en móviles pequeños para evitar desbordes */
       }
     }
   </style>
@@ -313,11 +341,11 @@
       </div>
       <div class="header-right">
         <div class="icon-btn">
-          <i class="material-icons" href="notiD.html">notifications_none</i>
+          <i class="material-icons" onclick="location.href='notiD.html'">notifications_none</i>
         </div>
-        <div class="user-profile">
+        <div class="user-profile" onclick="location.href='perfilD.html'">
           <div class="avatar">
-            <i class="material-icons" href="perfilD.html">person</i>
+            <i class="material-icons">person</i>
           </div>
           <div class="user-info">
             <span class="user-name">cargando...</span>
@@ -329,18 +357,19 @@
     </header>
 
     <!-- Banner Principal -->
-    <section class="welcome-banner" style="background: linear-gradient(135deg, #1557d0, #2867f0); padding: 30px; border-radius: 16px; color: white; display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(21, 87, 208, 0.2);">
+    <section class="welcome-banner">
       <div class="banner-content">
-        <h2 class="banner-title" style="margin: 0 0 10px 0; font-size: 1.8rem; font-weight: bold;">¡Bienvenido/a!</h2>
-        <p class="banner-text" style="margin: 0; font-size: 0.95rem; opacity: 0.9; max-width: 600px;">Supervisa y registra el progreso de tus estudiantes, controla sus encargados y verifica sus actividades y evidencias.</p>
+        <h2 class="banner-title">¡Bienvenido/a!</h2>
+        <p class="banner-text">Supervisa y registra el progreso de tus estudiantes, controla sus encargados y verifica sus actividades y evidencias.</p>
       </div>
-      <img src="https://cdnai.iconscout.com/ai-image/premium/thumb/ai-hombre-de-negocios-trabajando-en-una-computadora-portatil-illustration-png-download-jpg-13171712.png" alt="Ilustración Trabajo" class="banner-illustration" style="height: 110px; object-fit: contain;">
+      <img src="https://cdnai.iconscout.com/ai-image/premium/thumb/ai-hombre-de-negocios-trabajando-en-una-computadora-portatil-illustration-png-download-jpg-13171712.png" alt="Ilustración Trabajo" class="banner-illustration">
     </section>
 
-    <div class="row" style="display: flex; flex-wrap: wrap;">
+    <!-- Fila Adaptable (Grid) -->
+    <div class="row dashboard-grid">
 
       <!-- COLUMNA 1: PROGRESO GENERAL Y MIEMBROS DE LA INSTITUCIÓN -->
-      <div class="col s12 m6" style="display: flex; flex-direction: column; gap: 20px;">
+      <div class="col s12 m12 l6" style="display: flex; flex-direction: column; gap: 20px;">
         
         <!-- Tarjeta Progreso General -->
         <div class="card white custom-card" style="border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #f0f0f0; margin: 0;">
@@ -355,7 +384,7 @@
           </div>
         </div>
 
-        <!-- Nueva Tarjeta: Estudiantes y Docentes de la Institución -->
+        <!-- Tarjeta: Estudiantes y Docentes de la Institución -->
         <div class="card white custom-card" style="border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #f0f0f0; margin: 0;">
           <div class="card-content" style="padding: 20px;">
             <span class="card-title grey-text text-darken-4" style="font-size: 0.85rem; font-weight: bold; letter-spacing: 0.5px;">👥 MIEMBROS DE LA INSTITUCIÓN</span>
@@ -385,11 +414,11 @@
       </div>
 
       <!-- COLUMNA 2: REPORTES -->
-      <div class="col s12 m6" style="display: flex;">
-        <div class="card white custom-card" style="border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #f0f0f0; width: 100%;">
+      <div class="col s12 m12 l6" style="display: flex;">
+        <div class="card white custom-card" style="border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #f0f0f0; width: 100%; margin: 0;">
           <div class="card-content" style="padding: 20px;">
             <span class="card-title grey-text text-darken-4" style="font-size: 0.85rem; font-weight: bold; letter-spacing: 0.5px;">▲ REPORTES DE MAESTROS</span>
-            <div class="badge-card valign-wrapper" style="margin-top: 35px;">
+            <div class="metric-box" style="margin-top: 25px; padding: 20px;">
               <div style="background-color: #fff3e0; border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; margin-right: 15px; flex-shrink: 0;">
                 <i class="material-icons orange-text text-darken-2" style="font-size: 28px;">assignment_late</i>
               </div>
@@ -403,50 +432,50 @@
       </div>
 
     </div>
-
-    <footer class="page-footer custom-footer">
-      <div class="container footer-container">
-        <div class="row style-row">
-          
-          <div class="col s12 m4">
-            <div class="footer-brand">
-              <img src="logo.png" alt="HourCheck Logo" class="footer-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x40?text=HourCheck';">
-              <h5 class="white-text font-weight-bold">HourCheck</h5>
-            </div>
-            <p class="grey-text text-lighten-2">
-              Sistema para la gestión y seguimiento del Servicio Social Estudiantil. Facilitando la validación y control de horas de forma eficiente.
-            </p>
-          </div>
-
-          <div class="col s12 m4 center-on-small">
-            <h5 class="white-text font-weight-bold">Enlaces Rápidos</h5>
-            <ul>
-              <li><a class="grey-text text-lighten-3 footer-link" href="index.html"><i class="material-icons tiny">chevron_right</i> Inicio</a></li>
-              <li><a class="grey-text text-lighten-3 footer-link" href="saberCualP.html"><i class="material-icons tiny">chevron_right</i> Guía de Perfiles</a></li>
-            </ul>
-          </div>
-
-          <div class="col s12 m4">
-            <h5 class="white-text font-weight-bold">Soporte</h5>
-            <p class="grey-text text-lighten-2">
-              ¿Tienes dudas con el registro de tus horas?
-            </p>
-            <a href="mailto:soporte@hourcheck.com" class="btn-flat white-text footer-btn">
-              <i class="material-icons left">help_outline</i> Contactar Soporte
-            </a>
-          </div>
-
-        </div>
-      </div>
-
-      <div class="footer-copyright custom-copyright">
-        <div class="container center-align white-text">
-          © 2026 HourCheck - Todos los derechos reservados.
-        </div>
-      </div>
-    </footer>
-
   </div>
+
+  <!-- FOOTER (Fuera del contenedor para abarcar el 100% del ancho) -->
+  <footer class="page-footer custom-footer">
+    <div class="container footer-container">
+      <div class="row">
+        
+        <div class="col s12 m4">
+          <div class="footer-brand">
+            <img src="logo.png" alt="HourCheck Logo" class="footer-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x40?text=HourCheck';">
+            <h5 class="white-text font-weight-bold">HourCheck</h5>
+          </div>
+          <p class="grey-text text-lighten-2">
+            Sistema para la gestión y seguimiento del Servicio Social Estudiantil. Facilitando la validación y control de horas de forma eficiente.
+          </p>
+        </div>
+
+        <div class="col s12 m4">
+          <h5 class="white-text font-weight-bold">Enlaces Rápidos</h5>
+          <ul>
+            <li><a class="grey-text text-lighten-3 footer-link" href="index.html"><i class="material-icons tiny">chevron_right</i> Inicio</a></li>
+            <li><a class="grey-text text-lighten-3 footer-link" href="saberCualP.html"><i class="material-icons tiny">chevron_right</i> Guía de Perfiles</a></li>
+          </ul>
+        </div>
+
+        <div class="col s12 m4">
+          <h5 class="white-text font-weight-bold">Soporte</h5>
+          <p class="grey-text text-lighten-2">
+            ¿Tienes dudas con el registro de tus horas?
+          </p>
+          <a href="mailto:soporte@hourcheck.com" class="btn-flat white-text footer-btn">
+            <i class="material-icons left">help_outline</i> Contactar Soporte
+          </a>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="footer-copyright custom-copyright">
+      <div class="container center-align white-text">
+        © 2026 HourCheck - Todos los derechos reservados.
+      </div>
+    </div>
+  </footer>
 
   <!-- Materialize JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
@@ -454,171 +483,165 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-  import { getFirestore, doc, getDoc, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
-    authDomain: "hourcheckt.firebaseapp.com",
-    projectId: "hourcheckt",
-    storageBucket: "hourcheckt.firebasestorage.app",
-    messagingSenderId: "83459752453",
-    appId: "1:83459752453:web:1b81724c28973bf567126c"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-
-  document.addEventListener('DOMContentLoaded', function() {
-    var elems = document.querySelectorAll('.sidenav');
-    if (typeof M !== 'undefined' && M.Sidenav) {
-      M.Sidenav.init(elems, { edge: 'left', draggable: true });
-    }
-    renderDoughnutChart(72);
-  });
-
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      let instData = null;
-      let idInstitucionReal = null; // Guardará el ID exacto de la institución
-
-      try {
-        const docRef = doc(db, "Institucion", user.uid);
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-          instData = docSnap.data();
-          idInstitucionReal = docSnap.id; // ID directo del usuario
-        } else {
-          const q = query(collection(db, "Institucion"), where("CorreoInst", "==", user.email));
-          const querySnapshot = await getDocs(q);
-          if (!querySnapshot.empty) {
-            const firstDoc = querySnapshot.docs[0];
-            instData = firstDoc.data();
-            idInstitucionReal = firstDoc.id; // Captura el ID real del documento
-          }
-        }
-
-        if (instData && idInstitucionReal) {
-          actualizarInterfaz({
-            nombreDirector: instData.NameDirector || "Director/a",
-            correoInst: instData.CorreoInst || user.email,
-            nombreInst: instData.NameInst || "Institución Educativa"
-          });
-
-          // Se consulta filtrando tanto por ID de documento de institución como por UID directo
-          cargarContadoresMiembros(idInstitucionReal, user.uid);
-        } else {
-          actualizarInterfaz({
-            nombreDirector: "Director/a",
-            correoInst: user.email,
-            nombreInst: "Institución No Encontrada"
-          });
-          cargarContadoresMiembros(user.uid, user.uid);
-        }
-
-      } catch (error) {
-        console.error("❌ Error al consultar Firestore:", error);
-        actualizarInterfaz({
-          nombreDirector: "Error de lectura",
-          correoInst: user.email,
-          nombreInst: "Verifique permisos de Firebase"
-        });
-      }
-    } else {
-      window.location.href = "loginU.html";
-    }
-  });
-
-  function actualizarInterfaz({ nombreDirector, correoInst, nombreInst }) {
-    const sidenavName = document.getElementById("user-name");
-    const sidenavEmail = document.getElementById("user-email");
-    const sidenavInst = document.getElementById("user-inst");
-
-    if (sidenavName) sidenavName.textContent = nombreDirector;
-    if (sidenavEmail) sidenavEmail.textContent = correoInst;
-    if (sidenavInst) sidenavInst.textContent = nombreInst;
-
-    const userNameHeader = document.querySelector(".header-right .user-info .user-name");
-    if (userNameHeader) userNameHeader.textContent = nombreDirector;
-
-    const bannerTitle = document.querySelector(".welcome-banner .banner-title");
-    if (bannerTitle) bannerTitle.textContent = `¡Bienvenido/a, ${nombreDirector}!`;
-  }
-
-  // Consulta en Firestore filtrando por la clave 'Institucion' del docente
-  async function cargarContadoresMiembros(instId, userUid) {
-    try {
-      // 1. Conteo de Estudiantes
-      const qEstudiantes = query(collection(db, "Estudiantes"), where("institucion", "==", instId));
-      const snapEstudiantes = await getDocs(qEstudiantes);
-      const elemEstudiantes = document.getElementById("cant-estudiantes");
-      if (elemEstudiantes) elemEstudiantes.textContent = snapEstudiantes.size;
-
-      // 2. Conteo de Docentes donde el campo 'Institucion' sea igual al ID de la institución o UID del usuario
-      let snapDocentes = await getDocs(query(collection(db, "Docentes"), where("Institucion", "==", instId)));
-      
-      // Si la búsqueda por ID de institución no devuelve resultados, realiza el intento directo por UID
-      if (snapDocentes.empty && instId !== userUid) {
-        snapDocentes = await getDocs(query(collection(db, "Docentes"), where("Institucion", "==", userUid)));
-      }
-
-      const elemDocentes = document.getElementById("cant-docentes");
-      if (elemDocentes) elemDocentes.textContent = snapDocentes.size;
-
-    } catch (e) {
-      console.error("Error obteniendo miembros de la institución:", e);
-    }
-  }
-
-  // Renderizado de Gráfica
-  function renderDoughnutChart(porcentaje) {
-    const ctx = document.getElementById('doughnutChart').getContext('2d');
-    
-    const centerTextPlugin = {
-      id: 'centerText',
-      beforeDraw: function(chart) {
-        const width = chart.width,
-              height = chart.height,
-              ctx = chart.ctx;
-        ctx.restore();
-        const fontSize = (height / 114).toFixed(2);
-        ctx.font = "bold " + fontSize + "em sans-serif";
-        ctx.textBaseline = "middle";
-        ctx.fillStyle = "#1557d0";
-        
-        const text = porcentaje + "%",
-              textX = Math.round((width - ctx.measureText(text).width) / 2),
-              textY = height / 2;
-        
-        ctx.fillText(text, textX, textY);
-        ctx.save();
-      }
+    const firebaseConfig = {
+      apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
+      authDomain: "hourcheckt.firebaseapp.com",
+      projectId: "hourcheckt",
+      storageBucket: "hourcheckt.firebasestorage.app",
+      messagingSenderId: "83459752453",
+      appId: "1:83459752453:web:1b81724c28973bf567126c"
     };
 
-    new Chart(ctx, {
-      type: 'doughnut',
-      data: {
-        datasets: [{
-          data: [porcentaje, 100 - porcentaje],
-          backgroundColor: ['#1557d0', '#e0e0e0'],
-          borderWidth: 0
-        }]
-      },
-      options: {
-        cutout: '78%',
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          tooltip: { enabled: false },
-          legend: { display: false }
-        }
-      },
-      plugins: [centerTextPlugin]
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    document.addEventListener('DOMContentLoaded', function() {
+      var elems = document.querySelectorAll('.sidenav');
+      if (typeof M !== 'undefined' && M.Sidenav) {
+        M.Sidenav.init(elems, { edge: 'left', draggable: true });
+      }
+      renderDoughnutChart(72);
     });
-  }
-</script>
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        let instData = null;
+        let idInstitucionReal = null;
+
+        try {
+          const docRef = doc(db, "Institucion", user.uid);
+          const docSnap = await getDoc(docRef);
+
+          if (docSnap.exists()) {
+            instData = docSnap.data();
+            idInstitucionReal = docSnap.id;
+          } else {
+            const q = query(collection(db, "Institucion"), where("CorreoInst", "==", user.email));
+            const querySnapshot = await getDocs(q);
+            if (!querySnapshot.empty) {
+              const firstDoc = querySnapshot.docs[0];
+              instData = firstDoc.data();
+              idInstitucionReal = firstDoc.id;
+            }
+          }
+
+          if (instData && idInstitucionReal) {
+            actualizarInterfaz({
+              nombreDirector: instData.NameDirector || "Director/a",
+              correoInst: instData.CorreoInst || user.email,
+              nombreInst: instData.NameInst || "Institución Educativa"
+            });
+
+            cargarContadoresMiembros(idInstitucionReal, user.uid);
+          } else {
+            actualizarInterfaz({
+              nombreDirector: "Director/a",
+              correoInst: user.email,
+              nombreInst: "Institución No Encontrada"
+            });
+            cargarContadoresMiembros(user.uid, user.uid);
+          }
+
+        } catch (error) {
+          console.error("❌ Error al consultar Firestore:", error);
+          actualizarInterfaz({
+            nombreDirector: "Error de lectura",
+            correoInst: user.email,
+            nombreInst: "Verifique permisos de Firebase"
+          });
+        }
+      } else {
+        window.location.href = "loginU.html";
+      }
+    });
+
+    function actualizarInterfaz({ nombreDirector, correoInst, nombreInst }) {
+      const sidenavName = document.getElementById("user-name");
+      const sidenavEmail = document.getElementById("user-email");
+      const sidenavInst = document.getElementById("user-inst");
+
+      if (sidenavName) sidenavName.textContent = nombreDirector;
+      if (sidenavEmail) sidenavEmail.textContent = correoInst;
+      if (sidenavInst) sidenavInst.textContent = nombreInst;
+
+      const userNameHeader = document.querySelector(".header-right .user-info .user-name");
+      if (userNameHeader) userNameHeader.textContent = nombreDirector;
+
+      const bannerTitle = document.querySelector(".welcome-banner .banner-title");
+      if (bannerTitle) bannerTitle.textContent = `¡Bienvenido/a, ${nombreDirector}!`;
+    }
+
+    async function cargarContadoresMiembros(instId, userUid) {
+      try {
+        const qEstudiantes = query(collection(db, "Estudiantes"), where("institucion", "==", instId));
+        const snapEstudiantes = await getDocs(qEstudiantes);
+        const elemEstudiantes = document.getElementById("cant-estudiantes");
+        if (elemEstudiantes) elemEstudiantes.textContent = snapEstudiantes.size;
+
+        let snapDocentes = await getDocs(query(collection(db, "Docentes"), where("Institucion", "==", instId)));
+        
+        if (snapDocentes.empty && instId !== userUid) {
+          snapDocentes = await getDocs(query(collection(db, "Docentes"), where("Institucion", "==", userUid)));
+        }
+
+        const elemDocentes = document.getElementById("cant-docentes");
+        if (elemDocentes) elemDocentes.textContent = snapDocentes.size;
+
+      } catch (e) {
+        console.error("Error obteniendo miembros de la institución:", e);
+      }
+    }
+
+    function renderDoughnutChart(porcentaje) {
+      const ctx = document.getElementById('doughnutChart').getContext('2d');
+      
+      const centerTextPlugin = {
+        id: 'centerText',
+        beforeDraw: function(chart) {
+          const width = chart.width,
+                height = chart.height,
+                ctx = chart.ctx;
+          ctx.restore();
+          const fontSize = (height / 114).toFixed(2);
+          ctx.font = "bold " + fontSize + "em sans-serif";
+          ctx.textBaseline = "middle";
+          ctx.fillStyle = "#1557d0";
+          
+          const text = porcentaje + "%",
+                textX = Math.round((width - ctx.measureText(text).width) / 2),
+                textY = height / 2;
+          
+          ctx.fillText(text, textX, textY);
+          ctx.save();
+        }
+      };
+
+      new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          datasets: [{
+            data: [porcentaje, 100 - porcentaje],
+            backgroundColor: ['#1557d0', '#e0e0e0'],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          cutout: '78%',
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            tooltip: { enabled: false },
+            legend: { display: false }
+          }
+        },
+        plugins: [centerTextPlugin]
+      });
+    }
+  </script>
 </body>
 </html>

@@ -330,7 +330,7 @@
   <!-- Firebase Script Modular -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, serverTimestamp, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, doc, getDoc, serverTimestamp, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     const firebaseConfig = {
@@ -372,12 +372,13 @@
       });
     };
 
-    async function obtenerHorasAcumuladas(userId) {
+    // Obtener horas buscando por el correo del usuario
+    async function obtenerHorasAcumuladas(email) {
       let totalHoras = 0;
       try {
         const q = query(
           collection(db, "HorasSociales"),
-          where("userId", "==", userId)
+          where("email", "==", email)
         );
         const querySnapshot = await getDocs(q);
         querySnapshot.forEach((docSnap) => {
@@ -423,9 +424,25 @@
 
       try {
         btnGuardar.disabled = true;
-        btnGuardar.textContent = "Verificando horas...";
+        btnGuardar.textContent = "Verificando datos...";
 
-        const horasAcumuladas = await obtenerHorasAcumuladas(usuarioActual.uid);
+        // 1. Obtener el ID de la institución desde el documento del Estudiante
+        let idInstitucion = "";
+        const estDocRef = doc(db, "Estudiantes", usuarioActual.uid);
+        const estDocSnap = await getDoc(estDocRef);
+
+        if (estDocSnap.exists()) {
+          idInstitucion = estDocSnap.data().institucion || "";
+        } else {
+          // Si el ID del documento en Estudiantes no es el UID directo, buscamos por correo
+          const qEst = query(collection(db, "Estudiantes"), where("correo", "==", usuarioActual.email));
+          const querySnap = await getDocs(qEst);
+          if (!querySnap.empty) {
+            idInstitucion = querySnap.docs[0].data().institucion || "";
+          }
+        }
+
+        const horasAcumuladas = await obtenerHorasAcumuladas(usuarioActual.email);
 
         if (horasAcumuladas >= META_HORAS) {
           M.toast({html: 'Ya has completado la meta de 150 horas.', classes: 'orange rounded'});
@@ -451,8 +468,9 @@
 
         const evidenciaBase64 = await convertirABase64(archivoEvidencia);
 
+        // 2. Guardar en Firestore reemplazando userId por institucion
         await addDoc(collection(db, "HorasSociales"), {
-          userId: usuarioActual.uid,
+          institucion: idInstitucion,
           email: usuarioActual.email || "",
           Categoria: categoriaInput,
           Descripcion: descripcionInput,
