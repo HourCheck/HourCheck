@@ -382,7 +382,6 @@
 
           </div>
         </div>
-
       </div>
 
       <!-- COLUMNA 2: REPORTES -->
@@ -509,14 +508,16 @@
             nombreInst: instData.NameInst || "Institución Educativa"
           });
 
-          // Se pasa el ID REAL del documento a las consultas
-          cargarContadoresMiembros(idInstitucionReal);
+          // Se pasa el UID del usuario en sesión
+          cargarContadoresMiembros(idInstitucionReal, user.uid);
         } else {
           actualizarInterfaz({
             nombreDirector: "Director/a",
             correoInst: user.email,
             nombreInst: "Institución No Encontrada"
           });
+          // Aunque no exista en "Institucion", intenta buscar por user.uid directamente
+          cargarContadoresMiembros(user.uid, user.uid);
         }
 
       } catch (error) {
@@ -548,8 +549,8 @@
     if (bannerTitle) bannerTitle.textContent = `¡Bienvenido/a, ${nombreDirector}!`;
   }
 
-  // Consulta en Firestore filtrando por el ID del documento de la institución
-  async function cargarContadoresMiembros(instId) {
+  // Consulta en Firestore filtrando por la sesión activa
+  async function cargarContadoresMiembros(instId, userUid) {
     try {
       // 1. Conteo de Estudiantes pertenecientes a la institución
       const qEstudiantes = query(collection(db, "Estudiantes"), where("institucion", "==", instId));
@@ -557,8 +558,8 @@
       const elemEstudiantes = document.getElementById("cant-estudiantes");
       if (elemEstudiantes) elemEstudiantes.textContent = snapEstudiantes.size;
 
-      // 2. Conteo de Docentes pertenecientes a la institución
-      const qDocentes = query(collection(db, "Docentes"), where("institucion", "==", instId));
+      // 2. Conteo de Docentes donde el campo 'Institucion' coincide exactamente con el UID de la sesión iniciada
+      const qDocentes = query(collection(db, "Docentes"), where("Institucion", "==", userUid));
       const snapDocentes = await getDocs(qDocentes);
       const elemDocentes = document.getElementById("cant-docentes");
       if (elemDocentes) elemDocentes.textContent = snapDocentes.size;
