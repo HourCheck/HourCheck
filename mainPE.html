@@ -14,6 +14,72 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
+    /* Footer */
+    .custom-footer {
+      background-color: #1557d0 !important;
+      border-top-left-radius: 25px;
+      border-top-right-radius: 25px;
+      margin-top: 50px;
+      padding-top: 30px !important;
+    }
+
+    .footer-container {
+      width: 90%;
+      max-width: 1100px;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .footer-logo {
+      height: 35px;
+      width: auto;
+      filter: brightness(0) invert(1);
+    }
+
+    .footer-brand h5 {
+      margin: 0;
+      font-size: 1.4rem;
+    }
+
+    .footer-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-bottom: 8px;
+      transition: color 0.2s, transform 0.2s;
+    }
+
+    .footer-link:hover {
+      color: #ff5500 !important;
+      transform: translateX(4px);
+    }
+
+    .footer-btn {
+      background-color: rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      text-transform: none;
+      font-weight: 600;
+      margin-top: 5px;
+    }
+
+    .footer-btn:hover {
+      background-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .custom-copyright {
+      background-color: rgba(0, 0, 0, 0.12) !important;
+      font-size: 0.85rem;
+      padding: 15px 0;
+    }
+
+    .font-weight-bold {
+      font-weight: 700;
+    }
     :root {
       --primary-color: #2563eb;
       --bg-body: #f8fafc;
@@ -162,35 +228,6 @@
       color: var(--text-muted);
     }
 
-    /* Dropdown Perfil */
-    .profile-dropdown {
-      top: 65px !important;
-      border-radius: 12px;
-      min-width: 200px !important;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
-      overflow: hidden;
-    }
-
-    .profile-dropdown li > a {
-      color: var(--text-main);
-      font-size: 0.9rem;
-      font-weight: 500;
-      padding: 12px 16px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .profile-dropdown li > a > i {
-      margin: 0 !important;
-      font-size: 20px !important;
-      color: var(--text-muted);
-    }
-
-    .profile-dropdown li:hover {
-      background-color: #f1f5f9;
-    }
-
     /* Sidenav */
     .sidenav {
       width: 300px;
@@ -290,6 +327,7 @@
       box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
     }
 
+    /* Dona interactiva según avance de horas */
     .donut-chart {
       width: 72px;
       height: 72px;
@@ -415,71 +453,41 @@
       border-bottom: none;
     }
 
-    /* Footer */
-    .custom-footer {
-      background-color: #1557d0 !important;
-      border-top-left-radius: 25px;
-      border-top-right-radius: 25px;
-      margin-top: 50px;
-      padding-top: 30px !important;
+    .img-evidencia {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: transform 0.2s;
     }
 
-    .footer-container {
-      width: 90%;
-      max-width: 1100px;
+    .img-evidencia:hover {
+      transform: scale(1.08);
     }
 
-    .footer-brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 10px;
-    }
-
-    .footer-logo {
-      height: 35px;
-      width: auto;
-      filter: brightness(0) invert(1);
-    }
-
-    .footer-brand h5 {
-      margin: 0;
-      font-size: 1.4rem;
-    }
-
-    .footer-link {
+    .status-badge {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
-      margin-bottom: 8px;
-      transition: color 0.2s, transform 0.2s;
-    }
-
-    .footer-link:hover {
-      color: #ff5500 !important;
-      transform: translateX(4px);
-    }
-
-    .footer-btn {
-      background-color: rgba(255, 255, 255, 0.15);
-      border-radius: 12px;
-      text-transform: none;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 0.82rem;
       font-weight: 600;
-      margin-top: 5px;
     }
 
-    .footer-btn:hover {
-      background-color: rgba(255, 255, 255, 0.25);
+    .status-comprobado {
+      background-color: #dcfce7;
+      color: #15803d;
     }
 
-    .custom-copyright {
-      background-color: rgba(0, 0, 0, 0.12) !important;
-      font-size: 0.85rem;
-      padding: 15px 0;
-    }
-
-    .font-weight-bold {
-      font-weight: 700;
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: currentColor;
     }
 
     @media (max-width: 768px) {
@@ -498,8 +506,8 @@
       <div class="user-view">
         <div class="background" style="background-color: #1e40af;"></div>
         <a href="perfilU.html"><div class="avatar"><i class="material-icons">person</i></div></a>
-        <a href="perfilU.html"><span class="white-text name" id="sideUserName" style="font-weight:700;">Cargando...</span></a>
-        <a href="perfilU.html"><span class="white-text email" id="sideUserEmail">Cargando...</span></a>
+        <a href="perfilU.html"><span class="white-text name" style="font-weight:700;">Cargando...</span></a>
+        <a href="perfilU.html"><span class="white-text email">Cargando...</span></a>
       </div>
     </li>
     
@@ -511,9 +519,10 @@
     
     <li><a href="historialE.html" class="waves-effect"><i class="material-icons">history</i>Historial de Horas</a></li>
     <li><a href="evidencias.html" class="waves-effect"><i class="material-icons">add_circle_outline</i>Subir Jornada</a></li>
+    <li><a href="#" id="btnCerrarSesion" class="waves-effect"><i class="material-icons">exit_to_app</i>Cerrar Sesión</a></li>
   </ul>
 
-  <!-- Encabezado Superior (Navbar) -->
+  <!-- Encabezado Superior -->
   <header class="top-header">
     <div class="header-left">
       <a href="#" data-target="slide-out" class="sidenav-trigger btn-menu-trigger">
@@ -523,41 +532,20 @@
     </div>
     
     <div class="header-right">
-      <a href="notiE.html" class="icon-btn" title="Notificaciones">
+      <a href="notiE.html" class="icon-btn">
         <i class="material-icons">notifications_none</i>
       </a>
       
-      <!-- Menú desplegable del perfil de usuario -->
-      <a href="#" class="user-profile dropdown-trigger" data-target="dropdown-user">
-        <div class="avatar" id="navAvatar">
+      <a href="loginU.html" class="user-profile">
+        <div class="avatar">
           <i class="material-icons">person</i>
         </div>
         <div class="user-info">
-          <span class="user-name" id="navUserName">Cargando...</span>
+          <span class="user-name">Cargando...</span>
           <span class="user-role">Estudiante</span>
         </div>
         <i class="material-icons" style="color: var(--text-muted); font-size: 20px !important;">expand_more</i>
       </a>
-
-      <!-- Estructura del Dropdown -->
-      <ul id="dropdown-user" class="dropdown-content profile-dropdown">
-        <li>
-          <a href="perfilU.html">
-            <i class="material-icons">account_circle</i>Mi Perfil
-          </a>
-        </li>
-        <li>
-          <a href="notiE.html">
-            <i class="material-icons">notifications</i>Notificaciones
-          </a>
-        </li>
-        <li class="divider" tabindex="-1"></li>
-        <li>
-          <a href="#" id="btnCerrarSesion" class="red-text text-darken-1">
-            <i class="material-icons red-text text-darken-1">exit_to_app</i>Cerrar Sesión
-          </a>
-        </li>
-      </ul>
     </div>
   </header>
 
@@ -635,7 +623,7 @@
             <th>Estado</th>
           </tr>
         </thead>
-        <tbody id="listaHoras">
+        <tbody id="tablaHistorial">
           <tr>
             <td colspan="5" class="center-align" style="color: var(--text-muted); padding: 30px;">Cargando historial...</td>
           </tr>
@@ -690,7 +678,7 @@
   <!-- Materialize JS CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
-  <!-- Script Firebase & Inicialización -->
+  <!-- Script Firebase con Carga de Datos Filtrados por Usuario -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { 
@@ -705,6 +693,12 @@
       where, 
       onSnapshot 
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // Inicializar componentes interactivos de Materialize (Menú Lateral)
+    document.addEventListener('DOMContentLoaded', function() {
+      var elems = document.querySelectorAll('.sidenav');
+      M.Sidenav.init(elems);
+    });
 
     // Configuración de tu proyecto en Firebase
     const firebaseConfig = {
@@ -721,42 +715,18 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // Inicialización de componentes UI Materialize
-    document.addEventListener('DOMContentLoaded', () => {
-      const elemsSidenav = document.querySelectorAll('.sidenav');
-      M.Sidenav.init(elemsSidenav);
-
-      const elemsDropdown = document.querySelectorAll('.dropdown-trigger');
-      M.Dropdown.init(elemsDropdown, {
-        constrainWidth: false,
-        coverTrigger: false,
-        alignment: 'right'
-      });
-    });
-
-    // Referencias a elementos DOM
-    const contenedorHoras = document.getElementById("listaHoras");
+    // Referencias a elementos del DOM
+    const contenedorHoras = document.getElementById("tablaHistorial");
     const btnCerrarSesion = document.getElementById("btnCerrarSesion");
 
     // Listener del estado de autenticación
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        // Asignar datos del usuario a la interfaz
-        const displayName = user.displayName || user.email.split('@')[0];
-        
-        const navUserName = document.getElementById("navUserName");
-        if (navUserName) navUserName.textContent = displayName;
-
-        const sideUserName = document.getElementById("sideUserName");
-        if (sideUserName) sideUserName.textContent = displayName;
-
-        const sideUserEmail = document.getElementById("sideUserEmail");
-        if (sideUserEmail) sideUserEmail.textContent = user.email;
-
-        // Cargar registros
+        // Cargar registros del usuario
         cargarHorasSociales(user.uid);
       } else {
-        window.location.href = "index.html";
+        // Redirigir al login si no está autenticado
+        window.location.href = "login.html";
       }
     });
 
@@ -785,41 +755,42 @@
 
         snapshot.forEach((doc) => {
           const data = doc.data();
-          const horas = parseInt(data.Horas) || 0;
-          totalHoras += horas;
-          if (data.Evidencia) totalEvidencias++;
-
-          const tr = document.createElement("tr");
-          tr.innerHTML = `
-            <td><strong>${data.Lugar || 'N/A'}</strong><br><small style="color:var(--text-muted);">${data.Categoria || 'Sin categoría'}</small></td>
+          const horasNum = parseFloat(data.Horas) || 0;
+          totalHoras += horasNum;
+          totalEvidencias++;
+          
+          const fila = document.createElement("tr");
+          fila.innerHTML = `
+            <td><strong>${data.Lugar || 'N/A'}</strong><br><small style="color: var(--text-muted);">${data.Categoria || 'Sin Categoría'}</small></td>
             <td>${data["Docente encargado"] || 'N/A'}</td>
-            <td><strong>${horas} h</strong></td>
+            <td><strong>${horasNum} h</strong></td>
             <td>
-              ${data.Evidencia ? `<a href="${data.Evidencia}" target="_blank"><img src="${data.Evidencia}" alt="Evidencia" style="width: 45px; height: 45px; object-fit: cover; border-radius: 8px;"/></a>` : '<span style="color:var(--text-muted);">Sin evidencia</span>'}
+              ${data.Evidencia ? `<img src="${data.Evidencia}" alt="Evidencia" class="img-evidencia"/>` : '<span style="color: var(--text-muted);">Sin imagen</span>'}
             </td>
             <td>
               <span class="status-badge status-comprobado">
-                <span class="dot"></span> Registrado
+                <span class="dot"></span> ${data.Estado || 'Registrado'}
               </span>
             </td>
           `;
-          contenedorHoras.appendChild(tr);
+          
+          contenedorHoras.appendChild(fila);
         });
 
-        // Actualizar KPIs
-        const kpiTotalHoras = document.getElementById("kpiTotalHoras");
-        if (kpiTotalHoras) kpiTotalHoras.textContent = `${totalHoras} / 150 h`;
-
-        const kpiTotalEvidencias = document.getElementById("kpiTotalEvidencias");
-        if (kpiTotalEvidencias) kpiTotalEvidencias.textContent = `${totalEvidencias} enviadas`;
-
-        // Actualizar dona
-        const porcentaje = Math.min(Math.round((totalHoras / 150) * 100), 100);
-        const donut = document.getElementById("donutHoras");
-        if (donut) donut.style.background = `conic-gradient(#2563eb ${porcentaje}%, #e2e8f0 ${porcentaje}%)`;
+        // Actualizar KPIs de la interfaz si existen los elementos
+        const kpiHoras = document.getElementById("kpiTotalHoras");
+        const kpiEvidencias = document.getElementById("kpiTotalEvidencias");
+        if(kpiHoras) kpiHoras.innerText = `${totalHoras} / 150 h`;
+        if(kpiEvidencias) kpiEvidencias.innerText = `${totalEvidencias} enviadas`;
 
       }, (error) => {
         console.error("Error al obtener los registros: ", error);
+        contenedorHoras.innerHTML = `
+          <tr>
+            <td colspan="5" class="center-align red-text" style="padding: 20px;">
+              Error al cargar los registros.
+            </td>
+          </tr>`;
       });
     }
 
@@ -828,11 +799,24 @@
       btnCerrarSesion.addEventListener("click", (e) => {
         e.preventDefault();
         signOut(auth).then(() => {
-          window.location.href = "index.html";
+          window.location.href = "loginU.html";
         }).catch((error) => {
           console.error("Error al cerrar sesión:", error);
         });
       });
+    }
+     function actualizarInterfaz(nombre, correo) {
+      const bannerTitle = document.querySelector(".banner-title");
+      if (bannerTitle) bannerTitle.textContent = `¡Bienvenido/a, ${nombre}!`;
+
+      const userNameHeader = document.querySelector(".top-header .user-name");
+      if (userNameHeader) userNameHeader.textContent = nombre;
+
+      const sidenavName = document.querySelector(".sidenav .name");
+      const sidenavEmail = document.querySelector(".sidenav .email");
+
+      if (sidenavName) sidenavName.textContent = nombre;
+      if (sidenavEmail) sidenavEmail.textContent = correo;
     }
   </script>
 </body>
