@@ -166,25 +166,6 @@
       background-color: #e66000;
     }
 
-    .btn-logout {
-      background-color: transparent;
-      color: #dc2626;
-      border: 1.5px solid #dc2626;
-      border-radius: 12px;
-      width: 100%;
-      height: 45px;
-      line-height: 43px;
-      font-size: 0.95rem;
-      font-weight: 600;
-      text-transform: none;
-      margin-top: 12px;
-      box-shadow: none;
-    }
-
-    .btn-logout:hover {
-      background-color: #fee2e2;
-    }
-
     .custom-footer {
       background-color: #1557d0 !important;
       border-top-left-radius: 25px;
@@ -255,10 +236,6 @@
             </div>
           </form>
 
-          <button class="btn waves-effect btn-logout" id="btnCerrarSesion">
-            <i class="material-icons left" style="font-size: 1.2rem;">logout</i> Cerrar Sesión
-          </button>
-
         </div>
       </div>
     </div>
@@ -277,7 +254,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, doc, getDoc, setDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
@@ -313,6 +290,17 @@
         window.location.href = "loginU.html";
       }
     });
+
+    // Función auxiliar para redirigir a la vista según el rol del usuario
+    function redirigirSegunRol() {
+      if (coleccionEfectiva === "Docentes") {
+        window.location.href = "mainPD.html";
+      } else if (coleccionEfectiva === "Institucion") {
+        window.location.href = "mainPI.html";
+      } else {
+        window.location.href = "mainPE.html";
+      }
+    }
 
     // Búsqueda en Firestore según las colecciones
     async function cargarDatosUsuario(uid) {
@@ -452,14 +440,7 @@
     // Navegación inteligente de retorno
     btnVolver.addEventListener("click", (e) => {
       e.preventDefault();
-
-      if (coleccionEfectiva === "Docentes") {
-        window.location.href = "mainPD.html";
-      } else if (coleccionEfectiva === "Institucion") {
-        window.location.href = "mainPI.html";
-      } else {
-        window.location.href = "mainPE.html";
-      }
+      redirigirSegunRol();
     });
 
     // Evento de guardar actualización
@@ -503,24 +484,18 @@
 
         M.toast({html: '¡Perfil actualizado correctamente!', classes: 'green rounded'});
 
+        // Espera un breve tiempo para que el usuario pueda ver el toast y redirige a la página origen
+        setTimeout(() => {
+          redirigirSegunRol();
+        }, 1000);
+
       } catch (error) {
         console.error("Error al guardar cambios:", error);
         M.toast({html: 'Error al actualizar el perfil', classes: 'red rounded'});
-      } finally {
         btnGuardarPerfil.disabled = false;
         btnGuardarPerfil.textContent = "Guardar Cambios";
       }
-    });
-
-    // Cerrar sesión
-    document.getElementById("btnCerrarSesion").addEventListener("click", async () => {
-      try {
-        await signOut(auth);
-        window.location.href = "loginU.html";
-      } catch (error) {
-        console.error("Error al cerrar sesión:", error);
-      }
-    });
+    }); // Cierre del addEventListener corregido
   </script>
 </body>
 </html>
