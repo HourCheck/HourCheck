@@ -343,6 +343,30 @@
     .action-link:hover {
       text-decoration: underline;
     }
+
+    /* Estilos del Modal de Evidencias */
+    #modalEvidencia {
+      border-radius: 16px;
+      max-width: 600px;
+    }
+
+    .evidencia-img-container {
+      width: 100%;
+      max-height: 380px;
+      overflow: hidden;
+      border-radius: 12px;
+      background-color: #f0f4f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 15px;
+    }
+
+    .evidencia-img-container img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+    }
   </style>
 </head>
 <body>
@@ -375,8 +399,8 @@
   <!-- Menú Lateral -->
   <ul id="slide-out" class="sidenav">
     <li><div class="divider"></div></li>
-<li><a class="subheader">Gestión de Reportes</a></li>
-<li><a href="reporteD.html" class="waves-effect"><i class="material-icons" style="color: #1557d0;">assessment</i>Generar Reporte PDF</a></li>
+    <li><a class="subheader">Gestión de Reportes</a></li>
+    <li><a href="reporteD.html" class="waves-effect"><i class="material-icons" style="color: #1557d0;">assessment</i>Generar Reporte PDF</a></li>
     <li><div class="divider"></div></li>
 
     <li>
@@ -403,7 +427,6 @@
     <div class="banner-card">
       <div>
         <h1 class="banner-title">Tutorías de inglés</h1>
-       
       </div>
       <div class="banner-icon-container">
         <i class="material-icons" style="font-size: 3.5rem; color: #1557d0;">translate</i>
@@ -467,6 +490,22 @@
 
   </div>
 
+  <!-- Modal Evidencia -->
+  <div id="modalEvidencia" class="modal">
+    <div class="modal-content">
+      <h5 style="font-weight: 700; margin-top: 0;">Evidencia del Registro</h5>
+      <p id="modalEstudiante" style="margin-bottom: 5px; font-weight: 600;"></p>
+      <p id="modalDetalles" style="color: #555; margin-top: 0;"></p>
+      
+      <div class="evidencia-img-container" id="modalImagenContainer">
+        <p style="color: #888;">Cargando imagen...</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-close waves-effect waves-blue btn-flat" style="font-weight: 700; color: #1557d0;">Cerrar</a>
+    </div>
+  </div>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
   <script type="module">
@@ -475,8 +514,11 @@
     import { getAuth, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     document.addEventListener('DOMContentLoaded', function() {
-      const elems = document.querySelectorAll('.sidenav');
-      M.Sidenav.init(elems);
+      const elemsSidenav = document.querySelectorAll('.sidenav');
+      M.Sidenav.init(elemsSidenav);
+
+      const elemsModal = document.querySelectorAll('.modal');
+      M.Modal.init(elemsModal);
     });
 
     const firebaseConfig = {
@@ -495,7 +537,6 @@
       console.error("Error al configurar persistencia:", error);
     });
 
-    // 🔑 Nombre exacto de la categoría en Firestore
     const CATEGORIA_ACTIVA = "Tutorías de inglés";
 
     const docenteNombreEl = document.getElementById("docenteNombre");
@@ -654,8 +695,29 @@
       });
     }
 
+    // Modal para mostrar la imagen y detalles de la evidencia
     window.verEvidencia = function(registroId) {
-      M.toast({html: `Abriendo registro de evidencia...`, classes: 'rounded blue'});
+      const registro = registrosCache.find(r => r.id === registroId);
+      if (!registro) {
+        M.toast({html: 'Registro no encontrado.', classes: 'red rounded'});
+        return;
+      }
+
+      document.getElementById("modalEstudiante").textContent = registro.email || registro.userId || "Estudiante";
+      document.getElementById("modalDetalles").textContent = `Horas: ${registro.Horas || 0} hrs | Descripción: ${registro.Descripcion || 'Sin descripción'}`;
+
+      const imgContainer = document.getElementById("modalImagenContainer");
+      const urlImagen = registro.evidenciaUrl || registro.Evidencia || registro.imagenUrl || registro.imagen;
+
+      if (urlImagen) {
+        imgContainer.innerHTML = `<img src="${urlImagen}" alt="Evidencia" />`;
+      } else {
+        imgContainer.innerHTML = `<p style="color: #666; padding: 20px;">Este registro no contiene imagen de evidencia adjunta.</p>`;
+      }
+
+      const modalElem = document.getElementById("modalEvidencia");
+      const instance = M.Modal.getInstance(modalElem);
+      instance.open();
     };
   </script>
 </body>
