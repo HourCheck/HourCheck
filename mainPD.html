@@ -9,7 +9,7 @@
   <!-- CSS Materialize -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   
-  <!-- Iconos de Materialize con HTTPS explícito para evitar bloqueos -->
+  <!-- Iconos de Materialize -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
   <style>
@@ -216,7 +216,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 35px;
+      margin-bottom: 25px;
       box-shadow: 0 10px 20px rgba(21, 87, 208, 0.15);
       position: relative;
       overflow: hidden;
@@ -244,6 +244,27 @@
       width: 280px;
       height: auto;
       z-index: 2;
+    }
+
+    /* Botón de Generación de Reporte */
+    .report-action-bar {
+      margin-bottom: 25px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .btn-reporte-main {
+      background-color: #ff5500 !important;
+      border-radius: 12px;
+      font-weight: 700;
+      text-transform: none;
+      box-shadow: 0 4px 12px rgba(255, 85, 0, 0.3);
+      transition: transform 0.2s;
+    }
+
+    .btn-reporte-main:hover {
+      transform: translateY(-2px);
+      background-color: #e04b00 !important;
     }
 
     /* Grid de Tarjetas de Proyectos */
@@ -328,6 +349,9 @@
         margin-top: 20px;
         width: 200px;
       }
+      .report-action-bar {
+        justify-content: center;
+      }
       .projects-grid {
         grid-template-columns: 1fr;
       }
@@ -350,11 +374,14 @@
     <li><a href="notiD.html" class="waves-effect"><i class="material-icons">notifications</i>Notificaciones</a></li>
     
     <li><div class="divider"></div></li>
+    <li><a class="subheader">Gestión de Reportes</a></li>
+    <li><a href="reporteD.html" class="waves-effect"><i class="material-icons" style="color: #1557d0;">assessment</i>Generar Reporte PDF</a></li>
+
+    <li><div class="divider"></div></li>
     <li><a class="subheader">Proyectos y Actividades</a></li>
-    <li><a href="reporteD.html" class="waves-effect"><i class="material-icons">assessment</i>Generar Reporte PDF</a></li>
     <li><a href="jornadalimpieza.html" class="waves-effect"><i class="material-icons">cleaning_services</i>Jornadas de limpieza</a></li>
     <li><a href="tutoriasingles.html" class="waves-effect"><i class="material-icons">translate</i>Tutorías de inglés</a></li>
-    <li><a href="tutoriasinfancia.html" class="waves-effect"><i class="material-icons">child_care</i>Tutorías primera infancia</a></li>
+    <li><a href="tutoriasPrimerInfa.html" class="waves-effect"><i class="material-icons">child_care</i>Tutorías primera infancia</a></li>
     <li><div class="divider"></div></li>
     <li><a href="#!" id="btnCerrarSesion" class="waves-effect" style="color: #d32f2f;"><i class="material-icons" style="color: #d32f2f;">exit_to_app</i>Cerrar Sesión</a></li>
   </ul>
@@ -394,6 +421,13 @@
       </div>
       <img src="https://cdni.iconscout.com/illustration/premium/thumb/woman-working-on-laptop-4268388-3561001.png" alt="Ilustración Trabajo" class="banner-illustration">
     </section>
+
+    <!-- ACCESO DIRECTO AL REPORTE PDF -->
+    <div class="report-action-bar">
+      <a href="reporteD.html" class="btn waves-effect waves-light btn-reporte-main">
+        <i class="material-icons left">picture_as_pdf</i> Generar Reporte PDF
+      </a>
+    </div>
 
     <main class="projects-grid">
       
@@ -452,6 +486,7 @@
           <h5 class="white-text font-weight-bold">Enlaces Rápidos</h5>
           <ul>
             <li><a class="grey-text text-lighten-3 footer-link" href="mainPD.html"><i class="material-icons tiny">chevron_right</i> Inicio</a></li>
+            <li><a class="grey-text text-lighten-3 footer-link" href="reporteD.html"><i class="material-icons tiny">chevron_right</i> Generar Reportes PDF</a></li>
             <li><a class="grey-text text-lighten-3 footer-link" href="saberCualP.html"><i class="material-icons tiny">chevron_right</i> Guía de Perfiles</a></li>
           </ul>
         </div>
@@ -489,7 +524,6 @@
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // Configuración de Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
       authDomain: "hourcheckt.firebaseapp.com",
@@ -556,7 +590,6 @@
 
         snap.forEach((doc) => {
           const data = doc.data();
-          // Evalúa tanto 'Categoria' (mayúscula) como 'categoria' (minúscula)
           const cat = String(data.Categoria || data.categoria || "").toLowerCase();
 
           if (cat.includes("limpieza")) {
