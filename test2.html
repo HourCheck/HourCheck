@@ -3,14 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Inicio Docente - HourCheck</title>
+  <title>Inicio Estudiante - HourCheck</title>
   <link rel="icon" type="image/png" href="logo.png">
   
   <!-- CSS Materialize -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   
   <!-- Iconos de Materialize -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material-Icons">
+
+  <!-- Chart.js para las gráficas de donas -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
     /* Body & Layout */
@@ -274,25 +277,19 @@
       z-index: 2;
     }
 
-    /* Botón de Generación de Reporte */
-    .report-action-bar {
-      margin-bottom: 25px;
-      display: flex;
-      justify-content: flex-end;
+    /* Sección del Gráfico de Donas */
+    .chart-section {
+      background: #ffffff;
+      border-radius: 25px;
+      padding: 30px;
+      margin-bottom: 30px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.03);
     }
 
-    .btn-reporte-main {
-      background-color: #ff5500 !important;
-      border-radius: 12px;
-      font-weight: 700;
-      text-transform: none;
-      box-shadow: 0 4px 12px rgba(255, 85, 0, 0.3);
-      transition: transform 0.2s;
-    }
-
-    .btn-reporte-main:hover {
-      transform: translateY(-2px);
-      background-color: #e04b00 !important;
+    .chart-container {
+      position: relative;
+      max-width: 320px;
+      margin: 0 auto;
     }
 
     /* Grid de Tarjetas de Proyectos */
@@ -318,19 +315,11 @@
       box-shadow: 0 12px 28px rgba(0, 0, 0, 0.06);
     }
 
-    .card-icon-wrapper {
+    .donut-card-wrapper {
       width: 90px;
       height: 90px;
       flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .card-icon-wrapper img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
+      position: relative;
     }
 
     .card-info {
@@ -366,7 +355,6 @@
       color: #002ca3;
     }
 
-    /* Adaptación Responsiva */
     @media (max-width: 768px) {
       .welcome-banner {
         flex-direction: column;
@@ -376,9 +364,6 @@
       .banner-illustration {
         margin-top: 20px;
         width: 200px;
-      }
-      .report-action-bar {
-        justify-content: center;
       }
       .projects-grid {
         grid-template-columns: 1fr;
@@ -393,21 +378,21 @@
     <li>
       <div class="user-view">
         <div class="background" style="background-color: #1557d0;"></div>
-        <a href="perfilU.html"><div class="avatar"><i class="material-icons">person</i></div></a>
-        <a href="perfilU.html"><span class="white-text name" style="font-weight:700;">Cargando...</span></a>
-        <a href="perfilU.html"><span class="white-text email">Cargando...</span></a>
+        <a href="perfilE.html"><div class="avatar"><i class="material-icons">person</i></div></a>
+        <a href="perfilE.html"><span class="white-text name" style="font-weight:700;">Cargando...</span></a>
+        <a href="perfilE.html"><span class="white-text email">Cargando...</span></a>
       </div>
     </li>
     
-    <li><a href="perfilU.html" class="waves-effect"><i class="material-icons">account_circle</i>Perfil</a></li>
-    <li><a href="notiD.html" class="waves-effect"><i class="material-icons">notifications</i>Notificaciones</a></li>
+    <li><a href="perfilE.html" class="waves-effect"><i class="material-icons">account_circle</i>Perfil</a></li>
+    <li><a href="notiE.html" class="waves-effect"><i class="material-icons">notifications</i>Notificaciones</a></li>
     
     <li><div class="divider"></div></li>
-    <li><a class="subheader">Gestión de Reportes</a></li>
-    <li><a href="reporteD.html" class="waves-effect"><i class="material-icons" style="color: #1557d0;">assessment</i>Generar Reporte PDF</a></li>
+    <li><a class="subheader">Mis Horas Sociales</a></li>
+    <li><a href="reporteE.html" class="waves-effect"><i class="material-icons" style="color: #1557d0;">assignment</i>Ver mi Avance</a></li>
 
     <li><div class="divider"></div></li>
-    <li><a class="subheader">Proyectos y Actividades</a></li>
+    <li><a class="subheader">Proyectos Disponibles</a></li>
     <li><a href="jornadalimpieza.html" class="waves-effect"><i class="material-icons">cleaning_services</i>Jornadas de limpieza</a></li>
     <li><a href="tutoriasingles.html" class="waves-effect"><i class="material-icons">translate</i>Tutorías de inglés</a></li>
     <li><a href="tutoriasPrimerInfa.html" class="waves-effect"><i class="material-icons">child_care</i>Tutorías primera infancia</a></li>
@@ -415,10 +400,10 @@
     <li><a href="#!" id="btnCerrarSesion" class="waves-effect" style="color: #d32f2f;"><i class="material-icons" style="color: #d32f2f;">exit_to_app</i>Cerrar Sesión</a></li>
   </ul>
 
-  <!-- Estrutura del Dropdown -->
+  <!-- Estructura del Dropdown -->
   <ul id="user-dropdown" class="dropdown-content">
     <li>
-      <a href="perfilD.html">
+      <a href="perfilE.html">
         <i class="material-icons">person</i>Perfil
       </a>
     </li>
@@ -442,18 +427,17 @@
       </div>
       
       <div class="header-right">
-        <a href="notiD.html" class="icon-btn">
+        <a href="notiE.html" class="icon-btn">
           <i class="material-icons">notifications_none</i>
         </a>
         
-        <!-- Activador del Dropdown -->
         <a href="#!" class="dropdown-trigger user-profile" data-target="user-dropdown">
           <div class="avatar">
             <i class="material-icons">person</i>
           </div>
           <div class="user-info">
             <span class="user-name">Cargando...</span>
-            <span class="user-role">Docente</span>
+            <span class="user-role">Estudiante</span>
           </div>
           <i class="material-icons">keyboard_arrow_down</i>
         </a>
@@ -464,50 +448,51 @@
     <section class="welcome-banner">
       <div class="banner-content">
         <h2 class="banner-title">¡Bienvenido/a!</h2>
-        <p class="banner-text">Supervisa y registra el progreso de tus estudiantes, controla sus horas de servicio social y verifica sus actividades y evidencias.</p>
+        <p class="banner-text">Gestiona y consulta el avance de tus horas de servicio social, registra tus actividades y sube tus evidencias fácilmente.</p>
       </div>
       <img src="https://cdni.iconscout.com/illustration/premium/thumb/woman-working-on-laptop-4268388-3561001.png" alt="Ilustración Trabajo" class="banner-illustration">
     </section>
 
-    <!-- Acceso directo al Reporte PDF -->
-    <div class="report-action-bar">
-      <a href="reporteD.html" class="btn waves-effect waves-light btn-reporte-main">
-        <i class="material-icons left">picture_as_pdf</i> Generar Reporte PDF
-      </a>
-    </div>
+    <!-- Gráfica de Dona Global del Avance -->
+    <section class="chart-section center-align">
+      <h5 class="font-weight-bold" style="color: #1557d0; margin-bottom: 20px;">Resumen de Horas Acumuladas</h5>
+      <div class="chart-container">
+        <canvas id="donutChartGlobal"></canvas>
+      </div>
+    </section>
 
-    <!-- Cards de proyectos -->
+    <!-- Cards de proyectos con Donitas individuales -->
     <main class="projects-grid">
       <div class="project-card">
-        <div class="card-icon-wrapper">
-          <img src="https://cdn-icons-png.flaticon.com/512/995/995053.png" alt="Proyectos de Limpieza">
+        <div class="donut-card-wrapper">
+          <canvas id="donutLimpieza"></canvas>
         </div>
         <div class="card-info">
           <h3 class="card-title">Jornadas de<br>limpieza</h3>
           <span class="card-status" id="statusLimpieza">Cargando...</span>
-          <a href="jornadalimpieza.html" class="card-link">Ver más</a>
+          <a href="jornadalimpieza.html" class="card-link">Ver detalles</a>
         </div>
       </div>
 
       <div class="project-card">
-        <div class="card-icon-wrapper">
-          <img src="https://cdn-icons-png.flaticon.com/512/3389/3389081.png" alt="Tutorías de inglés">
+        <div class="donut-card-wrapper">
+          <canvas id="donutIngles"></canvas>
         </div>
         <div class="card-info">
           <h3 class="card-title">Tutorías de<br>inglés</h3>
           <span class="card-status" id="statusIngles">Cargando...</span>
-          <a href="tutoriasingles.html" class="card-link">Ver más</a>
+          <a href="tutoriasingles.html" class="card-link">Ver detalles</a>
         </div>
       </div>
 
       <div class="project-card">
-        <div class="card-icon-wrapper">
-          <img src="https://cdn-icons-png.flaticon.com/512/2942/2942924.png" alt="Tutorías primera infancia">
+        <div class="donut-card-wrapper">
+          <canvas id="donutInfancia"></canvas>
         </div>
         <div class="card-info">
           <h3 class="card-title">Tutorías en<br>primera infancia</h3>
           <span class="card-status" id="statusInfancia">Cargando...</span>
-          <a href="tutoriasPrimerInfa.html" class="card-link">Ver más</a>
+          <a href="tutoriasPrimerInfa.html" class="card-link">Ver detalles</a>
         </div>
       </div>
     </main>
@@ -518,36 +503,34 @@
   <footer class="page-footer custom-footer">
     <div class="container footer-container">
       <div class="row style-row">
-        
         <div class="col s12 m4">
           <div class="footer-brand">
             <img src="logo.png" alt="HourCheck Logo" class="footer-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x40?text=HourCheck';">
             <h5 class="white-text font-weight-bold">HourCheck</h5>
           </div>
           <p class="grey-text text-lighten-2">
-            Sistema para la gestión y seguimiento del Servicio Social Estudiantil. Facilitando la validación y control de horas de forma eficiente.
+            Sistema para la gestión y seguimiento del Servicio Social Estudiantil. Controla y valida tus horas de forma rápida e intuitiva.
           </p>
         </div>
 
         <div class="col s12 m4 center-on-small">
           <h5 class="white-text font-weight-bold">Enlaces Rápidos</h5>
           <ul>
-            <li><a class="grey-text text-lighten-3 footer-link" href="mainPD.html"><i class="material-icons tiny">chevron_right</i> Inicio</a></li>
-            <li><a class="grey-text text-lighten-3 footer-link" href="reporteD.html"><i class="material-icons tiny">chevron_right</i> Generar Reportes PDF</a></li>
-            <li><a class="grey-text text-lighten-3 footer-link" href="saberCualP.html"><i class="material-icons tiny">chevron_right</i> Guía de Perfiles</a></li>
+            <li><a class="grey-text text-lighten-3 footer-link" href="mainPE.html"><i class="material-icons tiny">chevron_right</i> Inicio</a></li>
+            <li><a class="grey-text text-lighten-3 footer-link" href="reporteE.html"><i class="material-icons tiny">chevron_right</i> Mi Avance de Horas</a></li>
+            <li><a class="grey-text text-lighten-3 footer-link" href="perfilE.html"><i class="material-icons tiny">chevron_right</i> Mi Perfil</a></li>
           </ul>
         </div>
 
         <div class="col s12 m4">
           <h5 class="white-text font-weight-bold">Soporte</h5>
           <p class="grey-text text-lighten-2">
-            ¿Tienes dudas con el registro de tus horas?
+            ¿Tienes dudas con el registro de tus horas de servicio social?
           </p>
           <a href="mailto:soporte@hourcheck.com" class="btn-flat white-text footer-btn">
             <i class="material-icons left">help_outline</i> Contactar Soporte
           </a>
         </div>
-
       </div>
     </div>
 
@@ -561,7 +544,7 @@
   <!-- Script Materialize JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
-  <!-- Script Lógica Firebase -->
+  <!-- Script Lógica Firebase y Gráficas Donas -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { 
@@ -586,16 +569,19 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    let chartGlobal = null;
+    let chartLimpieza = null;
+    let chartIngles = null;
+    let chartInfancia = null;
+
     setPersistence(auth, browserLocalPersistence).catch((error) => {
       console.error("Error ajustando persistencia:", error);
     });
 
     document.addEventListener('DOMContentLoaded', function() {
-      // Inicialización del Sidenav
       var elemsSidenav = document.querySelectorAll('.sidenav');
       M.Sidenav.init(elemsSidenav, { edge: 'left', draggable: true });
 
-      // Inicialización del Dropdown del usuario
       var elemsDropdown = document.querySelectorAll('.dropdown-trigger');
       M.Dropdown.init(elemsDropdown, {
         alignment: 'right',
@@ -614,15 +600,12 @@
       let nombreEncontrado = null;
 
       try {
-        const querySnapshot = await getDocs(collection(db, "Docentes"));
-
+        const querySnapshot = await getDocs(collection(db, "Estudiantes"));
         querySnapshot.forEach((docSnap) => {
           const data = docSnap.data();
-
           if (docSnap.id === user.uid) {
             nombreEncontrado = obtenerNombreDeObjeto(data);
           }
-
           for (let clave in data) {
             const valor = String(data[clave]).toLowerCase().trim();
             if (valor === correoAuth && correoAuth !== "") {
@@ -630,41 +613,102 @@
             }
           }
         });
-
       } catch (error) {
         console.error("Error al leer Firestore:", error);
       }
 
-      actualizarInterfaz(nombreEncontrado || user.displayName || "Docente", user.email);
-      cargarEstadisticas();
+      actualizarInterfaz(nombreEncontrado || user.displayName || "Estudiante", user.email);
+      cargarEstadisticasEstudiante(user);
     }
 
-    async function cargarEstadisticas() {
+    async function cargarEstadisticasEstudiante(user) {
       try {
         const snap = await getDocs(collection(db, "HorasSociales"));
-        let countLimpieza = 0;
-        let countIngles = 0;
-        let countInfancia = 0;
+        let horasLimpieza = 0;
+        let horasIngles = 0;
+        let horasInfancia = 0;
+
+        const correoAuth = user.email ? user.email.toLowerCase().trim() : "";
 
         snap.forEach((doc) => {
           const data = doc.data();
-          const cat = String(data.Categoria || data.categoria || "").toLowerCase();
+          const uidDoc = data.uid || data.userId || data.usuarioId;
+          const correoDoc = String(data.Correo || data.correo || "").toLowerCase().trim();
 
-          if (cat.includes("limpieza")) {
-            countLimpieza++;
-          } else if (cat.includes("ingl") || cat.includes("ingles")) {
-            countIngles++;
-          } else if (cat.includes("infancia") || cat.includes("primera")) {
-            countInfancia++;
+          if (uidDoc === user.uid || (correoAuth !== "" && correoDoc === correoAuth)) {
+            const cat = String(data.Categoria || data.categoria || "").toLowerCase();
+            const horas = parseFloat(data.Horas || data.horas || data.cantidadHoras || 0) || 0;
+
+            if (cat.includes("limpieza")) {
+              horasLimpieza += horas;
+            } else if (cat.includes("ingl") || cat.includes("ingles")) {
+              horasIngles += horas;
+            } else if (cat.includes("infancia") || cat.includes("primera")) {
+              horasInfancia += horas;
+            }
           }
         });
 
-        document.getElementById("statusLimpieza").textContent = `${countLimpieza} registro${countLimpieza === 1 ? '' : 's'}`;
-        document.getElementById("statusIngles").textContent = `${countIngles} registro${countIngles === 1 ? '' : 's'}`;
-        document.getElementById("statusInfancia").textContent = `${countInfancia} registro${countInfancia === 1 ? '' : 's'}`;
+        document.getElementById("statusLimpieza").textContent = `${horasLimpieza} hora${horasLimpieza === 1 ? '' : 's'} acumulada${horasLimpieza === 1 ? '' : 's'}`;
+        document.getElementById("statusIngles").textContent = `${horasIngles} hora${horasIngles === 1 ? '' : 's'} acumulada${horasIngles === 1 ? '' : 's'}`;
+        document.getElementById("statusInfancia").textContent = `${horasInfancia} hora${horasInfancia === 1 ? '' : 's'} acumulada${horasInfancia === 1 ? '' : 's'}`;
+
+        renderizarGraficasDonas(horasLimpieza, horasIngles, horasInfancia);
       } catch (e) {
-        console.error("Error al cargar contadores:", e);
+        console.error("Error al cargar contadores del estudiante:", e);
       }
+    }
+
+    function renderizarGraficasDonas(hLimpieza, hIngles, hInfancia) {
+      const metaPorProyecto = 50; // Meta sugerida por área
+
+      // 1. Dona Global
+      const ctxGlobal = document.getElementById('donutChartGlobal').getContext('2d');
+      if (chartGlobal) chartGlobal.destroy();
+      chartGlobal = new Chart(ctxGlobal, {
+        type: 'doughnut',
+        data: {
+          labels: ['Jornadas de Limpieza', 'Tutorías de Inglés', 'Primera Infancia'],
+          datasets: [{
+            data: [hLimpieza, hIngles, hInfancia],
+            backgroundColor: ['#ff5500', '#1557d0', '#00c853'],
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: 'bottom' }
+          }
+        }
+      });
+
+      // Función auxiliar para mini donas
+      const crearMiniDona = (canvasId, horas, colorHex, chartRef) => {
+        const ctx = document.getElementById(canvasId).getContext('2d');
+        if (chartRef) chartRef.destroy();
+        const restante = Math.max(0, metaPorProyecto - horas);
+        return new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            datasets: [{
+              data: [horas, restante],
+              backgroundColor: [colorHex, '#e0e0e0'],
+              borderWidth: 0
+            }]
+          },
+          options: {
+            cutout: '75%',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { tooltip: { enabled: false }, legend: { display: false } }
+          }
+        });
+      };
+
+      chartLimpieza = crearMiniDona('donutLimpieza', hLimpieza, '#ff5500', chartLimpieza);
+      chartIngles = crearMiniDona('donutIngles', hIngles, '#1557d0', chartIngles);
+      chartInfancia = crearMiniDona('donutInfancia', hInfancia, '#00c853', chartInfancia);
     }
 
     onAuthStateChanged(auth, (user) => {
@@ -703,7 +747,6 @@
       if (sidenavEmail) sidenavEmail.textContent = correo;
     }
 
-    // Cierre de sesión centralizado
     function cerrarSesion(e) {
       e.preventDefault();
       signOut(auth).then(() => {
