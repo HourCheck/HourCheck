@@ -9,79 +9,14 @@
   <!-- Materialize CSS CDN -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   
-  <!-- Material Icons Directo desde Google Fonts -->
+  <!-- Fuentes e Iconos -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
-    /* Footer */
-    .custom-footer {
-      background-color: #1557d0 !important;
-      border-top-left-radius: 25px;
-      border-top-right-radius: 25px;
-      margin-top: 50px;
-      padding-top: 30px !important;
-    }
-
-    .footer-container {
-      width: 90%;
-      max-width: 1100px;
-    }
-
-    .footer-brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 10px;
-    }
-
-    .footer-logo {
-      height: 35px;
-      width: auto;
-      filter: brightness(0) invert(1);
-    }
-
-    .footer-brand h5 {
-      margin: 0;
-      font-size: 1.4rem;
-    }
-
-    .footer-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      margin-bottom: 8px;
-      transition: color 0.2s, transform 0.2s;
-    }
-
-    .footer-link:hover {
-      color: #ff5500 !important;
-      transform: translateX(4px);
-    }
-
-    .footer-btn {
-      background-color: rgba(255, 255, 255, 0.15);
-      border-radius: 12px;
-      text-transform: none;
-      font-weight: 600;
-      margin-top: 5px;
-    }
-
-    .footer-btn:hover {
-      background-color: rgba(255, 255, 255, 0.25);
-    }
-
-    .custom-copyright {
-      background-color: rgba(0, 0, 0, 0.12) !important;
-      font-size: 0.85rem;
-      padding: 15px 0;
-    }
-
-    .font-weight-bold {
-      font-weight: 700;
-    }
     :root {
       --primary-color: #2563eb;
+      --primary-hover: #1d4ed8;
       --bg-body: #f8fafc;
       --card-bg: #ffffff;
       --text-main: #0f172a;
@@ -95,6 +30,9 @@
       color: var(--text-main);
       margin: 0;
       padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
     .material-icons {
@@ -115,13 +53,7 @@
       vertical-align: middle;
     }
 
-    .dashboard-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 24px;
-    }
-
-    /* Navbar superior */
+    /* Navbar Superior */
     .top-header {
       background-color: var(--card-bg);
       padding: 16px 32px;
@@ -250,7 +182,7 @@
 
     .sidenav li > a > i.material-icons {
       margin: 0 !important;
-      color: #2563eb;
+      color: var(--primary-color);
     }
 
     .sidenav .subheader {
@@ -261,7 +193,16 @@
       letter-spacing: 0.8px;
     }
 
-    /* Banner de Bienvenida Estudiante */
+    /* Dashboard Layout */
+    .dashboard-container {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 24px;
+      flex: 1;
+    }
+
+    /* Welcome Banner */
     .welcome-banner {
       background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
       border-radius: 20px;
@@ -300,7 +241,7 @@
       z-index: 2;
     }
 
-    /* Grid de Tarjetas KPI */
+    /* KPI Grid */
     .kpi-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -327,17 +268,16 @@
       box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
     }
 
-    /* Dona interactiva según avance de horas */
     .donut-chart {
       width: 72px;
       height: 72px;
       border-radius: 50%;
-      background: conic-gradient(#2563eb 0%, #e2e8f0 0%);
+      background: conic-gradient(var(--primary-color) 0%, #e2e8f0 0%);
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      transition: background 0.3s ease;
+      transition: background 0.4s ease;
     }
 
     .donut-inner {
@@ -351,7 +291,7 @@
       width: 72px;
       height: 72px;
       border-radius: 50%;
-      background: conic-gradient(#f97316 0% 50%, #2563eb 50% 65%, #e2e8f0 65% 100%);
+      background: conic-gradient(#f97316 0% 50%, var(--primary-color) 50% 65%, #e2e8f0 65% 100%);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -362,7 +302,7 @@
       width: 72px;
       height: 72px;
       border-radius: 50%;
-      background-color: #2563eb;
+      background-color: var(--primary-color);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -372,7 +312,7 @@
     }
 
     .kpi-card:hover .action-badge {
-      background-color: #1d4ed8;
+      background-color: var(--primary-hover);
     }
 
     .action-badge i {
@@ -399,7 +339,7 @@
       color: var(--primary-color);
     }
 
-    /* Tabla */
+    /* Tabla de Historial */
     .section-header {
       display: flex;
       justify-content: space-between;
@@ -490,6 +430,73 @@
       background-color: currentColor;
     }
 
+    /* Footer */
+    .custom-footer {
+      background-color: #1557d0 !important;
+      border-top-left-radius: 25px;
+      border-top-right-radius: 25px;
+      margin-top: 50px;
+      padding-top: 30px !important;
+    }
+
+    .footer-container {
+      width: 90%;
+      max-width: 1100px;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .footer-logo {
+      height: 35px;
+      width: auto;
+      filter: brightness(0) invert(1);
+    }
+
+    .footer-brand h5 {
+      margin: 0;
+      font-size: 1.4rem;
+    }
+
+    .footer-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-bottom: 8px;
+      transition: color 0.2s, transform 0.2s;
+    }
+
+    .footer-link:hover {
+      color: #ff5500 !important;
+      transform: translateX(4px);
+    }
+
+    .footer-btn {
+      background-color: rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      text-transform: none;
+      font-weight: 600;
+      margin-top: 5px;
+    }
+
+    .footer-btn:hover {
+      background-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .custom-copyright {
+      background-color: rgba(0, 0, 0, 0.12) !important;
+      font-size: 0.85rem;
+      padding: 15px 0;
+    }
+
+    .font-weight-bold {
+      font-weight: 700;
+    }
+
     @media (max-width: 768px) {
       .top-header { padding: 16px 20px; }
       .dashboard-container { padding: 16px; }
@@ -500,7 +507,7 @@
 </head>
 <body>
 
-  <!-- Sidenav Estudiante -->
+  <!-- Sidenav Navigation -->
   <ul id="slide-out" class="sidenav">
     <li>
       <div class="user-view">
@@ -510,14 +517,10 @@
         <a href="perfilU.html"><span class="white-text email">Cargando...</span></a>
       </div>
     </li>
-    
-
     <li><a href="perfilU.html" class="waves-effect"><i class="material-icons">account_circle</i>Perfil</a></li>
     <li><a href="notiE.html" class="waves-effect"><i class="material-icons">notifications</i>Notificaciones</a></li>
-    
     <li><div class="divider"></div></li>
     <li><a class="subheader">Mi Servicio Social</a></li>
-    
     <li><a href="historialE.html" class="waves-effect"><i class="material-icons">history</i>Historial de Horas</a></li>
     <li><a href="evidencias.html" class="waves-effect"><i class="material-icons">add_circle_outline</i>Subir Jornada</a></li>
     <li><a href="#" id="btnCerrarSesion" class="waves-effect"><i class="material-icons">exit_to_app</i>Cerrar Sesión</a></li>
@@ -537,7 +540,7 @@
         <i class="material-icons">notifications_none</i>
       </a>
       
-      <a href="#" class="user-profile">
+      <a href="perfilU.html" class="user-profile">
         <div class="avatar">
           <i class="material-icons">person</i>
         </div>
@@ -550,13 +553,13 @@
     </div>
   </header>
 
-  <!-- CONTENIDO PRINCIPAL -->
+  <!-- Contenido Principal -->
   <div class="dashboard-container">
     
-    <!-- Banner Principal -->
+    <!-- Banner de Bienvenida -->
     <section class="welcome-banner">
       <div class="banner-content">
-        <h2 class="banner-title">¡Bienvenido!</h2>
+        <h2 class="banner-title">¡Bienvenido/a!</h2>
         <p class="banner-text">Gestiona tus horas de servicio social, actividades y evidencias de forma fácil y segura.</p>
       </div>
       <svg class="banner-illustration" viewBox="0 0 500 300" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -595,7 +598,6 @@
         </div>
       </div>
 
-      <!-- Tarjeta: Subir Jornada -->
       <a href="evidencias.html" class="kpi-card">
         <div class="action-badge">
           <i class="material-icons">add_circle</i>
@@ -634,10 +636,10 @@
 
   </div>
 
+  <!-- Pie de Página -->
   <footer class="page-footer custom-footer">
     <div class="container footer-container">
       <div class="row style-row">
-        
         <div class="col s12 m4">
           <div class="footer-brand">
             <img src="logo.png" alt="HourCheck Logo" class="footer-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x40?text=HourCheck';">
@@ -665,7 +667,6 @@
             <i class="material-icons left">help_outline</i> Contactar Soporte
           </a>
         </div>
-
       </div>
     </div>
 
@@ -676,143 +677,137 @@
     </div>
   </footer>
 
-  <!-- Materialize JS CDN -->
+  <!-- Scripts JavaScript -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
-  <!-- Script Firebase con Carga de Datos Filtrados por Usuario -->
   <script type="module">
-   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import { getFirestore, collection, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getFirestore, collection, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-document.addEventListener('DOMContentLoaded', function() {
-  var elems = document.querySelectorAll('.sidenav');
-  M.Sidenav.init(elems);
-});
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
-  authDomain: "hourcheckt.firebaseapp.com",
-  projectId: "hourcheckt",
-  storageBucket: "hourcheckt.firebasestorage.app",
-  messagingSenderId: "83459752453",
-  appId: "1:83459752453:web:1b81724c28973bf567126c"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-const contenedorHoras = document.getElementById("tablaHistorial");
-const btnCerrarSesion = document.getElementById("btnCerrarSesion");
-
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    // 1. Actualizar el perfil del usuario en la interfaz
-    const nombreUsuario = user.displayName || user.email.split('@')[0];
-    actualizarInterfaz(nombreUsuario, user.email);
-    
-    // 2. Cargar horas
-    cargarHorasSociales(user.uid);
-  } else {
-    window.location.href = "loginU.html"; // Redirección estandarizada
-  }
-});
-
-function cargarHorasSociales(userId) {
-  const q = query(
-    collection(db, "HorasSociales"),
-    where("userId", "==", userId)
-  );
-
-  onSnapshot(q, (snapshot) => {
-    contenedorHoras.innerHTML = "";
-
-    if (snapshot.empty) {
-      contenedorHoras.innerHTML = `
-        <tr>
-          <td colspan="5" class="center-align" style="color: var(--text-muted); padding: 30px;">
-            No tienes registros de horas sociales aún.
-          </td>
-        </tr>`;
-      return;
-    }
-
-    let totalHoras = 0;
-    let totalEvidencias = 0;
-
-    snapshot.forEach((doc) => {
-      const data = doc.data();
-      const horasNum = parseFloat(data.Horas) || 0;
-      totalHoras += horasNum;
-      totalEvidencias++;
-      
-      const fila = document.createElement("tr");
-      fila.innerHTML = `
-        <td><strong>${data.Lugar || 'N/A'}</strong><br><small style="color: var(--text-muted);">${data.Categoria || 'Sin Categoría'}</small></td>
-        <td>${data["Docente encargado"] || 'N/A'}</td>
-        <td><strong>${horasNum} h</strong></td>
-        <td>
-          ${data.Evidencia ? `<img src="${data.Evidencia}" alt="Evidencia" class="img-evidencia"/>` : '<span style="color: var(--text-muted);">Sin imagen</span>'}
-        </td>
-        <td>
-          <span class="status-badge status-comprobado">
-            <span class="dot"></span> ${data.Estado || 'Registrado'}
-          </span>
-        </td>
-      `;
-      contenedorHoras.appendChild(fila);
+    document.addEventListener('DOMContentLoaded', function() {
+      var elems = document.querySelectorAll('.sidenav');
+      M.Sidenav.init(elems);
     });
 
-    // Actualizar datos cuantitativos y gráfico de dona
-    const kpiHoras = document.getElementById("kpiTotalHoras");
-    const kpiEvidencias = document.getElementById("kpiTotalEvidencias");
-    const donutHoras = document.getElementById("donutHoras");
+    const firebaseConfig = {
+      apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
+      authDomain: "hourcheckt.firebaseapp.com",
+      projectId: "hourcheckt",
+      storageBucket: "hourcheckt.firebasestorage.app",
+      messagingSenderId: "83459752453",
+      appId: "1:83459752453:web:1b81724c28973bf567126c"
+    };
 
-    if (kpiHoras) kpiHoras.innerText = `${totalHoras} / 150 h`;
-    if (kpiEvidencias) kpiEvidencias.innerText = `${totalEvidencias} enviadas`;
-    
-    // Actualización dinámica del porcentaje visual de la dona (Max 150h)
-    if (donutHoras) {
-      const porcentaje = Math.min((totalHoras / 150) * 100, 100);
-      donutHoras.style.background = `conic-gradient(#2563eb ${porcentaje}%, #e2e8f0 ${porcentaje}%)`;
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const contenedorHoras = document.getElementById("tablaHistorial");
+    const btnCerrarSesion = document.getElementById("btnCerrarSesion");
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const nombreUsuario = user.displayName || user.email.split('@')[0];
+        actualizarInterfaz(nombreUsuario, user.email);
+        cargarHorasSociales(user.uid);
+      } else {
+        window.location.href = "loginU.html";
+      }
+    });
+
+    function cargarHorasSociales(userId) {
+      const q = query(
+        collection(db, "HorasSociales"),
+        where("userId", "==", userId)
+      );
+
+      onSnapshot(q, (snapshot) => {
+        contenedorHoras.innerHTML = "";
+
+        if (snapshot.empty) {
+          contenedorHoras.innerHTML = `
+            <tr>
+              <td colspan="5" class="center-align" style="color: var(--text-muted); padding: 30px;">
+                No tienes registros de horas sociales aún.
+              </td>
+            </tr>`;
+          return;
+        }
+
+        let totalHoras = 0;
+        let totalEvidencias = 0;
+
+        snapshot.forEach((doc) => {
+          const data = doc.data();
+          const horasNum = parseFloat(data.Horas) || 0;
+          totalHoras += horasNum;
+          totalEvidencias++;
+          
+          const fila = document.createElement("tr");
+          fila.innerHTML = `
+            <td><strong>${data.Lugar || 'N/A'}</strong><br><small style="color: var(--text-muted);">${data.Categoria || 'Sin Categoría'}</small></td>
+            <td>${data["Docente encargado"] || 'N/A'}</td>
+            <td><strong>${horasNum} h</strong></td>
+            <td>
+              ${data.Evidencia ? `<img src="${data.Evidencia}" alt="Evidencia" class="img-evidencia"/>` : '<span style="color: var(--text-muted);">Sin imagen</span>'}
+            </td>
+            <td>
+              <span class="status-badge status-comprobado">
+                <span class="dot"></span> ${data.Estado || 'Registrado'}
+              </span>
+            </td>
+          `;
+          contenedorHoras.appendChild(fila);
+        });
+
+        const kpiHoras = document.getElementById("kpiTotalHoras");
+        const kpiEvidencias = document.getElementById("kpiTotalEvidencias");
+        const donutHoras = document.getElementById("donutHoras");
+
+        if (kpiHoras) kpiHoras.innerText = `${totalHoras} / 150 h`;
+        if (kpiEvidencias) kpiEvidencias.innerText = `${totalEvidencias} enviadas`;
+        
+        if (donutHoras) {
+          const porcentaje = Math.min((totalHoras / 150) * 100, 100);
+          donutHoras.style.background = `conic-gradient(#2563eb ${porcentaje}%, #e2e8f0 ${porcentaje}%)`;
+        }
+
+      }, (error) => {
+        console.error("Error al obtener los registros: ", error);
+        contenedorHoras.innerHTML = `
+          <tr>
+            <td colspan="5" class="center-align red-text" style="padding: 20px;">
+              Error al cargar los registros.
+            </td>
+          </tr>`;
+      });
     }
 
-  }, (error) => {
-    console.error("Error al obtener los registros: ", error);
-    contenedorHoras.innerHTML = `
-      <tr>
-        <td colspan="5" class="center-align red-text" style="padding: 20px;">
-          Error al cargar los registros.
-        </td>
-      </tr>`;
-  });
-}
+    function actualizarInterfaz(nombre, correo) {
+      const bannerTitle = document.querySelector(".banner-title");
+      if (bannerTitle) bannerTitle.textContent = `¡Bienvenido/a, ${nombre}!`;
 
-function actualizarInterfaz(nombre, correo) {
-  const bannerTitle = document.querySelector(".banner-title");
-  if (bannerTitle) bannerTitle.textContent = `¡Bienvenido/a, ${nombre}!`;
+      const userNameHeader = document.querySelector(".top-header .user-name");
+      if (userNameHeader) userNameHeader.textContent = nombre;
 
-  const userNameHeader = document.querySelector(".top-header .user-name");
-  if (userNameHeader) userNameHeader.textContent = nombre;
+      const sidenavName = document.querySelector(".sidenav .name");
+      const sidenavEmail = document.querySelector(".sidenav .email");
 
-  const sidenavName = document.querySelector(".sidenav .name");
-  const sidenavEmail = document.querySelector(".sidenav .email");
+      if (sidenavName) sidenavName.textContent = nombre;
+      if (sidenavEmail) sidenavEmail.textContent = correo;
+    }
 
-  if (sidenavName) sidenavName.textContent = nombre;
-  if (sidenavEmail) sidenavEmail.textContent = correo;
-}
-
-if (btnCerrarSesion) {
-  btnCerrarSesion.addEventListener("click", (e) => {
-    e.preventDefault();
-    signOut(auth).then(() => {
-      window.location.href = "loginU.html";
-    }).catch((error) => {
-      console.error("Error al cerrar sesión:", error);
-    });
-  });
-}
+    if (btnCerrarSesion) {
+      btnCerrarSesion.addEventListener("click", (e) => {
+        e.preventDefault();
+        signOut(auth).then(() => {
+          window.location.href = "loginU.html";
+        }).catch((error) => {
+          console.error("Error al cerrar sesión:", error);
+        });
+      });
+    }
   </script>
 </body>
 </html>

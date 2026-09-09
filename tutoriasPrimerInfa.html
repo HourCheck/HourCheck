@@ -8,7 +8,7 @@
   <!-- Materialize CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   <!-- Material Icons -->
-  <link href="https://fonts.googleapis.com/icon?family=Material-Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
   <style>
     body {
@@ -138,24 +138,6 @@
       color: #000;
       margin: 0 0 4px 0;
     }
-    
-    .material-icons {
-      font-family: 'Material Icons' !important;
-      font-weight: normal;
-      font-style: normal;
-      font-size: 24px;
-      display: inline-block;
-      line-height: 1;
-      text-transform: none;
-      letter-spacing: normal;
-      word-wrap: normal;
-      white-space: nowrap;
-      direction: ltr;
-      -webkit-font-smoothing: antialiased;
-      text-rendering: optimizeLegibility;
-      -moz-osx-font-smoothing: grayscale;
-      font-feature-settings: 'liga';
-    }
 
     .card-text-sub {
       font-size: 0.9rem;
@@ -262,10 +244,10 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 16px 25px;
+      padding: 16px 30px;
       border-bottom: 1.5px solid #222;
-      gap: 15px;
       flex-wrap: wrap;
+      gap: 15px;
     }
 
     .student-row:last-child {
@@ -278,84 +260,88 @@
       color: #000;
     }
 
+    .action-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
     .action-link {
       font-weight: 700;
       font-size: 0.95rem;
       color: #1557d0;
       text-decoration: none;
       cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
     }
 
     .action-link:hover {
       text-decoration: underline;
     }
 
-    /* Estilos para badges y acciones */
-    .actions-container {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
+    /* Estilos idénticos a la segunda versión */
     .status-badge {
       padding: 4px 10px;
       border-radius: 12px;
       font-size: 0.8rem;
-      font-weight: 700;
-      text-transform: uppercase;
+      font-weight: bold;
+      display: inline-block;
+      margin-left: 8px;
     }
 
-    .status-aprobado {
+    .status-approved {
       background-color: #e8f5e9;
       color: #2e7d32;
     }
 
-    .status-rechazado {
+    .status-rejected {
       background-color: #ffebee;
       color: #c62828;
     }
 
-    .status-pendiente {
-      background-color: #fff8e1;
-      color: #f57f17;
+    .status-pending {
+      background-color: #fff3e0;
+      color: #ef6c00;
     }
 
     .btn-action-icon {
       border: none;
-      border-radius: 50%;
-      width: 36px;
-      height: 36px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      border-radius: 8px;
+      padding: 6px 12px;
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: bold;
+      font-size: 0.85rem;
       transition: opacity 0.2s;
     }
 
     .btn-action-icon:hover {
-      opacity: 0.8;
+      opacity: 0.85;
     }
 
-    .btn-approve {
+    .btn-accept {
       background-color: #2e7d32;
       color: white;
     }
 
-    .btn-deny {
+    .btn-reject {
       background-color: #c62828;
       color: white;
     }
 
-    .modal-evidencia-img {
+    .modal {
+      border-radius: 16px;
+      max-width: 650px;
+    }
+
+    .evidencia-img {
       max-width: 100%;
       max-height: 300px;
+      border-radius: 12px;
       object-fit: contain;
-      border-radius: 8px;
-      margin-top: 10px;
       border: 1px solid #ddd;
+      margin-top: 10px;
     }
   </style>
 </head>
@@ -443,23 +429,23 @@
 
   </div>
 
-  <!-- Modal Estructurado para Ver Más Detalle -->
+  <!-- Modal con estructura similar al diseño 2 -->
   <div id="modalEvidencia" class="modal">
     <div class="modal-content">
-      <h4 id="modalUsuarioNombre" style="font-weight: 700;">Detalle de Registro</h4>
+      <h5 id="modalUsuarioNombre" style="font-weight: bold; margin-bottom: 5px;">Detalle de Registro</h5>
       <p><strong>Lugar:</strong> <span id="modalLugar"></span></p>
       <p><strong>Horas Reportadas:</strong> <span id="modalHoras"></span> hrs</p>
       <p><strong>Descripción:</strong> <span id="modalDescripcion"></span></p>
       <p><strong>Estado Actual:</strong> <span id="modalEstadoBadge"></span></p>
-      <div>
-        <strong>Evidencia Adjunta:</strong><br>
+      <div style="margin-top: 15px;">
+        <strong>Evidencia Adjunta:</strong>
         <div id="modalEvidenciaContainer"></div>
       </div>
     </div>
     <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 10px; padding: 15px;">
-      <button class="btn green" id="modalBtnAprobar"><i class="material-icons left">check</i>Aceptar</button>
-      <button class="btn red" id="modalBtnRechazar"><i class="material-icons left">close</i>Denegar</button>
-      <a href="#!" class="modal-close btn-flat grey lighten-2">Cerrar</a>
+      <button class="btn-action-icon btn-accept" id="modalBtnAprobar"><i class="material-icons" style="font-size: 1.1rem;">check</i> Aceptar</button>
+      <button class="btn-action-icon btn-reject" id="modalBtnRechazar"><i class="material-icons" style="font-size: 1.1rem;">close</i> Denegar</button>
+      <a href="#!" class="modal-close btn-flat grey lighten-2" style="border-radius: 8px;">Cerrar</a>
     </div>
   </div>
 
@@ -582,11 +568,11 @@
         const usuarioNombre = item.email || item.userId || "Estudiante";
         const horasRealizadas = item.Horas || 0;
 
-        let badgeEstado = '<span class="status-badge status-pendiente">Pendiente</span>';
+        let badgeEstado = '<span class="status-badge status-pending">Pendiente</span>';
         if (item.Aprobado === true) {
-          badgeEstado = '<span class="status-badge status-aprobado">Aprobado</span>';
+          badgeEstado = '<span class="status-badge status-approved">Aprobado</span>';
         } else if (item.Aprobado === false) {
-          badgeEstado = '<span class="status-badge status-rechazado">Denegado</span>';
+          badgeEstado = '<span class="status-badge status-rejected">Denegado</span>';
         }
 
         const row = document.createElement("div");
@@ -599,19 +585,17 @@
             </span>
           </div>
 
-          <div class="actions-container">
+          <div class="action-group">
             ${badgeEstado}
             
-            <a class="action-link" onclick="verEvidencia('${item.id}')">
-              <i class="material-icons" style="font-size: 1.1rem;">visibility</i> Ver más
-            </a>
+            <a class="action-link" onclick="verEvidencia('${item.id}')">Ver más</a>
 
-            <button class="btn-action-icon btn-approve" title="Aceptar horas" onclick="actualizarEstadoHoras('${item.id}', true)">
-              <i class="material-icons">check</i>
+            <button class="btn-action-icon btn-accept" title="Aceptar horas" onclick="actualizarEstadoHoras('${item.id}', true)">
+              <i class="material-icons" style="font-size: 1.1rem;">check</i> Aceptar
             </button>
 
-            <button class="btn-action-icon btn-deny" title="Denegar horas" onclick="actualizarEstadoHoras('${item.id}', false)">
-              <i class="material-icons">close</i>
+            <button class="btn-action-icon btn-reject" title="Denegar horas" onclick="actualizarEstadoHoras('${item.id}', false)">
+              <i class="material-icons" style="font-size: 1.1rem;">close</i> Rechazar
             </button>
           </div>
         `;
@@ -619,7 +603,6 @@
       });
     }
 
-    // Actualiza Firestore agregando el campo boolean "Aprobado"
     window.actualizarEstadoHoras = async function(registroId, nuevoEstado) {
       try {
         const registroRef = doc(db, "HorasSociales", registroId);
@@ -627,7 +610,6 @@
           Aprobado: nuevoEstado
         });
 
-        // Actualizar caché local
         const index = registrosCache.findIndex(r => r.id === registroId);
         if (index !== -1) {
           registrosCache[index].Aprobado = nuevoEstado;
@@ -649,7 +631,6 @@
       }
     };
 
-    // Abre el modal para ver detalles completos y operar desde allí
     window.verEvidencia = function(registroId) {
       const item = registrosCache.find(r => r.id === registroId);
       if (!item) return;
@@ -659,14 +640,14 @@
       document.getElementById("modalHoras").textContent = item.Horas || 0;
       document.getElementById("modalDescripcion").textContent = item.Descripcion || "Sin descripción";
 
-      let badge = '<span class="status-badge status-pendiente">Pendiente</span>';
-      if (item.Aprobado === true) badge = '<span class="status-badge status-aprobado">Aprobado</span>';
-      if (item.Aprobado === false) badge = '<span class="status-badge status-rechazado">Denegado</span>';
+      let badge = '<span class="status-badge status-pending">Pendiente</span>';
+      if (item.Aprobado === true) badge = '<span class="status-badge status-approved">Aprobado</span>';
+      if (item.Aprobado === false) badge = '<span class="status-badge status-rejected">Denegado</span>';
       document.getElementById("modalEstadoBadge").innerHTML = badge;
 
       const containerEvidencia = document.getElementById("modalEvidenciaContainer");
       if (item.Evidencia && item.Evidencia.startsWith("data:image")) {
-        containerEvidencia.innerHTML = `<img src="${item.Evidencia}" class="modal-evidencia-img" alt="Evidencia">`;
+        containerEvidencia.innerHTML = `<img src="${item.Evidencia}" class="evidencia-img" alt="Evidencia">`;
       } else if (item.Evidencia) {
         containerEvidencia.innerHTML = `<a href="${item.Evidencia}" target="_blank" class="action-link">Abrir documento/imagen adjunta</a>`;
       } else {

@@ -326,23 +326,25 @@
 
   <!-- Script JS de Materialize -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<!-- Script JS de Materialize -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
   <!-- Firebase Script Modular -->
   <script type="module">
-   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { 
-  getAuth, 
-  onAuthStateChanged 
-} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import { 
-  getFirestore, 
-  collection, 
-  addDoc, 
-  serverTimestamp 
-} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { 
+      getAuth, 
+      onAuthStateChanged 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { 
+      getFirestore, 
+      collection, 
+      addDoc, 
+      serverTimestamp 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// Configuración de tu proyecto en Firebase
- const firebaseConfig = {
+    // Configuración de tu proyecto en Firebase
+    const firebaseConfig = {
       apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
       authDomain: "hourcheckt.firebaseapp.com",
       projectId: "hourcheckt",
@@ -351,90 +353,86 @@ import {
       appId: "1:83459752453:web:1b81724c28973bf567126c"
     };
 
-// Inicializar Servicios
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+    // Inicializar Servicios
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-let usuarioActual = null;
+    let usuarioActual = null;
 
-// Verificar que el usuario esté autenticado antes de permitir registrar
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    usuarioActual = user;
-  } else {
-    window.location.href = "login.html";
-  }
-});
-
-// Convertir archivo de imagen a string Base64
-function convertirImagenABase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = (error) => reject(error);
-  });
-}
-
-// Manejo del evento Submit del Formulario
-const formulario = document.getElementById("formularioHoras");
-
-if (formulario) {
-  formulario.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    if (!usuarioActual) {
-      alert("Debes estar autenticado para registrar horas.");
-      return;
-    }
-
-    // Capturar valores de los campos del formulario
-    const idInstitucion = document.getElementById("institucion").value;
-    const categoriaInput = document.getElementById("categoria").value;
-    const descripcionInput = document.getElementById("descripcion").value;
-    const docenteInput = document.getElementById("docente").value;
-    const horasInput = parseFloat(document.getElementById("horas").value);
-    const lugarInput = document.getElementById("lugar").value;
-    const archivoEvidencia = document.getElementById("evidencia").files[0];
-
-    let evidenciaBase64 = "";
-    if (archivoEvidencia) {
-      try {
-        evidenciaBase64 = await convertirImagenABase64(archivoEvidencia);
-      } catch (err) {
-        console.error("Error al procesar la imagen:", err);
+    // Verificar que el usuario esté autenticado
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        usuarioActual = user;
+      } else {
+        window.location.href = "login.html";
       }
-    }
+    });
 
-    try {
-      // Guardar en Firestore asociando el userId del estudiante autenticado
-      await addDoc(collection(db, "HorasSociales"), {
-        userId: usuarioActual.uid, // <--- Propiedad indispensable para la consulta en la vista principal
-        institucion: idInstitucion,
-        email: usuarioActual.email || "",
-        Categoria: categoriaInput,
-        Descripcion: descripcionInput,
-        "Docente encargado": docenteInput,
-        Evidencia: evidenciaBase64,
-        Horas: horasInput,
-        Lugar: lugarInput,
-        fechaCreacion: serverTimestamp()
+    // Convertir archivo de imagen a string Base64
+    function convertirImagenABase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = (error) => reject(error);
       });
-
-      alert("Horas sociales registradas correctamente.");
-      formulario.reset();
-      
-      // Opcional: Redirigir a la vista principal para ver el nuevo registro
-      window.location.href = "index.html";
-
-    } catch (error) {
-      console.error("Error al guardar el registro en Firestore: ", error);
-      alert("Ocurrió un error al guardar el registro. Inténtalo de nuevo.");
     }
-  });
-}
-    
+
+    // Corregido: ID exacto como figura en el HTML ("horasForm")
+    const formulario = document.getElementById("horasForm");
+
+    if (formulario) {
+      formulario.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        if (!usuarioActual) {
+          alert("Debes estar autenticado para registrar horas.");
+          return;
+        }
+
+        // Capturar valores de los campos del formulario
+        const categoriaInput = document.getElementById("categoria").value;
+        const descripcionInput = document.getElementById("descripcion").value;
+        const docenteInput = document.getElementById("docente").value;
+        const horasInput = parseFloat(document.getElementById("horas").value);
+        const lugarInput = document.getElementById("lugar").value;
+        const archivoEvidencia = document.getElementById("evidencia").files[0];
+
+        let evidenciaBase64 = "";
+        if (archivoEvidencia) {
+          try {
+            evidenciaBase64 = await convertirImagenABase64(archivoEvidencia);
+          } catch (err) {
+            console.error("Error al procesar la imagen:", err);
+          }
+        }
+
+        try {
+          // Guardar en Firestore asociando el userId del estudiante autenticado
+          await addDoc(collection(db, "HorasSociales"), {
+            userId: usuarioActual.uid,
+            email: usuarioActual.email || "",
+            Categoria: categoriaInput,
+            Descripcion: descripcionInput,
+            "Docente encargado": docenteInput,
+            Evidencia: evidenciaBase64,
+            Horas: horasInput,
+            Lugar: lugarInput,
+            fechaCreacion: serverTimestamp()
+          });
+
+          alert("Horas sociales registradas correctamente.");
+          formulario.reset();
+
+          window.location.href = "mainPE.html";
+
+        } catch (error) {
+          console.error("Error al guardar el registro en Firestore: ", error);
+          alert("Ocurrió un error al guardar el registro. Inténtalo de nuevo.");
+        }
+      });
+    }
   </script>
 </body>
 </html>

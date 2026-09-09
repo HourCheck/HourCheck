@@ -211,7 +211,7 @@
       border: 1.5px solid #222;
       border-radius: 16px;
       overflow: hidden;
-      margin-top: 15px;
+      margin-top: 20px;
       margin-bottom: 40px;
     }
 
@@ -257,8 +257,10 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 16px 40px;
+      padding: 16px 30px;
       border-bottom: 1.5px solid #222;
+      flex-wrap: wrap;
+      gap: 15px;
     }
 
     .student-row:last-child {
@@ -271,9 +273,15 @@
       color: #000;
     }
 
+    .action-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
     .action-link {
       font-weight: 700;
-      font-size: 1.05rem;
+      font-size: 0.95rem;
       color: #1557d0;
       text-decoration: none;
       cursor: pointer;
@@ -283,27 +291,72 @@
       text-decoration: underline;
     }
 
-    #modalEvidencia {
-      border-radius: 16px;
-      max-width: 600px;
-    }
-
-    .evidencia-img-container {
-      width: 100%;
-      max-height: 380px;
-      overflow: hidden;
+    /* Badges de Estado Visuales */
+    .status-badge {
+      padding: 4px 10px;
       border-radius: 12px;
-      background-color: #f0f4f9;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-top: 15px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      display: inline-block;
+      margin-left: 8px;
     }
 
-    .evidencia-img-container img {
-      width: 100%;
-      height: auto;
+    .status-approved {
+      background-color: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    .status-rejected {
+      background-color: #ffebee;
+      color: #c62828;
+    }
+
+    .status-pending {
+      background-color: #fff3e0;
+      color: #ef6c00;
+    }
+
+    /* Botones de Acción con Estilos Refinados */
+    .btn-action-icon {
+      border: none;
+      border-radius: 8px;
+      padding: 6px 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: bold;
+      font-size: 0.85rem;
+      transition: opacity 0.2s;
+    }
+
+    .btn-action-icon:hover {
+      opacity: 0.85;
+    }
+
+    .btn-accept {
+      background-color: #2e7d32;
+      color: white;
+    }
+
+    .btn-reject {
+      background-color: #c62828;
+      color: white;
+    }
+
+    /* Modal de Evidencia */
+    .modal {
+      border-radius: 16px;
+      max-width: 650px;
+    }
+
+    .evidencia-img {
+      max-width: 100%;
+      max-height: 320px;
+      border-radius: 12px;
       object-fit: contain;
+      border: 1px solid #ddd;
+      margin-top: 10px;
     }
   </style>
 </head>
@@ -406,14 +459,18 @@
       <p id="modalEstudiante" style="margin-bottom: 5px; font-weight: 600;"></p>
       <p id="modalDetalles" style="color: #555; margin-top: 0;"></p>
       
-      <div class="evidencia-img-container" id="modalImagenContainer">
+      <div style="text-align: center; margin-top: 15px;" id="modalImagenContainer">
         <p style="color: #888;">Cargando imagen...</p>
       </div>
     </div>
     <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center; padding: 0 24px 16px 24px;">
-      <div>
-        <button id="btnModalAceptar" class="btn green waves-effect waves-light" style="margin-right: 8px;">Aceptar Horas</button>
-        <button id="btnModalDenegar" class="btn red waves-effect waves-light">Denegar Horas</button>
+      <div class="action-group">
+        <button id="btnModalAceptar" class="btn-action-icon btn-accept">
+          <i class="material-icons" style="font-size: 1.1rem;">check</i> Aceptar
+        </button>
+        <button id="btnModalDenegar" class="btn-action-icon btn-reject">
+          <i class="material-icons" style="font-size: 1.1rem;">close</i> Denegar
+        </button>
       </div>
       <a href="#!" class="modal-close waves-effect waves-blue btn-flat" style="font-weight: 700; color: #1557d0;">Cerrar</a>
     </div>
@@ -427,9 +484,6 @@
     import { getAuth, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     document.addEventListener('DOMContentLoaded', function() {
-      const elemsSidenav = document.querySelectorAll('.sidenav');
-      M.Sidenav.init(elemsSidenav);
-
       const elemsModal = document.querySelectorAll('.modal');
       M.Modal.init(elemsModal);
     });
@@ -452,41 +506,17 @@
 
     const CATEGORIA_ACTIVA = "Tutorías de inglés";
 
-    const docenteNombreEl = document.getElementById("docenteNombre");
-    const menuDocenteNombreEl = document.getElementById("menuDocenteNombre");
-    const menuDocenteEmailEl = document.getElementById("menuDocenteEmail");
     const totalEstudiantesTextoEl = document.getElementById("totalEstudiantesTexto");
     const totalRegistrosTextoEl = document.getElementById("totalRegistrosTexto");
     const gaugeChartEl = document.getElementById("gaugeChart");
     const studentsContainer = document.getElementById("studentsContainer");
     const btnGenerarReporte = document.getElementById("btnGenerarReporte");
-    const btnCerrarSesion = document.getElementById("btnCerrarSesion");
     const inputBuscadorEstudiante = document.getElementById("inputBuscadorEstudiante");
 
     let registrosCache = [];
 
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        if (menuDocenteEmailEl) menuDocenteEmailEl.textContent = user.email || "";
-
-        try {
-          const docRef = doc(db, "Docentes", user.uid);
-          const docSnap = await getDoc(docRef);
-          if (docSnap.exists() && docSnap.data().nombre) {
-            const nombre = docSnap.data().nombre;
-            if (docenteNombreEl) docenteNombreEl.textContent = nombre;
-            if (menuDocenteNombreEl) menuDocenteNombreEl.textContent = nombre;
-          } else {
-            const fallback = user.displayName || user.email.split('@')[0];
-            if (docenteNombreEl) docenteNombreEl.textContent = fallback;
-            if (menuDocenteNombreEl) menuDocenteNombreEl.textContent = fallback;
-          }
-        } catch (e) {
-          const fallback = user.email ? user.email.split('@')[0] : "Docente";
-          if (docenteNombreEl) docenteNombreEl.textContent = fallback;
-          if (menuDocenteNombreEl) menuDocenteNombreEl.textContent = fallback;
-        }
-
         await cargarMetricas();
       } else {
         window.location.href = "loginU.html";
@@ -552,34 +582,34 @@
         const usuarioNombre = item.nombre || item.email || item.userId || "Estudiante";
         const horasRealizadas = item.Horas || 0;
 
-        let estadoHTML = `<span class="orange-text" style="font-weight: bold; margin-left: 6px;">[Pendiente]</span>`;
-        if (item.Aprobado === true) estadoHTML = `<span class="green-text" style="font-weight: bold; margin-left: 6px;">[Aprobado]</span>`;
-        if (item.Aprobado === false) estadoHTML = `<span class="red-text" style="font-weight: bold; margin-left: 6px;">[Denegado]</span>`;
+        let badgeHTML = `<span class="status-badge status-pending">Pendiente</span>`;
+        if (item.Aprobado === true) badgeHTML = `<span class="status-badge status-approved">Aprobado</span>`;
+        if (item.Aprobado === false) badgeHTML = `<span class="status-badge status-rejected">Rechazado</span>`;
 
         const row = document.createElement("div");
         row.className = "student-row";
         row.innerHTML = `
           <div>
-            <span class="student-name">${usuarioNombre}</span> ${estadoHTML}
-            <span style="display: block; font-size: 0.85rem; color: #666;">
+            <span class="student-name">${usuarioNombre}</span> ${badgeHTML}
+            <span style="display: block; font-size: 0.85rem; color: #666; margin-top: 4px;">
               Horas reportadas: <strong>${horasRealizadas} hrs</strong>
             </span>
           </div>
-          <div style="display: flex; gap: 8px; align-items: center;">
-            <button class="btn-small green waves-effect waves-light" title="Aceptar Horas" onclick="cambiarEstadoHoras('${item.id}', true)">
-              <i class="material-icons">check</i>
+          <div class="action-group">
+            <button class="btn-action-icon btn-accept" title="Aceptar Horas" onclick="cambiarEstadoHoras('${item.id}', true)">
+              <i class="material-icons" style="font-size: 1rem;">check</i> Aceptar
             </button>
-            <button class="btn-small red waves-effect waves-light" title="Denegar Horas" onclick="cambiarEstadoHoras('${item.id}', false)">
-              <i class="material-icons">close</i>
+            <button class="btn-action-icon btn-reject" title="Denegar Horas" onclick="cambiarEstadoHoras('${item.id}', false)">
+              <i class="material-icons" style="font-size: 1rem;">close</i> Rechazar
             </button>
-            <a class="action-link" style="margin-left: 8px;" onclick="verEvidencia('${item.id}')">Ver actividad</a>
+            <a class="action-link" style="margin-left: 6px;" onclick="verEvidencia('${item.id}')">Ver actividad</a>
           </div>
         `;
         studentsContainer.appendChild(row);
       });
     }
 
-    // Cambiar estado booleano "Aprobado" en Firestore
+    // Actualizar estado en Firestore (Aprobado: true/false)
     window.cambiarEstadoHoras = async function(docId, nuevoEstado) {
       try {
         const docRef = doc(db, "HorasSociales", docId);
@@ -592,7 +622,7 @@
           registrosCache[registroIndex].Aprobado = nuevoEstado;
         }
 
-        const estadoTexto = nuevoEstado ? "aceptadas" : "denegadas";
+        const estadoTexto = nuevoEstado ? "aceptadas" : "rechazadas";
         const colorToast = nuevoEstado ? "green rounded" : "red rounded";
         M.toast({ html: `Horas ${estadoTexto} correctamente.`, classes: colorToast });
 
@@ -609,7 +639,7 @@
       }
     };
 
-    // Evento de búsqueda por nombre o correo
+    // Buscador interactivo
     if (inputBuscadorEstudiante) {
       inputBuscadorEstudiante.addEventListener("input", (e) => {
         const textoBusqueda = e.target.value.toLowerCase().trim();
@@ -624,6 +654,7 @@
       });
     }
 
+    // Generar Reporte CSV
     btnGenerarReporte.addEventListener("click", () => {
       if (registrosCache.length === 0) {
         M.toast({html: 'No hay datos disponibles para generar el reporte.', classes: 'orange rounded'});
@@ -642,7 +673,7 @@
         const horas = item.Horas || 0;
         let estado = "Pendiente";
         if (item.Aprobado === true) estado = "Aprobado";
-        if (item.Aprobado === false) estado = "Denegado";
+        if (item.Aprobado === false) estado = "Rechazado";
         const descripcion = `"${(item.Descripcion || '').replace(/"/g, '""')}"`;
 
         csvContent += `${nombreEstudiante},${estudianteEmail},${categoria},${lugar},${docente},${horas},${estado},${descripcion}\n`;
@@ -661,16 +692,7 @@
       M.toast({html: 'Reporte descargado exitosamente.', classes: 'green rounded'});
     });
 
-    if (btnCerrarSesion) {
-      btnCerrarSesion.addEventListener("click", (e) => {
-        e.preventDefault();
-        signOut(auth).then(() => {
-          window.location.href = "loginU.html";
-        });
-      });
-    }
-
-    // Modal para mostrar la imagen y detalles de la evidencia
+    // Abrir Modal de Evidencia
     window.verEvidencia = function(registroId) {
       const registro = registrosCache.find(r => r.id === registroId);
       if (!registro) {
@@ -687,7 +709,7 @@
       const urlImagen = registro.evidenciaUrl || registro.Evidencia || registro.imagenUrl || registro.imagen;
 
       if (urlImagen) {
-        imgContainer.innerHTML = `<img src="${urlImagen}" alt="Evidencia" />`;
+        imgContainer.innerHTML = `<img src="${urlImagen}" alt="Evidencia" class="evidencia-img" />`;
       } else {
         imgContainer.innerHTML = `<p style="color: #666; padding: 20px;">Este registro no contiene imagen de evidencia adjunta.</p>`;
       }
