@@ -278,7 +278,6 @@
       text-decoration: underline;
     }
 
-    /* Estilos idénticos a la segunda versión */
     .status-badge {
       padding: 4px 10px;
       border-radius: 12px;
@@ -367,7 +366,7 @@
     <div class="banner-card">
       <div>
         <h1 class="banner-title">Tutorías en primera infancia</h1>
-        <div class="banner-subtitle">1° año de Bachillerato General</div>
+        <p class="banner-sub">Gestión de horas sociales y evidencias</p>
       </div>
       <div class="banner-icon-container">
         <i class="material-icons" style="font-size: 3.5rem; color: #1557d0;">child_care</i>
@@ -429,7 +428,7 @@
 
   </div>
 
-  <!-- Modal con estructura similar al diseño 2 -->
+  <!-- Modal Evidencia -->
   <div id="modalEvidencia" class="modal">
     <div class="modal-content">
       <h5 id="modalUsuarioNombre" style="font-weight: bold; margin-bottom: 5px;">Detalle de Registro</h5>
@@ -569,9 +568,9 @@
         const horasRealizadas = item.Horas || 0;
 
         let badgeEstado = '<span class="status-badge status-pending">Pendiente</span>';
-        if (item.Aprobado === true) {
+        if (item.estado === true) {
           badgeEstado = '<span class="status-badge status-approved">Aprobado</span>';
-        } else if (item.Aprobado === false) {
+        } else if (item.estado === false) {
           badgeEstado = '<span class="status-badge status-rejected">Denegado</span>';
         }
 
@@ -603,16 +602,17 @@
       });
     }
 
+    // Actualiza la propiedad 'estado' en Firestore
     window.actualizarEstadoHoras = async function(registroId, nuevoEstado) {
       try {
         const registroRef = doc(db, "HorasSociales", registroId);
         await updateDoc(registroRef, {
-          Aprobado: nuevoEstado
+          estado: nuevoEstado
         });
 
         const index = registrosCache.findIndex(r => r.id === registroId);
         if (index !== -1) {
-          registrosCache[index].Aprobado = nuevoEstado;
+          registrosCache[index].estado = nuevoEstado;
         }
 
         const mensaje = nuevoEstado ? 'Horas aprobadas exitosamente.' : 'Horas denegadas.';
@@ -641,8 +641,8 @@
       document.getElementById("modalDescripcion").textContent = item.Descripcion || "Sin descripción";
 
       let badge = '<span class="status-badge status-pending">Pendiente</span>';
-      if (item.Aprobado === true) badge = '<span class="status-badge status-approved">Aprobado</span>';
-      if (item.Aprobado === false) badge = '<span class="status-badge status-rejected">Denegado</span>';
+      if (item.estado === true) badge = '<span class="status-badge status-approved">Aprobado</span>';
+      if (item.estado === false) badge = '<span class="status-badge status-rejected">Denegado</span>';
       document.getElementById("modalEstadoBadge").innerHTML = badge;
 
       const containerEvidencia = document.getElementById("modalEvidenciaContainer");

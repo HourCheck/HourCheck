@@ -480,8 +480,8 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, getDocs, doc, getDoc, query, where, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-    import { getAuth, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getFirestore, collection, getDocs, doc, query, where, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     document.addEventListener('DOMContentLoaded', function() {
       const elemsModal = document.querySelectorAll('.modal');
@@ -583,8 +583,8 @@
         const horasRealizadas = item.Horas || 0;
 
         let badgeHTML = `<span class="status-badge status-pending">Pendiente</span>`;
-        if (item.Aprobado === true) badgeHTML = `<span class="status-badge status-approved">Aprobado</span>`;
-        if (item.Aprobado === false) badgeHTML = `<span class="status-badge status-rejected">Rechazado</span>`;
+        if (item.estado === true) badgeHTML = `<span class="status-badge status-approved">Aprobado</span>`;
+        if (item.estado === false) badgeHTML = `<span class="status-badge status-rejected">Rechazado</span>`;
 
         const row = document.createElement("div");
         row.className = "student-row";
@@ -609,17 +609,17 @@
       });
     }
 
-    // Actualizar estado en Firestore (Aprobado: true/false)
+    // Actualizar campo "estado" en Firestore (estado: true/false)
     window.cambiarEstadoHoras = async function(docId, nuevoEstado) {
       try {
         const docRef = doc(db, "HorasSociales", docId);
         await updateDoc(docRef, {
-          Aprobado: nuevoEstado
+          estado: nuevoEstado
         });
 
         const registroIndex = registrosCache.findIndex(r => r.id === docId);
         if (registroIndex !== -1) {
-          registrosCache[registroIndex].Aprobado = nuevoEstado;
+          registrosCache[registroIndex].estado = nuevoEstado;
         }
 
         const estadoTexto = nuevoEstado ? "aceptadas" : "rechazadas";
