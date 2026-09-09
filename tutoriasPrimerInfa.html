@@ -677,8 +677,8 @@
         const horas = item.Horas || 0;
         
         let estadoStr = "Pendiente";
-        if (item.Aprobado === true) estadoStr = "Aprobado";
-        if (item.Aprobado === false) estadoStr = "Denegado";
+        if (item.estado === true) estadoStr = "Aprobado";
+        if (item.estado === false) estadoStr = "Denegado";
 
         const descripcion = `"${(item.Descripcion || '').replace(/"/g, '""')}"`;
 

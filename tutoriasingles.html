@@ -672,8 +672,8 @@
         const docente = `"${item['Docente encargado'] || 'N/A'}"`;
         const horas = item.Horas || 0;
         let estado = "Pendiente";
-        if (item.Aprobado === true) estado = "Aprobado";
-        if (item.Aprobado === false) estado = "Rechazado";
+        if (item.estado === true) estado = "Aprobado";
+        if (item.estado === false) estado = "Rechazado";
         const descripcion = `"${(item.Descripcion || '').replace(/"/g, '""')}"`;
 
         csvContent += `${nombreEstudiante},${estudianteEmail},${categoria},${lugar},${docente},${horas},${estado},${descripcion}\n`;

@@ -263,6 +263,32 @@
       color: inherit;
     }
 
+  /* Estilos para el menú desplegable del usuario */
+    #user-dropdown {
+      border-radius: 12px;
+      min-width: 180px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      overflow: hidden;
+    }
+
+    #user-dropdown li > a {
+      color: #333;
+      display: flex;
+      align-items: center;
+      font-weight: 500;
+      font-size: 0.9rem;
+      padding: 12px 16px;
+    }
+
+    #user-dropdown li > a > i {
+      margin-right: 12px;
+      color: #1557d0;
+    }
+
+    #user-dropdown li > a.logout-item > i {
+      color: #d32f2f;
+    }
+
     .kpi-card:hover {
       transform: translateY(-3px);
       box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
@@ -285,17 +311,6 @@
       height: 46px;
       background-color: var(--card-bg);
       border-radius: 50%;
-    }
-
-    .half-donut-chart {
-      width: 72px;
-      height: 72px;
-      border-radius: 50%;
-      background: conic-gradient(#f97316 0% 50%, var(--primary-color) 50% 65%, #e2e8f0 65% 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
     }
 
     .action-badge {
@@ -540,7 +555,7 @@
         <i class="material-icons">notifications_none</i>
       </a>
       
-      <a href="perfilU.html" class="user-profile">
+      <a href="#" class="user-profile">
         <div class="avatar">
           <i class="material-icons">person</i>
         </div>
@@ -553,6 +568,20 @@
     </div>
   </header>
 
+  <!-- DROPDOWN DEL PERFIL (SUPERIOR DERECHO) -->
+  <ul id="user-dropdown" class="dropdown-content">
+    <li>
+      <a href="perfilU.html">
+        <i class="material-icons">person</i>Perfil
+      </a>
+    </li>
+    <li class="divider" tabindex="-1"></li>
+    <li>
+      <a href="#" id="btn-logout" class="logout-item">
+        <i class="material-icons">exit_to_app</i>Cerrar sesión
+      </a>
+    </li>
+  </ul>
   <!-- Contenido Principal -->
   <div class="dashboard-container">
     
@@ -588,7 +617,8 @@
       </div>
 
       <div class="kpi-card">
-        <div class="half-donut-chart">
+        <!-- Corregido id y clase para que muestre la dona vacía correctamente -->
+        <div class="donut-chart" id="donutEvidencias">
           <div class="donut-inner"></div>
         </div>
         <div>
@@ -706,6 +736,16 @@
     const contenedorHoras = document.getElementById("tablaHistorial");
     const btnCerrarSesion = document.getElementById("btnCerrarSesion");
 
+    // Inicializar Dropdown del Usuario
+      var dropdownElems = document.querySelectorAll('.dropdown-trigger');
+      if (typeof M !== 'undefined' && M.Dropdown) {
+        M.Dropdown.init(dropdownElems, {
+          alignment: 'right',
+          constrainWidth: false,
+          coverTrigger: false
+        });
+      }
+      
     onAuthStateChanged(auth, (user) => {
       if (user) {
         const nombreUsuario = user.displayName || user.email.split('@')[0];
@@ -725,6 +765,11 @@
       onSnapshot(q, (snapshot) => {
         contenedorHoras.innerHTML = "";
 
+        const kpiHoras = document.getElementById("kpiTotalHoras");
+        const kpiEvidencias = document.getElementById("kpiTotalEvidencias");
+        const donutHoras = document.getElementById("donutHoras");
+        const donutEvidencias = document.getElementById("donutEvidencias");
+
         if (snapshot.empty) {
           contenedorHoras.innerHTML = `
             <tr>
@@ -732,6 +777,12 @@
                 No tienes registros de horas sociales aún.
               </td>
             </tr>`;
+          
+          // Resetear valores a 0 cuando no hay nada en la colección
+          if (kpiHoras) kpiHoras.innerText = `0 / 150 h`;
+          if (kpiEvidencias) kpiEvidencias.innerText = `0 enviadas`;
+          if (donutHoras) donutHoras.style.background = `conic-gradient(#2563eb 0%, #e2e8f0 0%)`;
+          if (donutEvidencias) donutEvidencias.style.background = `conic-gradient(#f97316 0%, #e2e8f0 0%)`;
           return;
         }
 
@@ -761,16 +812,20 @@
           contenedorHoras.appendChild(fila);
         });
 
-        const kpiHoras = document.getElementById("kpiTotalHoras");
-        const kpiEvidencias = document.getElementById("kpiTotalEvidencias");
-        const donutHoras = document.getElementById("donutHoras");
-
         if (kpiHoras) kpiHoras.innerText = `${totalHoras} / 150 h`;
         if (kpiEvidencias) kpiEvidencias.innerText = `${totalEvidencias} enviadas`;
         
+        // 1. Actualizar Dona de Horas
         if (donutHoras) {
-          const porcentaje = Math.min((totalHoras / 150) * 100, 100);
-          donutHoras.style.background = `conic-gradient(#2563eb ${porcentaje}%, #e2e8f0 ${porcentaje}%)`;
+          const porcentajeHoras = Math.min((totalHoras / 150) * 100, 100);
+          donutHoras.style.background = `conic-gradient(#2563eb ${porcentajeHoras}%, #e2e8f0 ${porcentajeHoras}%)`;
+        }
+
+        // 2. Actualizar Dona de Evidencias (Meta estimada: 10 evidencias)
+        if (donutEvidencias) {
+          const metaEvidencias = 38;
+          const porcentajeEvidencias = Math.min((totalEvidencias / metaEvidencias) * 100, 100);
+          donutEvidencias.style.background = `conic-gradient(#f97316 ${porcentajeEvidencias}%, #e2e8f0 ${porcentajeEvidencias}%)`;
         }
 
       }, (error) => {

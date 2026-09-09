@@ -328,6 +328,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 <!-- Script JS de Materialize -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<!-- Script JS de Materialize -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
   <!-- Firebase Script Modular -->
   <script type="module">
@@ -360,16 +362,16 @@
 
     let usuarioActual = null;
 
-    // Verificar que el usuario esté autenticado
+    // Verificar autenticación
     onAuthStateChanged(auth, (user) => {
       if (user) {
         usuarioActual = user;
       } else {
-        window.location.href = "login.html";
+        window.location.href = "loginU.html";
       }
     });
 
-    // Convertir archivo de imagen a string Base64
+    // Convertir archivo a Base64
     function convertirImagenABase64(file) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -379,7 +381,6 @@
       });
     }
 
-    // Corregido: ID exacto como figura en el HTML ("horasForm")
     const formulario = document.getElementById("horasForm");
 
     if (formulario) {
@@ -387,11 +388,18 @@
         e.preventDefault();
 
         if (!usuarioActual) {
-          alert("Debes estar autenticado para registrar horas.");
+          M.toast({
+            html: '<i class="material-icons left">warning</i>Debes estar autenticado para registrar horas.',
+            classes: 'red darken-1 rounded'
+          });
           return;
         }
 
-        // Capturar valores de los campos del formulario
+        // Deshabilitar botón mientras guarda para evitar múltiples clics
+        const btnGuardar = document.getElementById("btnGuardar");
+        btnGuardar.disabled = true;
+
+        // Capturar valores
         const categoriaInput = document.getElementById("categoria").value;
         const descripcionInput = document.getElementById("descripcion").value;
         const docenteInput = document.getElementById("docente").value;
@@ -409,7 +417,6 @@
         }
 
         try {
-          // Guardar en Firestore asociando el userId del estudiante autenticado
           await addDoc(collection(db, "HorasSociales"), {
             userId: usuarioActual.uid,
             email: usuarioActual.email || "",
@@ -422,14 +429,29 @@
             fechaCreacion: serverTimestamp()
           });
 
-          alert("Horas sociales registradas correctamente.");
+          // Notificación visual de éxito con Materialize Toast
+          M.toast({
+            html: '<i class="material-icons left">check_circle</i>Horas sociales registradas correctamente.',
+            classes: 'green darken-1 rounded',
+            displayLength: 2000
+          });
+
           formulario.reset();
 
-          window.location.href = "mainPE.html";
+          // Espera a que la notificación sea visible antes de redirigir
+          setTimeout(() => {
+            window.location.href = "mainPE.html";
+          }, 1500);
 
         } catch (error) {
-          console.error("Error al guardar el registro en Firestore: ", error);
-          alert("Ocurrió un error al guardar el registro. Inténtalo de nuevo.");
+          console.error("Error al guardar en Firestore: ", error);
+          btnGuardar.disabled = false;
+          
+          // Notificación visual de error
+          M.toast({
+            html: '<i class="material-icons left">error</i>Ocurrió un error al guardar. Inténtalo de nuevo.',
+            classes: 'red darken-1 rounded'
+          });
         }
       });
     }

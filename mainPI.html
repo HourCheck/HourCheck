@@ -665,9 +665,12 @@
           snapHoras = await getDocs(query(collection(db, "HorasSociales"), where("institucion", "==", userUid)));
         }
 
+        // SE FILTRAN ÚNICAMENTE LAS HORAS APROBADAS (Aprobado === true)
         snapHoras.forEach(docSnap => {
           const data = docSnap.data();
-          totalHorasCompletadas += Number(data.Horas) || 0;
+          if (data.Aprobado === true) {
+            totalHorasCompletadas += Number(data.Horas) || 0;
+          }
         });
 
         const metaGlobalHoras = cantEstudiantes * 150;
