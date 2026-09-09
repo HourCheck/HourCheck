@@ -18,7 +18,7 @@
       margin: 0;
       padding: 0;
     }
-/* Header Superior */
+
     .top-header {
       background-color: #ffffff;
       padding: 15px 40px;
@@ -52,13 +52,6 @@
       font-size: 30px;
     }
 
-    .header-title {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: #000;
-      margin: 0;
-    }
-
     .header-right {
       display: flex;
       align-items: center;
@@ -74,95 +67,6 @@
       height: 38px;
       width: auto;
       object-fit: contain;
-    }
-
-    /* Estilos Generales de la Interfaz */
-    .custom-navbar {
-      background-color: #ffffff;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-      padding: 0 30px;
-      height: 64px;
-      line-height: 64px;
-    }
-
-    .nav-wrapper {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      height: 100%;
-    }
-
-    .nav-left {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .menu-trigger {
-      color: #333;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-decoration: none;
-      cursor: pointer;
-    }
-
-    .menu-trigger i {
-      font-size: 1.8rem;
-    }
-
-    .nav-title {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: #000;
-    }
-
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .bell-icon {
-      color: #333;
-      font-size: 1.8rem;
-      cursor: pointer;
-    }
-
-    .user-profile {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-    }
-
-    .user-avatar {
-      width: 40px;
-      height: 40px;
-      background-color: #3b82f6;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-    }
-
-    .user-info {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      line-height: 1.2;
-    }
-
-    .user-name {
-      font-weight: 700;
-      font-size: 0.95rem;
-      color: #000;
-    }
-
-    .user-role {
-      font-size: 0.8rem;
-      color: #666;
     }
 
     .banner-card {
@@ -184,13 +88,6 @@
       margin: 0;
       line-height: 1.1;
       letter-spacing: -0.5px;
-    }
-
-    .banner-subtitle {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #222;
-      margin-top: 8px;
     }
 
     .banner-icon-container {
@@ -340,8 +237,10 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 16px 40px;
+      padding: 16px 30px;
       border-bottom: 1.5px solid #222;
+      flex-wrap: wrap;
+      gap: 15px;
     }
 
     .student-row:last-child {
@@ -354,9 +253,15 @@
       color: #000;
     }
 
+    .action-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
     .action-link {
       font-weight: 700;
-      font-size: 1.05rem;
+      font-size: 0.95rem;
       color: #1557d0;
       text-decoration: none;
       cursor: pointer;
@@ -365,34 +270,98 @@
     .action-link:hover {
       text-decoration: underline;
     }
+
+    /* Estilos para Badges de Estado */
+    .status-badge {
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      display: inline-block;
+      margin-left: 8px;
+    }
+
+    .status-approved {
+      background-color: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    .status-rejected {
+      background-color: #ffebee;
+      color: #c62828;
+    }
+
+    .status-pending {
+      background-color: #fff3e0;
+      color: #ef6c00;
+    }
+
+    /* Botones de Acción */
+    .btn-action-icon {
+      border: none;
+      border-radius: 8px;
+      padding: 6px 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: bold;
+      font-size: 0.85rem;
+      transition: opacity 0.2s;
+    }
+
+    .btn-action-icon:hover {
+      opacity: 0.85;
+    }
+
+    .btn-accept {
+      background-color: #2e7d32;
+      color: white;
+    }
+
+    .btn-reject {
+      background-color: #c62828;
+      color: white;
+    }
+
+    /* Modal de Evidencia */
+    .modal {
+      border-radius: 16px;
+      max-width: 650px;
+    }
+
+    .evidencia-img {
+      max-width: 100%;
+      max-height: 300px;
+      border-radius: 12px;
+      object-fit: contain;
+      border: 1px solid #ddd;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
 
- <header class="top-header">
+  <header class="top-header">
     <div class="header-left">
-      <!-- Flecha de regreso al index.html -->
       <a href="mainPD.html" class="back-btn" title="Volver al Inicio">
         <i class="material-icons">arrow_back</i>
       </a>
-      
     </div>
 
-    <!-- Logo a la derecha -->
     <div class="header-right">
       <div class="logo-container">
         <img src="logo.png" alt="HourCheck Logo" class="logo-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x40?text=HourCheck';">
       </div>
     </div>
   </header>
-  <!-- Contenedor Principal -->
+
   <div class="container" style="width: 90%; max-width: 1200px;">
 
     <!-- Banner Principal -->
     <div class="banner-card">
       <div>
         <h1 class="banner-title">Jornadas de limpieza</h1>
-      
       </div>
       <div class="banner-icon-container">
         <i class="material-icons" style="font-size: 3.5rem; color: #1557d0;">delete_sweep</i>
@@ -401,7 +370,6 @@
 
     <!-- Cards de Estadísticas -->
     <div class="row">
-      <!-- Card 1: Próxima Actividad -->
       <div class="col s12 m4">
         <div class="info-card">
           <div class="icon-orange-circle">
@@ -415,7 +383,6 @@
         </div>
       </div>
 
-      <!-- Card 2: Estudiantes en la Categoría -->
       <div class="col s12 m4">
         <div class="info-card">
           <div class="donut-chart"></div>
@@ -427,7 +394,6 @@
         </div>
       </div>
 
-      <!-- Card 3: Evidencias Subidas -->
       <div class="col s12 m4">
         <div class="info-card">
           <div class="gauge-chart" id="gaugeChart"></div>
@@ -440,7 +406,7 @@
       </div>
     </div>
 
-    <!-- Tabla de Estudiantes + Botón Generar Reporte -->
+    <!-- Tabla de Estudiantes -->
     <div class="students-table-container">
       <div class="table-header-box">
         <span class="table-header-title">Estudiantes en Jornadas de Limpieza</span>
@@ -459,20 +425,48 @@
 
   </div>
 
+  <!-- Modal para ver Evidencia Detallada -->
+  <div id="modalEvidencia" class="modal">
+    <div class="modal-content">
+      <h5 id="modalEstudiante" style="font-weight: bold; margin-bottom: 5px;">Detalle de Evidencia</h5>
+      <p id="modalInfoMeta" class="grey-text" style="font-size: 0.9rem; margin-top: 0;"></p>
+      
+      <div style="margin-top: 15px;">
+        <strong>Lugar:</strong> <span id="modalLugar">N/A</span><br>
+        <strong>Horas solicitadas:</strong> <span id="modalHoras">0</span> hrs<br>
+        <strong>Descripción:</strong>
+        <p id="modalDescripcion" style="background: #f8f9fa; padding: 10px; border-radius: 8px; font-size: 0.9rem;"></p>
+      </div>
+
+      <div style="margin-top: 15px;">
+        <strong>Evidencia Adjunta:</strong><br>
+        <div id="modalEvidenciaContainer" class="center-align" style="margin-top: 10px;">
+          <img id="modalImgEvidencia" src="" alt="Evidencia" class="evidencia-img" style="display: none;">
+          <span id="noEvidenciaText" class="grey-text" style="display: none;">No se adjunto imagen de evidencia</span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer" style="padding: 10px 20px; display: flex; justify-content: space-between; align-items: center;">
+      <button class="modal-close btn-flat grey-text">Cerrar</button>
+      <div id="modalActions">
+        <button class="btn-action-icon btn-reject" id="btnModalReject">
+          <i class="material-icons tiny">cancel</i> Denegar
+        </button>
+        <button class="btn-action-icon btn-accept" id="btnModalAccept">
+          <i class="material-icons tiny">check_circle</i> Aceptar
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Materialize JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
-  <!-- Módulo de Firebase -->
+  <!-- Firebase -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, getDocs, doc, getDoc, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-    import { getAuth, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
-    // Inicializar Sidenav de Materialize
-    document.addEventListener('DOMContentLoaded', function() {
-      const elems = document.querySelectorAll('.sidenav');
-      M.Sidenav.init(elems);
-    });
+    import { getFirestore, collection, getDocs, doc, getDoc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
@@ -486,51 +480,29 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
 
-    // Asegurar la persistencia de la sesión en el navegador
-    setPersistence(auth, browserLocalPersistence).catch((error) => {
-      console.error("Error al configurar persistencia:", error);
-    });
+    setPersistence(auth, browserLocalPersistence).catch(console.error);
 
     const CATEGORIA_ACTIVA = "Jornadas de limpieza";
 
-    const docenteNombreEl = document.getElementById("docenteNombre");
-    const menuDocenteNombreEl = document.getElementById("menuDocenteNombre");
-    const menuDocenteEmailEl = document.getElementById("menuDocenteEmail");
     const totalEstudiantesTextoEl = document.getElementById("totalEstudiantesTexto");
     const totalRegistrosTextoEl = document.getElementById("totalRegistrosTexto");
     const gaugeChartEl = document.getElementById("gaugeChart");
     const studentsContainer = document.getElementById("studentsContainer");
     const btnGenerarReporte = document.getElementById("btnGenerarReporte");
-    const btnCerrarSesion = document.getElementById("btnCerrarSesion");
 
     let registrosCache = [];
+    let modalInstance = null;
+    let registroSeleccionadoId = null;
 
-    // Autenticación de Usuario con verificación y manejo de redirección
+    document.addEventListener('DOMContentLoaded', function() {
+      const modalElem = document.getElementById('modalEvidencia');
+      modalInstance = M.Modal.init(modalElem);
+    });
+
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        if (menuDocenteEmailEl) menuDocenteEmailEl.textContent = user.email || "";
-
-        try {
-          const docRef = doc(db, "Docentes", user.uid);
-          const docSnap = await getDoc(docRef);
-          if (docSnap.exists() && docSnap.data().nombre) {
-            const nombre = docSnap.data().nombre;
-            docenteNombreEl.textContent = nombre;
-            if (menuDocenteNombreEl) menuDocenteNombreEl.textContent = nombre;
-          } else {
-            const fallback = user.displayName || user.email.split('@')[0];
-            docenteNombreEl.textContent = fallback;
-            if (menuDocenteNombreEl) menuDocenteNombreEl.textContent = fallback;
-          }
-        } catch (e) {
-          const fallback = user.email ? user.email.split('@')[0] : "Docente";
-          docenteNombreEl.textContent = fallback;
-          if (menuDocenteNombreEl) menuDocenteNombreEl.textContent = fallback;
-        }
-
         await cargarMetricasJornadasLimpieza();
       } else {
-        // Redirigir a login si no está autenticado
         window.location.href = "loginU.html";
       }
     });
@@ -556,22 +528,12 @@
           registrosCache.push({ id: docSnap.id, ...data });
         });
 
-        const totalEstudiantesCategoria = estudiantesUnicos.size;
+        totalEstudiantesTextoEl.textContent = `${estudiantesUnicos.size} estudiante${estudiantesUnicos.size === 1 ? '' : 's'}`;
+        totalRegistrosTextoEl.textContent = `${totalRegistros} registro${totalRegistros === 1 ? '' : 's'}`;
 
-        // Actualización de métricas
-        totalEstudiantesTextoEl.textContent = `${totalEstudiantesCategoria} estudiante${totalEstudiantesCategoria === 1 ? '' : 's'}`;
-
-        if (totalRegistros === 1) {
-          totalRegistrosTextoEl.textContent = "1 registro";
-        } else {
-          totalRegistrosTextoEl.textContent = `${totalRegistros} registros`;
-        }
-
-        // Indicador gráfico
         const porcentajeVisual = totalRegistros > 0 ? Math.min(totalRegistros * 10, 100) : 0;
         gaugeChartEl.style.background = `conic-gradient(#ff5722 0% ${porcentajeVisual}%, #e2e8f0 ${porcentajeVisual}% 100%)`;
 
-        // Renderizado de tabla
         renderizarTablaRegistros(registrosCache);
 
       } catch (error) {
@@ -597,22 +559,93 @@
         const usuarioNombre = item.email || item.userId || "Estudiante";
         const horasRealizadas = item.Horas || 0;
 
+        // Evaluación de estado en Firestore (true, false o undefined)
+        let statusBadge = `<span class="status-badge status-pending">Pendiente</span>`;
+        if (item.estado === true) {
+          statusBadge = `<span class="status-badge status-approved">Aprobado</span>`;
+        } else if (item.estado === false) {
+          statusBadge = `<span class="status-badge status-rejected">Denegado</span>`;
+        }
+
         const row = document.createElement("div");
         row.className = "student-row";
         row.innerHTML = `
           <div>
             <span class="student-name">${usuarioNombre}</span>
-            <span style="display: block; font-size: 0.85rem; color: #666;">
-              Horas reportadas: <strong>${horasRealizadas} hrs</strong>
+            ${statusBadge}
+            <span style="display: block; font-size: 0.85rem; color: #666; margin-top: 4px;">
+              Horas reportadas: <strong>${horasRealizadas} hrs</strong> | Docente: ${item['Docente encargado'] || 'N/A'}
             </span>
           </div>
-          <a class="action-link" onclick="verEvidencia('${item.id}')">Ver actividad</a>
+          <div class="action-group">
+            <button class="btn-action-icon btn-accept" onclick="cambiarEstadoHora('${item.id}', true)">
+              <i class="material-icons tiny">check</i> Aceptar
+            </button>
+            <button class="btn-action-icon btn-reject" onclick="cambiarEstadoHora('${item.id}', false)">
+              <i class="material-icons tiny">close</i> Denegar
+            </button>
+            <a class="action-link" onclick="abrirModalEvidencia('${item.id}')">Ver más</a>
+          </div>
         `;
         studentsContainer.appendChild(row);
       });
     }
 
-    // Generar Reporte CSV/Excel
+    // Actualiza Firestore asignando estado = true / false
+    window.cambiarEstadoHora = async function(docId, nuevoEstado) {
+      try {
+        const docRef = doc(db, "HorasSociales", docId);
+        await updateDoc(docRef, {
+          estado: nuevoEstado
+        });
+
+        const msj = nuevoEstado ? 'Horas Aprobadas (true)' : 'Horas Denegadas (false)';
+        const color = nuevoEstado ? 'green' : 'red';
+        M.toast({ html: msj, classes: `${color} rounded` });
+
+        if (modalInstance && modalInstance.isOpen) {
+          modalInstance.close();
+        }
+
+        await cargarMetricasJornadasLimpieza();
+      } catch (error) {
+        console.error("Error actualizando estado:", error);
+        M.toast({ html: 'Error al actualizar Firestore', classes: 'red rounded' });
+      }
+    };
+
+    // Abre el modal con la vista previa y opción de aceptar/rechazar
+    window.abrirModalEvidencia = function(registroId) {
+      const item = registrosCache.find(r => r.id === registroId);
+      if (!item) return;
+
+      registroSeleccionadoId = registroId;
+
+      document.getElementById("modalEstudiante").textContent = item.email || item.userId || "Estudiante";
+      document.getElementById("modalInfoMeta").textContent = `Categoría: ${item.Categoria || CATEGORIA_ACTIVA}`;
+      document.getElementById("modalLugar").textContent = item.Lugar || "No especificado";
+      document.getElementById("modalHoras").textContent = item.Horas || 0;
+      document.getElementById("modalDescripcion").textContent = item.Descripcion || "Sin descripción proporcionada.";
+
+      const imgEl = document.getElementById("modalImgEvidencia");
+      const noImgEl = document.getElementById("noEvidenciaText");
+
+      if (item.Evidencia && item.Evidencia.trim() !== "") {
+        imgEl.src = item.Evidencia;
+        imgEl.style.display = "block";
+        noImgEl.style.display = "none";
+      } else {
+        imgEl.style.display = "none";
+        noImgEl.style.display = "block";
+      }
+
+      document.getElementById("btnModalAccept").onclick = () => cambiarEstadoHora(registroSeleccionadoId, true);
+      document.getElementById("btnModalReject").onclick = () => cambiarEstadoHora(registroSeleccionadoId, false);
+
+      modalInstance.open();
+    };
+
+    // Exportar CSV/Excel incluyendo el estado
     btnGenerarReporte.addEventListener("click", () => {
       if (registrosCache.length === 0) {
         M.toast({html: 'No hay datos disponibles para generar el reporte.', classes: 'orange rounded'});
@@ -620,7 +653,7 @@
       }
 
       let csvContent = "\uFEFF";
-      csvContent += "Estudiante / Email,Categoría,Lugar,Docente Encargado,Horas Reportadas,Descripción\n";
+      csvContent += "Estudiante / Email,Categoría,Lugar,Docente Encargado,Horas Reportadas,Estado,Descripción\n";
 
       registrosCache.forEach((item) => {
         const estudiante = `"${item.email || item.userId || 'N/A'}"`;
@@ -628,9 +661,13 @@
         const lugar = `"${item.Lugar || 'N/A'}"`;
         const docente = `"${item['Docente encargado'] || 'N/A'}"`;
         const horas = item.Horas || 0;
+        let estadoTxt = "Pendiente";
+        if (item.estado === true) estadoTxt = "Aprobado";
+        if (item.estado === false) estadoTxt = "Denegado";
+        
         const descripcion = `"${(item.Descripcion || '').replace(/"/g, '""')}"`;
 
-        csvContent += `${estudiante},${categoria},${lugar},${docente},${horas},${descripcion}\n`;
+        csvContent += `${estudiante},${categoria},${lugar},${docente},${horas},${estadoTxt},${descripcion}\n`;
       });
 
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -645,20 +682,6 @@
 
       M.toast({html: 'Reporte descargado exitosamente.', classes: 'green rounded'});
     });
-
-    // Cerrar Sesión
-    if (btnCerrarSesion) {
-      btnCerrarSesion.addEventListener("click", (e) => {
-        e.preventDefault();
-        signOut(auth).then(() => {
-          window.location.href = "loginU.html";
-        });
-      });
-    }
-
-    window.verEvidencia = function(registroId) {
-      M.toast({html: `Abriendo registro de evidencia...`, classes: 'rounded blue'});
-    };
   </script>
 </body>
 </html>
