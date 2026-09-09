@@ -714,7 +714,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getFirestore, collection, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, collection, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     document.addEventListener('DOMContentLoaded', function() {
       // Inicialización del Sidenav
@@ -749,9 +749,31 @@
     const btnCerrarSesion = document.getElementById("btnCerrarSesion");
     const btnLogoutDropdown = document.getElementById("btn-logout");
 
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, async (user) => {
       if (user) {
-        const nombreUsuario = user.displayName || user.email.split('@')[0];
+        let nombreUsuario = user.displayName;
+
+        // Si Firebase Auth no tiene el displayName, consultamos el documento en la colección Estudiantes
+        if (!nombreUsuario) {
+          try {
+            const docRef = doc(db, "Estudiantes", user.uid);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+              const data = docSnap.data();
+              // Evalúa los posibles nombres de campo en tu Firestore (nombre, Nombre, NombreCompleto, etc.)
+              nombreUsuario = data.nombre || data.Nombre || data.nombreCompleto || data.NombreCompleto;
+            }
+          } catch (error) {
+            console.error("Error al obtener datos del estudiante:", error);
+          }
+        }
+
+        // Si no se encuentra un nombre en Firestore, se usa el correo como alternativa
+        if (!nombreUsuario) {
+          nombreUsuario = user.email ? user.email.split('@')[0] : "Estudiante";
+        }
+
         actualizarInterfaz(nombreUsuario, user.email);
         cargarHorasSociales(user.uid);
       } else {
