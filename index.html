@@ -6,18 +6,124 @@
   <title>HourCheck - Selecciona tu perfil</title>
   <link rel="icon" type="image/png" href="logo.png">
 
+  <!-- Materialize CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-
+  <!-- Material Icons -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
   <style>
-       /* Footer */
-   .custom-footer {
+    /* Reset & Base */
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      background-color: #ffffff;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .main-container {
+      flex: 1 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      position: relative;
+    }
+
+    /* Logo superior */
+    .brand-logo-container {
+      position: absolute;
+      top: 30px;
+      right: 40px;
+      text-align: center;
+    }
+
+    .brand-logo-container img {
+      width: 120px;
+      height: auto;
+      object-fit: contain;
+    }
+
+    /* Título principal */
+    .main-title {
+      font-weight: 700;
+      color: #000;
+      font-size: 2.5rem;
+      margin-top: 40px;
+      margin-bottom: 40px;
+    }
+
+    /* Tarjetas de Perfil */
+    .profile-card-col {
+      margin-bottom: 20px;
+    }
+
+    .profile-card {
+      background-color: #e0e0e0;
+      border-radius: 25px;
+      padding: 30px 20px;
+      text-align: center;
+      transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+      cursor: pointer;
+      min-height: 180px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+    }
+
+    .profile-card:hover {
+      transform: translateY(-5px);
+      background-color: #d5d5d5;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+
+    .profile-card i {
+      font-size: 60px;
+      color: #0052cc;
+      margin-bottom: 12px;
+    }
+
+    .profile-card span {
+      font-weight: bold;
+      color: #000;
+      font-size: 1.1rem;
+      display: block;
+    }
+
+    /* Texto de ayuda */
+    .help-text {
+      margin-top: 40px;
+      font-size: 1.25rem;
+      font-weight: bold;
+      color: #000;
+    }
+
+    .help-text a {
+      color: #448aff;
+      text-decoration: none;
+      margin-left: 5px;
+    }
+
+    .help-text a:hover {
+      text-decoration: underline;
+    }
+
+    /* Footer */
+    .custom-footer {
       background-color: #1557d0 !important;
       border-top-left-radius: 25px;
       border-top-right-radius: 25px;
-      margin-top: 50px;
+      margin-top: 40px;
       padding-top: 30px !important;
+      flex-shrink: 0;
     }
 
     .footer-container {
@@ -35,7 +141,7 @@
     .footer-logo {
       height: 35px;
       width: auto;
-      filter: brightness(0) invert(1); /* Convierte el logo a blanco si es oscuro */
+      filter: brightness(0) invert(1);
     }
 
     .footer-brand h5 {
@@ -61,7 +167,7 @@
       border-radius: 12px;
       text-transform: none;
       font-weight: 600;
-      margin-top: 5px;
+      margin-top: 10px;
     }
 
     .footer-btn:hover {
@@ -77,175 +183,105 @@
     .font-weight-bold {
       font-weight: 700;
     }
-    body, html {
-      height: 100%;
-      margin: 0;
-      font-family: 'Roboto', sans-serif;
-      background-color: #ffffff;
-    }
 
-    .main-container {
-      display: flex;
-      min-height: 100vh;
-    }
-
-   
-   
-    .content-area {
-      flex-grow: 1;
-      padding: 40px 60px;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-
-   
-    .brand-logo-container {
-      position: absolute;
-      top: 40px;
-      right: 60px;
-      text-align: center;
-    }
-
-    .brand-logo-container img {
-      width: 120px;
-      height: auto;
-      object-fit: contain;
-    }
-
-    /* Título principal */
-    .main-title {
-      font-weight: 700;
-      color: #000;
-      font-size: 2.8rem;
-      margin-bottom: 50px;
-    }
-
-  
-    .profile-card {
-      background-color: #e0e0e0;
-      border-radius: 25px;
-      padding: 30px 20px 20px 20px;
-      text-align: center;
-      transition: transform 0.2s, box-shadow 0.2s;
-      cursor: pointer;
-      min-height: 180px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-decoration: none;
-    }
-
-    .profile-card:hover {
-      transform: translateY(-5px);
-      background-color: #d5d5d5;
-      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-    }
-
-    .profile-card i {
-      font-size: 70px;
-      color: #0052cc;
-      margin-bottom: 15px;
-    }
-
-    .profile-card span {
-      font-weight: bold;
-      color: #000;
-      font-size: 1.1rem;
-      display: block;
-    }
-
-    
-    .help-text {
-      margin-top: 60px;
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: #000;
-    }
-
-    .help-text a {
-      color: #448aff;
-      text-decoration: none;
-      margin-left: 8px;
-    }
-
-    .help-text a:hover {
-      text-decoration: underline;
-    }
-
-    @media (max-width: 600px) {
+    /* Media Queries para Responsive en Moviles y Tablets */
+    @media (max-width: 992px) {
       .brand-logo-container {
         position: relative;
         top: 0;
         right: 0;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
       }
-      .content-area {
-        padding: 20px;
+
+      .main-container {
+        padding: 20px 15px;
       }
+
       .main-title {
         font-size: 2rem;
+        margin-top: 10px;
+        margin-bottom: 30px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .main-title {
+        font-size: 1.75rem;
+      }
+
+      .help-text {
+        font-size: 1rem;
+        margin-top: 25px;
+      }
+
+      .custom-footer {
+        text-align: center;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+      }
+
+      .footer-brand {
+        justify-content: center;
+      }
+
+      .footer-link {
+        justify-content: center;
       }
     }
   </style>
 </head>
 <body>
 
-  <div class="main-container">
+  <!-- Contenedor Principal -->
+  <main class="main-container">
 
-    <div class="content-area">
-      
-    
-      <div class="brand-logo-container">
-        <img src="logo1.png" alt="HourCheck Logo">
-      </div>
-
-      
-      <h1 class="main-title center-align">Selecciona tu perfil</h1>
-
-     
-      <div class="container">
-        <div class="row">
-          
-        
-          <div class="col s12 m4">
-            <a href="loginU.html?perfil=institucion" class="profile-card waves-effect waves-light width-100">
-              <i class="material-icons">account_balance</i>
-              <span>Instituciones</span>
-            </a>
-          </div>
-
-        
-          <div class="col s12 m4">
-            <a href="loginU.html?perfil=maestro" class="profile-card waves-effect waves-light width-100">
-              <i class="material-icons">collections_bookmark</i>
-              <span>Maestros</span>
-            </a>
-          </div>
-
-       
-          <div class="col s12 m4">
-            <a href="loginU.html?perfil=estudiante" class="profile-card waves-effect waves-light width-100">
-              <i class="material-icons">school</i>
-              <span>Estudiantes</span>
-            </a>
-          </div>
-        </div>
-      </div>
-        
-      <div class="help-text center-align">
-        ¿No sabes cual es tu perfil? <a href="saberCualP.html">Has click aquí</a>
-      </div>
-
+    <!-- Logo superior -->
+    <div class="brand-logo-container">
+      <img src="logo1.png" alt="HourCheck Logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x40?text=HourCheck';">
     </div>
-  </div>
 
- <footer class="page-footer custom-footer">
+    <!-- Título principal -->
+    <h1 class="main-title center-align">Selecciona tu perfil</h1>
+
+    <!-- Opciones de Perfiles -->
+    <div class="container">
+      <div class="row">
+        
+        <div class="col s12 m4 profile-card-col">
+          <a href="loginU.html?perfil=institucion" class="profile-card waves-effect waves-light">
+            <i class="material-icons">account_balance</i>
+            <span>Instituciones</span>
+          </a>
+        </div>
+
+        <div class="col s12 m4 profile-card-col">
+          <a href="loginU.html?perfil=maestro" class="profile-card waves-effect waves-light">
+            <i class="material-icons">collections_bookmark</i>
+            <span>Maestros</span>
+          </a>
+        </div>
+
+        <div class="col s12 m4 profile-card-col">
+          <a href="loginU.html?perfil=estudiante" class="profile-card waves-effect waves-light">
+            <i class="material-icons">school</i>
+            <span>Estudiantes</span>
+          </a>
+        </div>
+
+      </div>
+    </div>
+      
+    <!-- Texto de Ayuda -->
+    <div class="help-text center-align">
+      ¿No sabes cuál es tu perfil? <a href="saberCualP.html">Haz clic aquí</a>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="page-footer custom-footer">
     <div class="container footer-container">
-      <div class="row style-row">
+      <div class="row">
         
         <!-- Columna 1: Información de la Plataforma -->
         <div class="col s12 m4">
@@ -259,7 +295,7 @@
         </div>
 
         <!-- Columna 2: Enlaces Rápidos -->
-        <div class="col s12 m4 center-on-small">
+        <div class="col s12 m4">
           <h5 class="white-text font-weight-bold">Enlaces Rápidos</h5>
           <ul>
             <li><a class="grey-text text-lighten-3 footer-link" href="index.html"><i class="material-icons tiny">chevron_right</i> Inicio</a></li>
@@ -288,6 +324,8 @@
       </div>
     </div>
   </footer>
+
+  <!-- Firebase Scripts -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-analytics.js";
@@ -306,7 +344,7 @@
     const analytics = getAnalytics(app);
   </script>
 
- 
+  <!-- Materialize JavaScript -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
 </html>
