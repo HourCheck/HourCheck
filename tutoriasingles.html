@@ -410,7 +410,11 @@
         <p style="color: #888;">Cargando imagen...</p>
       </div>
     </div>
-    <div class="modal-footer">
+    <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center; padding: 0 24px 16px 24px;">
+      <div>
+        <button id="btnModalAceptar" class="btn green waves-effect waves-light" style="margin-right: 8px;">Aceptar Horas</button>
+        <button id="btnModalDenegar" class="btn red waves-effect waves-light">Denegar Horas</button>
+      </div>
       <a href="#!" class="modal-close waves-effect waves-blue btn-flat" style="font-weight: 700; color: #1557d0;">Cerrar</a>
     </div>
   </div>
@@ -419,7 +423,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, getDocs, doc, getDoc, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, doc, getDoc, query, where, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     import { getAuth, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -545,24 +549,65 @@
       }
 
       lista.forEach((item) => {
-        // CAMBIO CLAVE: Prioriza el campo 'nombre' que proviene de Firestore
         const usuarioNombre = item.nombre || item.email || item.userId || "Estudiante";
         const horasRealizadas = item.Horas || 0;
+
+        let estadoHTML = `<span class="orange-text" style="font-weight: bold; margin-left: 6px;">[Pendiente]</span>`;
+        if (item.Aprobado === true) estadoHTML = `<span class="green-text" style="font-weight: bold; margin-left: 6px;">[Aprobado]</span>`;
+        if (item.Aprobado === false) estadoHTML = `<span class="red-text" style="font-weight: bold; margin-left: 6px;">[Denegado]</span>`;
 
         const row = document.createElement("div");
         row.className = "student-row";
         row.innerHTML = `
           <div>
-            <span class="student-name">${usuarioNombre}</span>
+            <span class="student-name">${usuarioNombre}</span> ${estadoHTML}
             <span style="display: block; font-size: 0.85rem; color: #666;">
               Horas reportadas: <strong>${horasRealizadas} hrs</strong>
             </span>
           </div>
-          <a class="action-link" onclick="verEvidencia('${item.id}')">Ver actividad</a>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <button class="btn-small green waves-effect waves-light" title="Aceptar Horas" onclick="cambiarEstadoHoras('${item.id}', true)">
+              <i class="material-icons">check</i>
+            </button>
+            <button class="btn-small red waves-effect waves-light" title="Denegar Horas" onclick="cambiarEstadoHoras('${item.id}', false)">
+              <i class="material-icons">close</i>
+            </button>
+            <a class="action-link" style="margin-left: 8px;" onclick="verEvidencia('${item.id}')">Ver actividad</a>
+          </div>
         `;
         studentsContainer.appendChild(row);
       });
     }
+
+    // Cambiar estado booleano "Aprobado" en Firestore
+    window.cambiarEstadoHoras = async function(docId, nuevoEstado) {
+      try {
+        const docRef = doc(db, "HorasSociales", docId);
+        await updateDoc(docRef, {
+          Aprobado: nuevoEstado
+        });
+
+        const registroIndex = registrosCache.findIndex(r => r.id === docId);
+        if (registroIndex !== -1) {
+          registrosCache[registroIndex].Aprobado = nuevoEstado;
+        }
+
+        const estadoTexto = nuevoEstado ? "aceptadas" : "denegadas";
+        const colorToast = nuevoEstado ? "green rounded" : "red rounded";
+        M.toast({ html: `Horas ${estadoTexto} correctamente.`, classes: colorToast });
+
+        renderizarTablaRegistros(registrosCache);
+
+        const modalElem = document.getElementById("modalEvidencia");
+        const instance = M.Modal.getInstance(modalElem);
+        if (instance && instance.isOpen) {
+          instance.close();
+        }
+      } catch (error) {
+        console.error("Error al actualizar estado:", error);
+        M.toast({ html: 'Error al actualizar el registro en Firebase.', classes: 'red rounded' });
+      }
+    };
 
     // Evento de búsqueda por nombre o correo
     if (inputBuscadorEstudiante) {
@@ -586,7 +631,7 @@
       }
 
       let csvContent = "\uFEFF";
-      csvContent += "Estudiante / Nombre,Email,Categoría,Lugar,Docente Encargado,Horas Reportadas,Descripción\n";
+      csvContent += "Estudiante / Nombre,Email,Categoría,Lugar,Docente Encargado,Horas Reportadas,Estado,Descripción\n";
 
       registrosCache.forEach((item) => {
         const nombreEstudiante = `"${item.nombre || 'N/A'}"`;
@@ -595,9 +640,12 @@
         const lugar = `"${item.Lugar || 'N/A'}"`;
         const docente = `"${item['Docente encargado'] || 'N/A'}"`;
         const horas = item.Horas || 0;
+        let estado = "Pendiente";
+        if (item.Aprobado === true) estado = "Aprobado";
+        if (item.Aprobado === false) estado = "Denegado";
         const descripcion = `"${(item.Descripcion || '').replace(/"/g, '""')}"`;
 
-        csvContent += `${nombreEstudiante},${estudianteEmail},${categoria},${lugar},${docente},${horas},${descripcion}\n`;
+        csvContent += `${nombreEstudiante},${estudianteEmail},${categoria},${lugar},${docente},${horas},${estado},${descripcion}\n`;
       });
 
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -643,6 +691,12 @@
       } else {
         imgContainer.innerHTML = `<p style="color: #666; padding: 20px;">Este registro no contiene imagen de evidencia adjunta.</p>`;
       }
+
+      const btnAceptar = document.getElementById("btnModalAceptar");
+      const btnDenegar = document.getElementById("btnModalDenegar");
+
+      btnAceptar.onclick = () => cambiarEstadoHoras(registroId, true);
+      btnDenegar.onclick = () => cambiarEstadoHoras(registroId, false);
 
       const modalElem = document.getElementById("modalEvidencia");
       const instance = M.Modal.getInstance(modalElem);

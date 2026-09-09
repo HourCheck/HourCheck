@@ -690,171 +690,171 @@
   <!-- Materialize JS CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
-  <!-- Script Firebase -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getFirestore, collection, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+  <!-- Script Lógica Firebase Optimizado -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { 
+    getAuth, 
+    onAuthStateChanged, 
+    signOut,
+    setPersistence, 
+    browserLocalPersistence 
+  } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+  import { 
+    getFirestore, 
+    doc, 
+    getDoc, 
+    collection, 
+    query, 
+    where, 
+    getDocs 
+  } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // Inicialización de componentes Materialize CSS
-    document.addEventListener('DOMContentLoaded', function() {
-      var elemsSidenav = document.querySelectorAll('.sidenav');
-      M.Sidenav.init(elemsSidenav);
+  const firebaseConfig = {
+    apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
+    authDomain: "hourcheckt.firebaseapp.com",
+    projectId: "hourcheckt",
+    storageBucket: "hourcheckt.firebasestorage.app",
+    messagingSenderId: "83459752453",
+    appId: "1:83459752453:web:1b81724c28973bf567126c"
+  };
 
-      var elemsModal = document.querySelectorAll('.modal');
-      M.Modal.init(elemsModal);
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  setPersistence(auth, browserLocalPersistence).catch((error) => {
+    console.error("Error ajustando persistencia:", error);
+  });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    // Inicialización del Sidenav
+    var elemsSidenav = document.querySelectorAll('.sidenav');
+    M.Sidenav.init(elemsSidenav, { edge: 'left', draggable: true });
+
+    // Inicialización del Dropdown del usuario
+    var elemsDropdown = document.querySelectorAll('.dropdown-trigger');
+    M.Dropdown.init(elemsDropdown, {
+      alignment: 'right',
+      constrainWidth: false,
+      coverTrigger: false
     });
+  });
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
-      authDomain: "hourcheckt.firebaseapp.com",
-      projectId: "hourcheckt",
-      storageBucket: "hourcheckt.firebasestorage.app",
-      messagingSenderId: "83459752453",
-      appId: "1:83459752453:web:1b81724c28973bf567126c"
-    };
+  async function verificarUsuarioYActualizar(user) {
+    if (!user) {
+      window.location.href = "loginU.html";
+      return;
+    }
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+    let nombreEncontrado = user.displayName || null;
 
-    const contenedorHoras = document.getElementById("tablaHistorial");
-    const btnCerrarSesion = document.getElementById("btnCerrarSesion");
+    try {
+      // 1. Búsqueda directa por ID de documento (Más eficiente)
+      const docRef = doc(db, "Docentes", user.uid);
+      const docSnap = await getDoc(docRef);
 
-    // Función global para mostrar modal de evidencia
-    window.verEvidenciaModal = function(url) {
-      const imgModal = document.getElementById("imgModalEvidencia");
-      if (imgModal) {
-        imgModal.src = url;
-        const modalElem = document.getElementById('modalEvidencia');
-        const instance = M.Modal.getInstance(modalElem);
-        if (instance) instance.open();
-      }
-    };
-
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        // 1. Actualizar el perfil del usuario en la interfaz
-        const nombreUsuario = user.displayName || user.email.split('@')[0];
-        actualizarInterfaz(nombreUsuario, user.email);
+      if (docSnap.exists()) {
+        nombreEncontrado = obtenerNombreDeObjeto(docSnap.data());
+      } else if (user.email) {
+        // 2. Si no coincide el ID, busca por correo
+        const q = query(collection(db, "Docentes"), where("Correo", "==", user.email.toLowerCase().trim()));
+        const querySnapshot = await getDocs(q);
         
-        // 2. Cargar horas
-        cargarHorasSociales(user.uid);
-      } else {
-        window.location.href = "loginU.html"; // Redirección estandarizada
+        querySnapshot.forEach((doc) => {
+          nombreEncontrado = obtenerNombreDeObjeto(doc.data());
+        });
       }
-    });
+    } catch (error) {
+      console.error("Error al obtener datos del docente:", error);
+    }
 
-    function cargarHorasSociales(userId) {
-      const q = query(
-        collection(db, "HorasSociales"),
-        where("userId", "==", userId)
-      );
+    actualizarInterfaz(nombreEncontrado || "Docente", user.email);
+    cargarEstadisticas();
+  }
 
-      onSnapshot(q, (snapshot) => {
-        contenedorHoras.innerHTML = "";
+  async function cargarEstadisticas() {
+    try {
+      const snap = await getDocs(collection(db, "HorasSociales"));
+      let countLimpieza = 0;
+      let countIngles = 0;
+      let countInfancia = 0;
 
-        if (snapshot.empty) {
-          contenedorHoras.innerHTML = `
-            <tr>
-              <td colspan="5" class="center-align" style="color: var(--text-muted); padding: 30px;">
-                No tienes registros de horas sociales aún.
-              </td>
-            </tr>`;
-          
-          actualizarMetricas(0, 0);
-          return;
+      snap.forEach((doc) => {
+        const data = doc.data();
+        const cat = String(data.Categoria || data.categoria || "").toLowerCase();
+
+        if (cat.includes("limpieza")) {
+          countLimpieza++;
+        } else if (cat.includes("ingl") || cat.includes("ingles")) {
+          countIngles++;
+        } else if (cat.includes("infancia") || cat.includes("primera")) {
+          countInfancia++;
         }
-
-        let totalHoras = 0;
-        let totalEvidencias = 0;
-
-        snapshot.forEach((doc) => {
-          const data = doc.data();
-          
-          // Compatibilidad flexible de claves en Firestore (mayúsculas/minúsculas)
-          const horasNum = parseFloat(data.Horas || data.horas || 0);
-          const lugar = data.Lugar || data.lugar || 'N/A';
-          const categoria = data.Categoria || data.categoria || 'Sin Categoría';
-          const docente = data["Docente encargado"] || data.docenteEncargado || data.docente || 'N/A';
-          const evidencia = data.Evidencia || data.evidencia || null;
-          const estado = data.Estado || data.estado || 'Registrado';
-
-          totalHoras += horasNum;
-          totalEvidencias++;
-          
-          const fila = document.createElement("tr");
-          
-          const evidenciaHTML = evidencia 
-            ? `<img src="${evidencia}" alt="Evidencia" class="img-evidencia" onclick="verEvidenciaModal('${evidencia}')"/>` 
-            : '<span style="color: var(--text-muted);">Sin imagen</span>';
-
-          fila.innerHTML = `
-            <td><strong>${lugar}</strong><br><small style="color: var(--text-muted);">${categoria}</small></td>
-            <td>${docente}</td>
-            <td><strong>${horasNum} h</strong></td>
-            <td>${evidenciaHTML}</td>
-            <td>
-              <span class="status-badge status-comprobado">
-                <span class="dot"></span> ${estado}
-              </span>
-            </td>
-          `;
-          contenedorHoras.appendChild(fila);
-        });
-
-        actualizarMetricas(totalHoras, totalEvidencias);
-
-      }, (error) => {
-        console.error("Error al obtener los registros: ", error);
-        contenedorHoras.innerHTML = `
-          <tr>
-            <td colspan="5" class="center-align red-text" style="padding: 20px;">
-              Error al cargar los registros.
-            </td>
-          </tr>`;
       });
+
+      document.getElementById("statusLimpieza").textContent = `${countLimpieza} registro${countLimpieza === 1 ? '' : 's'}`;
+      document.getElementById("statusIngles").textContent = `${countIngles} registro${countIngles === 1 ? '' : 's'}`;
+      document.getElementById("statusInfancia").textContent = `${countInfancia} registro${countInfancia === 1 ? '' : 's'}`;
+    } catch (e) {
+      console.error("Error al cargar contadores:", e);
+      document.getElementById("statusLimpieza").textContent = "Error al cargar";
+      document.getElementById("statusIngles").textContent = "Error al cargar";
+      document.getElementById("statusInfancia").textContent = "Error al cargar";
     }
+  }
 
-    function actualizarMetricas(totalHoras, totalEvidencias) {
-      const kpiHoras = document.getElementById("kpiTotalHoras");
-      const kpiEvidencias = document.getElementById("kpiTotalEvidencias");
-      const donutHoras = document.getElementById("donutHoras");
+  onAuthStateChanged(auth, (user) => {
+    verificarUsuarioYActualizar(user);
+  });
 
-      if (kpiHoras) kpiHoras.innerText = `${totalHoras} / 150 h`;
-      if (kpiEvidencias) kpiEvidencias.innerText = `${totalEvidencias} enviadas`;
-      
-      // Actualización dinámica del porcentaje visual de la dona (Base 150h)
-      if (donutHoras) {
-        const porcentaje = Math.min((totalHoras / 150) * 100, 100);
-        donutHoras.style.background = `conic-gradient(#2563eb ${porcentaje}%, #e2e8f0 ${porcentaje}%)`;
+  window.addEventListener('pageshow', function(event) {
+    if (event.persisted || (performance && performance.getEntriesByType("navigation")[0]?.type === "back_forward")) {
+      if (auth.currentUser) {
+        verificarUsuarioYActualizar(auth.currentUser);
       }
     }
+  });
 
-    function actualizarInterfaz(nombre, correo) {
-      const bannerTitle = document.querySelector(".banner-title");
-      if (bannerTitle) bannerTitle.textContent = `¡Bienvenido/a, ${nombre}!`;
-
-      const userNameHeader = document.querySelector(".top-header .user-name");
-      if (userNameHeader) userNameHeader.textContent = nombre;
-
-      const sidenavName = document.querySelector(".sidenav .name");
-      const sidenavEmail = document.querySelector(".sidenav .email");
-
-      if (sidenavName) sidenavName.textContent = nombre;
-      if (sidenavEmail) sidenavEmail.textContent = correo;
+  function obtenerNombreDeObjeto(obj) {
+    for (let clave in obj) {
+      const claveLower = clave.toLowerCase();
+      if (claveLower.includes("nombre") || claveLower.includes("name")) {
+        return obj[clave];
+      }
     }
+    return null;
+  }
 
-    if (btnCerrarSesion) {
-      btnCerrarSesion.addEventListener("click", (e) => {
-        e.preventDefault();
-        signOut(auth).then(() => {
-          window.location.href = "loginU.html";
-        }).catch((error) => {
-          console.error("Error al cerrar sesión:", error);
-        });
-      });
-    }
-  </script>
-</body>
+  function actualizarInterfaz(nombre, correo) {
+    const bannerTitle = document.querySelector(".banner-title");
+    if (bannerTitle) bannerTitle.textContent = `¡Bienvenido/a, ${nombre}!`;
+
+    const userNameHeader = document.querySelector(".top-header .user-name");
+    if (userNameHeader) userNameHeader.textContent = nombre;
+
+    const sidenavName = document.querySelector(".sidenav .name");
+    const sidenavEmail = document.querySelector(".sidenav .email");
+
+    if (sidenavName) sidenavName.textContent = nombre;
+    if (sidenavEmail) sidenavEmail.textContent = correo;
+  }
+
+  // Cierre de sesión centralizado
+  function cerrarSesion(e) {
+    e.preventDefault();
+    signOut(auth).then(() => {
+      window.location.href = "loginU.html";
+    }).catch((error) => {
+      console.error("Error al cerrar sesión:", error);
+    });
+  }
+
+  const btnCerrarSesion = document.getElementById("btnCerrarSesion");
+  const btnLogoutDropdown = document.getElementById("btn-logout");
+
+  if (btnCerrarSesion) btnCerrarSesion.addEventListener("click", cerrarSesion);
+  if (btnLogoutDropdown) btnLogoutDropdown.addEventListener("click", cerrarSesion);
+</script>
+
 </html>

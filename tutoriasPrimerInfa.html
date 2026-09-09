@@ -8,7 +8,7 @@
   <!-- Materialize CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   <!-- Material Icons -->
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material-Icons" rel="stylesheet">
 
   <style>
     body {
@@ -19,7 +19,6 @@
       padding: 0;
     }
 
- /* Header Superior */
     .top-header {
       background-color: #ffffff;
       padding: 15px 40px;
@@ -53,13 +52,6 @@
       font-size: 30px;
     }
 
-    .header-title {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: #000;
-      margin: 0;
-    }
-
     .header-right {
       display: flex;
       align-items: center;
@@ -75,67 +67,6 @@
       height: 38px;
       width: auto;
       object-fit: contain;
-    }
-
-    .menu-trigger {
-      color: #333;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-decoration: none;
-      cursor: pointer;
-    }
-
-    .menu-trigger i {
-      font-size: 1.8rem;
-    }
-
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .bell-icon {
-      color: #333;
-      font-size: 1.8rem;
-      cursor: pointer;
-    }
-
-    .user-profile {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-    }
-
-    .user-avatar {
-      width: 40px;
-      height: 40px;
-      background-color: #3b82f6;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-    }
-
-    .user-info {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      line-height: 1.2;
-    }
-
-    .user-name {
-      font-weight: 700;
-      font-size: 0.95rem;
-      color: #000;
-    }
-
-    .user-role {
-      font-size: 0.8rem;
-      color: #666;
     }
 
     .banner-card {
@@ -313,8 +244,10 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 16px 40px;
+      padding: 16px 25px;
       border-bottom: 1.5px solid #222;
+      gap: 15px;
+      flex-wrap: wrap;
     }
 
     .student-row:last-child {
@@ -329,29 +262,95 @@
 
     .action-link {
       font-weight: 700;
-      font-size: 1.05rem;
+      font-size: 0.95rem;
       color: #1557d0;
       text-decoration: none;
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
     }
 
     .action-link:hover {
       text-decoration: underline;
     }
+
+    /* Estilos para badges y acciones */
+    .actions-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .status-badge {
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .status-aprobado {
+      background-color: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    .status-rechazado {
+      background-color: #ffebee;
+      color: #c62828;
+    }
+
+    .status-pendiente {
+      background-color: #fff8e1;
+      color: #f57f17;
+    }
+
+    .btn-action-icon {
+      border: none;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .btn-action-icon:hover {
+      opacity: 0.8;
+    }
+
+    .btn-approve {
+      background-color: #2e7d32;
+      color: white;
+    }
+
+    .btn-deny {
+      background-color: #c62828;
+      color: white;
+    }
+
+    .modal-evidencia-img {
+      max-width: 100%;
+      max-height: 300px;
+      object-fit: contain;
+      border-radius: 8px;
+      margin-top: 10px;
+      border: 1px solid #ddd;
+    }
   </style>
 </head>
 <body>
 
- <header class="top-header">
+  <header class="top-header">
     <div class="header-left">
-      <!-- Flecha de regreso al index.html -->
       <a href="mainPD.html" class="back-btn" title="Volver al Inicio">
         <i class="material-icons">arrow_back</i>
       </a>
-      
+      <span id="docenteNombre" style="font-weight: bold;">Cargando...</span>
     </div>
 
-    <!-- Logo a la derecha -->
     <div class="header-right">
       <div class="logo-container">
         <img src="logo.png" alt="HourCheck Logo" class="logo-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x40?text=HourCheck';">
@@ -359,10 +358,8 @@
     </div>
   </header>
 
-  <!-- Contenedor Principal -->
   <div class="container" style="width: 90%; max-width: 1200px;">
 
-    <!-- Banner Principal -->
     <div class="banner-card">
       <div>
         <h1 class="banner-title">Tutorías en primera infancia</h1>
@@ -373,7 +370,6 @@
       </div>
     </div>
 
-    <!-- Cards de Estadísticas -->
     <div class="row">
       <div class="col s12 m4">
         <div class="info-card">
@@ -411,7 +407,6 @@
       </div>
     </div>
 
-    <!-- Tabla de Estudiantes -->
     <div class="students-table-container">
       <div class="table-header-box">
         <span class="table-header-title">Estudiantes en Tutorías en primera infancia</span>
@@ -430,16 +425,38 @@
 
   </div>
 
+  <!-- Modal Estructurado para Ver Más Detalle -->
+  <div id="modalEvidencia" class="modal">
+    <div class="modal-content">
+      <h4 id="modalUsuarioNombre" style="font-weight: 700;">Detalle de Registro</h4>
+      <p><strong>Lugar:</strong> <span id="modalLugar"></span></p>
+      <p><strong>Horas Reportadas:</strong> <span id="modalHoras"></span> hrs</p>
+      <p><strong>Descripción:</strong> <span id="modalDescripcion"></span></p>
+      <p><strong>Estado Actual:</strong> <span id="modalEstadoBadge"></span></p>
+      <div>
+        <strong>Evidencia Adjunta:</strong><br>
+        <div id="modalEvidenciaContainer"></div>
+      </div>
+    </div>
+    <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 10px; padding: 15px;">
+      <button class="btn green" id="modalBtnAprobar"><i class="material-icons left">check</i>Aceptar</button>
+      <button class="btn red" id="modalBtnRechazar"><i class="material-icons left">close</i>Denegar</button>
+      <a href="#!" class="modal-close btn-flat grey lighten-2">Cerrar</a>
+    </div>
+  </div>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, getDocs, doc, getDoc, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, doc, getDoc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     import { getAuth, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
+    let modalInstance = null;
+
     document.addEventListener('DOMContentLoaded', function() {
-      const elems = document.querySelectorAll('.sidenav');
-      M.Sidenav.init(elems);
+      const modalElem = document.getElementById('modalEvidencia');
+      modalInstance = M.Modal.init(modalElem);
     });
 
     const firebaseConfig = {
@@ -458,41 +475,29 @@
       console.error("Error al configurar persistencia:", error);
     });
 
-    // 🔑 Nombre exacto de la categoría en Firestore
     const CATEGORIA_ACTIVA = "Tutorías en primera infancia";
 
     const docenteNombreEl = document.getElementById("docenteNombre");
-    const menuDocenteNombreEl = document.getElementById("menuDocenteNombre");
-    const menuDocenteEmailEl = document.getElementById("menuDocenteEmail");
     const totalEstudiantesTextoEl = document.getElementById("totalEstudiantesTexto");
     const totalRegistrosTextoEl = document.getElementById("totalRegistrosTexto");
     const gaugeChartEl = document.getElementById("gaugeChart");
     const studentsContainer = document.getElementById("studentsContainer");
     const btnGenerarReporte = document.getElementById("btnGenerarReporte");
-    const btnCerrarSesion = document.getElementById("btnCerrarSesion");
 
     let registrosCache = [];
 
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        if (menuDocenteEmailEl) menuDocenteEmailEl.textContent = user.email || "";
-
         try {
           const docRef = doc(db, "Docentes", user.uid);
           const docSnap = await getDoc(docRef);
           if (docSnap.exists() && docSnap.data().nombre) {
-            const nombre = docSnap.data().nombre;
-            docenteNombreEl.textContent = nombre;
-            if (menuDocenteNombreEl) menuDocenteNombreEl.textContent = nombre;
+            docenteNombreEl.textContent = docSnap.data().nombre;
           } else {
-            const fallback = user.displayName || user.email.split('@')[0];
-            docenteNombreEl.textContent = fallback;
-            if (menuDocenteNombreEl) menuDocenteNombreEl.textContent = fallback;
+            docenteNombreEl.textContent = user.displayName || user.email.split('@')[0];
           }
         } catch (e) {
-          const fallback = user.email ? user.email.split('@')[0] : "Docente";
-          docenteNombreEl.textContent = fallback;
-          if (menuDocenteNombreEl) menuDocenteNombreEl.textContent = fallback;
+          docenteNombreEl.textContent = user.email ? user.email.split('@')[0] : "Docente";
         }
 
         await cargarMetricas();
@@ -523,7 +528,6 @@
         });
 
         const totalEstudiantesCategoria = estudiantesUnicos.size;
-
         totalEstudiantesTextoEl.textContent = `${totalEstudiantesCategoria} estudiante${totalEstudiantesCategoria === 1 ? '' : 's'}`;
 
         if (totalRegistros === 1) {
@@ -560,6 +564,13 @@
         const usuarioNombre = item.email || item.userId || "Estudiante";
         const horasRealizadas = item.Horas || 0;
 
+        let badgeEstado = '<span class="status-badge status-pendiente">Pendiente</span>';
+        if (item.Aprobado === true) {
+          badgeEstado = '<span class="status-badge status-aprobado">Aprobado</span>';
+        } else if (item.Aprobado === false) {
+          badgeEstado = '<span class="status-badge status-rechazado">Denegado</span>';
+        }
+
         const row = document.createElement("div");
         row.className = "student-row";
         row.innerHTML = `
@@ -569,11 +580,86 @@
               Horas reportadas: <strong>${horasRealizadas} hrs</strong>
             </span>
           </div>
-          <a class="action-link" onclick="verEvidencia('${item.id}')">Ver actividad</a>
+
+          <div class="actions-container">
+            ${badgeEstado}
+            
+            <a class="action-link" onclick="verEvidencia('${item.id}')">
+              <i class="material-icons" style="font-size: 1.1rem;">visibility</i> Ver más
+            </a>
+
+            <button class="btn-action-icon btn-approve" title="Aceptar horas" onclick="actualizarEstadoHoras('${item.id}', true)">
+              <i class="material-icons">check</i>
+            </button>
+
+            <button class="btn-action-icon btn-deny" title="Denegar horas" onclick="actualizarEstadoHoras('${item.id}', false)">
+              <i class="material-icons">close</i>
+            </button>
+          </div>
         `;
         studentsContainer.appendChild(row);
       });
     }
+
+    // Actualiza Firestore agregando el campo boolean "Aprobado"
+    window.actualizarEstadoHoras = async function(registroId, nuevoEstado) {
+      try {
+        const registroRef = doc(db, "HorasSociales", registroId);
+        await updateDoc(registroRef, {
+          Aprobado: nuevoEstado
+        });
+
+        // Actualizar caché local
+        const index = registrosCache.findIndex(r => r.id === registroId);
+        if (index !== -1) {
+          registrosCache[index].Aprobado = nuevoEstado;
+        }
+
+        const mensaje = nuevoEstado ? 'Horas aprobadas exitosamente.' : 'Horas denegadas.';
+        const colorClass = nuevoEstado ? 'green' : 'red';
+        M.toast({html: mensaje, classes: `${colorClass} rounded`});
+
+        renderizarTablaRegistros(registrosCache);
+
+        if (modalInstance && modalInstance.isOpen) {
+          modalInstance.close();
+        }
+
+      } catch (error) {
+        console.error("Error al actualizar estado:", error);
+        M.toast({html: 'Ocurrió un error al actualizar el estado.', classes: 'red rounded'});
+      }
+    };
+
+    // Abre el modal para ver detalles completos y operar desde allí
+    window.verEvidencia = function(registroId) {
+      const item = registrosCache.find(r => r.id === registroId);
+      if (!item) return;
+
+      document.getElementById("modalUsuarioNombre").textContent = item.email || item.userId || "Estudiante";
+      document.getElementById("modalLugar").textContent = item.Lugar || "No especificado";
+      document.getElementById("modalHoras").textContent = item.Horas || 0;
+      document.getElementById("modalDescripcion").textContent = item.Descripcion || "Sin descripción";
+
+      let badge = '<span class="status-badge status-pendiente">Pendiente</span>';
+      if (item.Aprobado === true) badge = '<span class="status-badge status-aprobado">Aprobado</span>';
+      if (item.Aprobado === false) badge = '<span class="status-badge status-rechazado">Denegado</span>';
+      document.getElementById("modalEstadoBadge").innerHTML = badge;
+
+      const containerEvidencia = document.getElementById("modalEvidenciaContainer");
+      if (item.Evidencia && item.Evidencia.startsWith("data:image")) {
+        containerEvidencia.innerHTML = `<img src="${item.Evidencia}" class="modal-evidencia-img" alt="Evidencia">`;
+      } else if (item.Evidencia) {
+        containerEvidencia.innerHTML = `<a href="${item.Evidencia}" target="_blank" class="action-link">Abrir documento/imagen adjunta</a>`;
+      } else {
+        containerEvidencia.innerHTML = `<span style="color: #999;">No hay evidencia adjunta.</span>`;
+      }
+
+      document.getElementById("modalBtnAprobar").onclick = () => actualizarEstadoHoras(registroId, true);
+      document.getElementById("modalBtnRechazar").onclick = () => actualizarEstadoHoras(registroId, false);
+
+      modalInstance.open();
+    };
 
     btnGenerarReporte.addEventListener("click", () => {
       if (registrosCache.length === 0) {
@@ -582,7 +668,7 @@
       }
 
       let csvContent = "\uFEFF";
-      csvContent += "Estudiante / Email,Categoría,Lugar,Docente Encargado,Horas Reportadas,Descripción\n";
+      csvContent += "Estudiante / Email,Categoría,Lugar,Docente Encargado,Horas Reportadas,Estado,Descripción\n";
 
       registrosCache.forEach((item) => {
         const estudiante = `"${item.email || item.userId || 'N/A'}"`;
@@ -590,9 +676,14 @@
         const lugar = `"${item.Lugar || 'N/A'}"`;
         const docente = `"${item['Docente encargado'] || 'N/A'}"`;
         const horas = item.Horas || 0;
+        
+        let estadoStr = "Pendiente";
+        if (item.Aprobado === true) estadoStr = "Aprobado";
+        if (item.Aprobado === false) estadoStr = "Denegado";
+
         const descripcion = `"${(item.Descripcion || '').replace(/"/g, '""')}"`;
 
-        csvContent += `${estudiante},${categoria},${lugar},${docente},${horas},${descripcion}\n`;
+        csvContent += `${estudiante},${categoria},${lugar},${docente},${horas},${estadoStr},${descripcion}\n`;
       });
 
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -607,19 +698,6 @@
 
       M.toast({html: 'Reporte descargado exitosamente.', classes: 'green rounded'});
     });
-
-    if (btnCerrarSesion) {
-      btnCerrarSesion.addEventListener("click", (e) => {
-        e.preventDefault();
-        signOut(auth).then(() => {
-          window.location.href = "loginU.html";
-        });
-      });
-    }
-
-    window.verEvidencia = function(registroId) {
-      M.toast({html: `Abriendo registro de evidencia...`, classes: 'rounded blue'});
-    };
   </script>
 </body>
 </html>
