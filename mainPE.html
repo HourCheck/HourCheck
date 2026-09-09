@@ -263,7 +263,7 @@
       color: inherit;
     }
 
-  /* Estilos para el menú desplegable del usuario */
+    /* Estilos para el menú desplegable del usuario */
     #user-dropdown {
       border-radius: 12px;
       min-width: 180px;
@@ -555,7 +555,8 @@
         <i class="material-icons">notifications_none</i>
       </a>
       
-      <a href="#" class="user-profile">
+      <!-- Disparador del Dropdown -->
+      <a href="#" class="user-profile dropdown-trigger" data-target="user-dropdown">
         <div class="avatar">
           <i class="material-icons">person</i>
         </div>
@@ -582,6 +583,7 @@
       </a>
     </li>
   </ul>
+
   <!-- Contenido Principal -->
   <div class="dashboard-container">
     
@@ -617,7 +619,6 @@
       </div>
 
       <div class="kpi-card">
-        <!-- Corregido id y clase para que muestre la dona vacía correctamente -->
         <div class="donut-chart" id="donutEvidencias">
           <div class="donut-inner"></div>
         </div>
@@ -716,8 +717,19 @@
     import { getFirestore, collection, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     document.addEventListener('DOMContentLoaded', function() {
-      var elems = document.querySelectorAll('.sidenav');
-      M.Sidenav.init(elems);
+      // Inicialización del Sidenav
+      var elemsSidenav = document.querySelectorAll('.sidenav');
+      M.Sidenav.init(elemsSidenav);
+
+      // Inicialización del Dropdown del Usuario
+      var dropdownElems = document.querySelectorAll('.dropdown-trigger');
+      if (typeof M !== 'undefined' && M.Dropdown) {
+        M.Dropdown.init(dropdownElems, {
+          alignment: 'right',
+          constrainWidth: false,
+          coverTrigger: false
+        });
+      }
     });
 
     const firebaseConfig = {
@@ -735,17 +747,8 @@
 
     const contenedorHoras = document.getElementById("tablaHistorial");
     const btnCerrarSesion = document.getElementById("btnCerrarSesion");
+    const btnLogoutDropdown = document.getElementById("btn-logout");
 
-    // Inicializar Dropdown del Usuario
-      var dropdownElems = document.querySelectorAll('.dropdown-trigger');
-      if (typeof M !== 'undefined' && M.Dropdown) {
-        M.Dropdown.init(dropdownElems, {
-          alignment: 'right',
-          constrainWidth: false,
-          coverTrigger: false
-        });
-      }
-      
     onAuthStateChanged(auth, (user) => {
       if (user) {
         const nombreUsuario = user.displayName || user.email.split('@')[0];
@@ -778,7 +781,6 @@
               </td>
             </tr>`;
           
-          // Resetear valores a 0 cuando no hay nada en la colección
           if (kpiHoras) kpiHoras.innerText = `0 / 150 h`;
           if (kpiEvidencias) kpiEvidencias.innerText = `0 enviadas`;
           if (donutHoras) donutHoras.style.background = `conic-gradient(#2563eb 0%, #e2e8f0 0%)`;
@@ -815,13 +817,11 @@
         if (kpiHoras) kpiHoras.innerText = `${totalHoras} / 150 h`;
         if (kpiEvidencias) kpiEvidencias.innerText = `${totalEvidencias} enviadas`;
         
-        // 1. Actualizar Dona de Horas
         if (donutHoras) {
           const porcentajeHoras = Math.min((totalHoras / 150) * 100, 100);
           donutHoras.style.background = `conic-gradient(#2563eb ${porcentajeHoras}%, #e2e8f0 ${porcentajeHoras}%)`;
         }
 
-        // 2. Actualizar Dona de Evidencias (Meta estimada: 10 evidencias)
         if (donutEvidencias) {
           const metaEvidencias = 38;
           const porcentajeEvidencias = Math.min((totalEvidencias / metaEvidencias) * 100, 100);
@@ -853,14 +853,22 @@
       if (sidenavEmail) sidenavEmail.textContent = correo;
     }
 
+    // Cerrar sesión desde Sidenav
     if (btnCerrarSesion) {
-      btnCerrarSesion.addEventListener("click", (e) => {
-        e.preventDefault();
-        signOut(auth).then(() => {
-          window.location.href = "loginU.html";
-        }).catch((error) => {
-          console.error("Error al cerrar sesión:", error);
-        });
+      btnCerrarSesion.addEventListener("click", cerrarSesion);
+    }
+
+    // Cerrar sesión desde Dropdown
+    if (btnLogoutDropdown) {
+      btnLogoutDropdown.addEventListener("click", cerrarSesion);
+    }
+
+    function cerrarSesion(e) {
+      e.preventDefault();
+      signOut(auth).then(() => {
+        window.location.href = "loginU.html";
+      }).catch((error) => {
+        console.error("Error al cerrar sesión:", error);
       });
     }
   </script>
