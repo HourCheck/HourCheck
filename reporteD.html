@@ -204,21 +204,20 @@
 </head>
 <body>
 
-  <!-- HEADER / NAVBAR SUPERIOR -->
-  <header class="top-header">
-    <div class="header-left">
-      <a href="mainPD.html" class="back-btn" title="Volver al Inicio">
-        <i class="material-icons">arrow_back</i>
-      </a>
-      <span id="docenteNombre" style="font-weight: bold;">Cargando...</span>
-    </div>
+<header class="top-header">
+  <div class="header-left">
+    <a href="mainPD.html" class="back-btn" title="Volver al Inicio">
+      <i class="material-icons">arrow_back</i>
+    </a>
+    <!-- Se remueve el span del docente -->
+  </div>
 
-    <div class="header-right">
-      <div class="logo-container">
-        <img src="logo.png" alt="HourCheck Logo" class="logo-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x40?text=HourCheck';">
-      </div>
+  <div class="header-right">
+    <div class="logo-container">
+      <img src="logo.png" alt="HourCheck Logo" class="logo-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x40?text=HourCheck';">
     </div>
-  </header>
+  </div>
+</header>
 
   <!-- CONTENIDO PRINCIPAL -->
   <div class="container-reporte">
@@ -341,83 +340,115 @@
         return;
       }
 
-      // Asignar el nombre del docente tanto al Navbar superior como al documento del PDF
+      // Asignar el nombre del docente únicamente al documento del PDF
       const nombreUsuario = user.displayName || "Docente / Supervisor";
-      document.getElementById("docenteNombre").textContent = nombreUsuario;
       document.getElementById("repNombreDocente").textContent = nombreUsuario;
 
-      // Obtener la institución del docente desde Firestore (resolviendo ID/Referencia a texto)
+      // Obtener la institución del docente desde Firestore resolviendo 'institucionId'
       await cargarDatosDocente(user.uid);
 
       await cargarEstudiantes();
     });
 
-    // Carga la institución del docente desde Firestore y resuelve ID/Referencia al Nombre real
+    // Carga la institución del docente desde Firestore resolviendo 'institucionId'
     async function cargarDatosDocente(uid) {
       try {
-        let institucionValor = "";
+        let docData = null;
 
-        // 1. Buscar en la colección "Docentes" por el UID del usuario
+        // 1. Buscar en la colección "Docentes" por UID
         let docRef = doc(db, "Docentes", uid);
         let docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-          const data = docSnap.data();
-          institucionValor = data.institucion || data.Institucion || data.colegio || data.escuela || "";
+          docData = docSnap.data();
         } else {
-          // 2. Buscar por correo electrónico si no se encontró por UID
-          if (auth.currentUser && auth.currentUser.email) {
-            const qDocente = query(
-              collection(db, "Docentes"),
-              where("email", "==", auth.currentUser.email.toLowerCase().trim())
-            );
+          // 2. Buscar en "Docente" (singular) por UID
+          let docRefSingular = doc(db, "Docente", uid);
+          let docSnapSingular = await getDoc(docRefSingular);
+
+          if (docSnapSingular.exists()) {
+            docData = docSnapSingular.data();
+          } else if (auth.currentUser && auth.currentUser.email) {
+            // 3. Buscar por correo electrónico
+            const emailUser = auth.currentUser.email.toLowerCase().trim();
+            const qDocente = query(collection(db, "Docentes"), where("email", "==", emailUser));
             const querySnap = await getDocs(qDocente);
+
             if (!querySnap.empty) {
-              const data = querySnap.docs[0].data();
-              institucionValor = data.institucion || data.Institucion || data.colegio || data.escuela || "";
+              docData = querySnap.docs[0].data();
+            } else {
+              const qDocenteSingular = query(collection(db, "Docente"), where("email", "==", emailUser));
+              const querySnapSingular = await getDocs(qDocenteSingular);
+              if (!querySnapSingular.empty) {
+                docData = querySnapSingular.docs[0].data();
+              }
             }
           }
         }
 
-        if (institucionValor) {
-          // Caso A: El campo es un objeto DocumentReference de Firestore
-          if (typeof institucionValor === 'object' && institucionValor.path) {
-            const instSnap = await getDoc(institucionValor);
-            if (instSnap.exists()) {
-              const dataInst = instSnap.data();
-              document.getElementById("repNombreInstitucion").textContent = dataInst.nombre || dataInst.Nombre || dataInst.nombreInstitucion || "INSTITUCIÓN EDUCATIVA";
-            }
-          } 
-          // Caso B: El campo es un ID en formato texto (ejemplo de id alfanumérico largo sin espacios)
-          else if (typeof institucionValor === 'string' && institucionValor.length > 15 && !institucionValor.includes(" ")) {
-            // Probar en la colección "Instituciones" (plural)
-            const instRef = doc(db, "Instituciones", institucionValor);
+        console.log("📄 Documento del Docente:", docData);
+
+        if (!docData) {
+          console.warn("⚠️ No se encontró el documento del docente en Firestore.");
+          document.getElementById("repNombreInstitucion").textContent = "INSTITUCIÓN EDUCATIVA";
+          return;
+        }
+
+        // Obtención del campo institucionId
+        let idInstitucion = docData.institucionId || docData.InstitucionId || docData.institucion || "";
+
+        console.log("🔍 ID de Institución detectado:", idInstitucion);
+
+        if (!idInstitucion) {
+          console.warn("⚠️ El documento existe pero no tiene el campo 'institucionId'.");
+          document.getElementById("repNombreInstitucion").textContent = "INSTITUCIÓN EDUCATIVA";
+          return;
+        }
+
+        // Caso A: Si institucionId es una referencia de Firestore (DocumentReference)
+        if (typeof idInstitucion === 'object' && idInstitucion.path) {
+          const instSnap = await getDoc(idInstitucion);
+          if (instSnap.exists()) {
+            const dataInst = instSnap.data();
+            const nombre = dataInst.nombre || dataInst.Nombre || dataInst.nombreInstitucion || dataInst.institucion || "";
+            document.getElementById("repNombreInstitucion").textContent = nombre || "INSTITUCIÓN EDUCATIVA";
+          }
+          return;
+        }
+
+        // Caso B: Si institucionId es una cadena con el ID del documento
+        const idLimpio = String(idInstitucion).trim();
+        const coleccionesAProbar = ["Instituciones", "Institucion", "Colegios", "Escuelas"];
+        let encontrada = false;
+
+        for (const colNombre of coleccionesAProbar) {
+          try {
+            const instRef = doc(db, colNombre, idLimpio);
             const instSnap = await getDoc(instRef);
 
             if (instSnap.exists()) {
               const dataInst = instSnap.data();
-              document.getElementById("repNombreInstitucion").textContent = dataInst.nombre || dataInst.Nombre || dataInst.nombreInstitucion || "INSTITUCIÓN EDUCATIVA";
-            } else {
-              // Probar en la colección "Institucion" (singular)
-              const instRefSingular = doc(db, "Institucion", institucionValor);
-              const instSnapSingular = await getDoc(instRefSingular);
-              if (instSnapSingular.exists()) {
-                const dataInst = instSnapSingular.data();
-                document.getElementById("repNombreInstitucion").textContent = dataInst.nombre || dataInst.Nombre || dataInst.nombreInstitucion || "INSTITUCIÓN EDUCATIVA";
-              } else {
-                document.getElementById("repNombreInstitucion").textContent = institucionValor;
+              console.log(`🏫 Datos encontrados en la colección '${colNombre}':`, dataInst);
+              const nombre = dataInst.nombre || dataInst.Nombre || dataInst.nombreInstitucion || dataInst.institucion || "";
+              
+              if (nombre) {
+                document.getElementById("repNombreInstitucion").textContent = nombre;
+                encontrada = true;
+                break;
               }
             }
-          } 
-          // Caso C: Ya viene la cadena de texto con el nombre de la institución
-          else {
-            document.getElementById("repNombreInstitucion").textContent = institucionValor;
+          } catch (e) {
+            console.warn(`Error al consultar colección '${colNombre}':`, e);
           }
-        } else {
-          document.getElementById("repNombreInstitucion").textContent = "INSTITUCIÓN EDUCATIVA";
         }
+
+        if (!encontrada) {
+          console.warn("⚠️ No se halló el documento en ninguna colección de instituciones con el ID:", idLimpio);
+          document.getElementById("repNombreInstitucion").textContent = idLimpio.length > 20 ? "INSTITUCIÓN EDUCATIVA" : idLimpio;
+        }
+
       } catch (error) {
-        console.error("Error al cargar datos del docente:", error);
+        console.error("❌ Error en cargarDatosDocente:", error);
         document.getElementById("repNombreInstitucion").textContent = "INSTITUCIÓN EDUCATIVA";
       }
     }
