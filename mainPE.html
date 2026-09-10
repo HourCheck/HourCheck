@@ -445,71 +445,99 @@
       background-color: currentColor;
     }
 
-    /* Footer */
-    .custom-footer {
-      background-color: #1557d0 !important;
-      border-top-left-radius: 25px;
-      border-top-right-radius: 25px;
+    /* ==========================================
+       FOOTER INTEGRADO - HOURCHECK (OSCURO SLATE)
+       ========================================== */
+    .hourcheck-footer {
+      background-color: #0f172a;
+      color: #f8fafc;
+      padding: 36px 20px 20px 20px;
+      border-top: 1px solid #1e293b;
       margin-top: 50px;
-      padding-top: 30px !important;
     }
 
     .footer-container {
-      width: 90%;
-      max-width: 1100px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 15px;
     }
 
-    .footer-brand {
-      display: flex;
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 24px;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 10px;
     }
 
     .footer-logo {
-      height: 35px;
+      display: flex;
+      align-items: center;
+    }
+
+    /* Estilo optimizado para la imagen del logo */
+    .footer-logo-img {
+      height: 38px;
       width: auto;
-      filter: brightness(0) invert(1);
+      object-fit: contain;
+      display: block;
     }
 
-    .footer-brand h5 {
-      margin: 0;
-      font-size: 1.4rem;
+    .footer-description {
+      color: #94a3b8;
+      font-size: 0.88rem;
+      margin: 12px 0 0 0;
+      line-height: 1.5;
+      max-width: 480px;
     }
 
-    .footer-link {
+    .footer-action-col {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .footer-support-btn {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
-      margin-bottom: 8px;
-      transition: color 0.2s, transform 0.2s;
-    }
-
-    .footer-link:hover {
-      color: #ff5500 !important;
-      transform: translateX(4px);
-    }
-
-    .footer-btn {
-      background-color: rgba(255, 255, 255, 0.15);
-      border-radius: 12px;
-      text-transform: none;
+      gap: 8px;
+      background-color: #1e293b;
+      color: #38bdf8;
+      padding: 10px 18px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 0.88rem;
       font-weight: 600;
-      margin-top: 5px;
+      border: 1px solid #334155;
+      transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
     }
 
-    .footer-btn:hover {
-      background-color: rgba(255, 255, 255, 0.25);
+    .footer-support-btn:hover {
+      background-color: #334155;
+      border-color: #475569;
+      color: #ffffff;
     }
 
-    .custom-copyright {
-      background-color: rgba(0, 0, 0, 0.12) !important;
-      font-size: 0.85rem;
-      padding: 15px 0;
+    .footer-bottom {
+      border-top: 1px solid #1e293b;
+      margin-top: 28px;
+      padding-top: 16px;
+      text-align: center;
+      font-size: 0.82rem;
+      color: #64748b;
     }
 
-    .font-weight-bold {
-      font-weight: 700;
+    .footer-bottom p {
+      margin: 0;
+    }
+
+    @media (max-width: 768px) {
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      
+      .footer-action-col {
+        justify-content: flex-start;
+      }
     }
 
     @media (max-width: 768px) {
@@ -667,47 +695,32 @@
 
   </div>
 
-  <!-- Pie de Página -->
-  <footer class="page-footer custom-footer">
-    <div class="container footer-container">
-      <div class="row style-row">
-        <div class="col s12 m4">
-          <div class="footer-brand">
-            <img src="logo.png" alt="HourCheck Logo" class="footer-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x40?text=HourCheck';">
-            <h5 class="white-text font-weight-bold">HourCheck</h5>
+ <!-- Footer HourCheck (Opción 4: Oscuro Slate) -->
+  <footer class="hourcheck-footer">
+    <div class="footer-container">
+      <div class="footer-grid">
+        <div class="footer-brand-col">
+          <div class="footer-logo">
+            <img src="logo.png" alt="HourCheck Logo" class="footer-logo-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/140x40?text=HourCheck';">
           </div>
-          <p class="grey-text text-lighten-2">
-            Sistema para la gestión y seguimiento del Servicio Social Estudiantil. Facilitando la validación y control de horas de forma eficiente.
+          <p class="footer-description">
+            Plataforma web para el registro, gestión y validación transparente del Servicio Social Estudiantil.
           </p>
         </div>
 
-        <div class="col s12 m4 center-on-small">
-          <h5 class="white-text font-weight-bold">Enlaces Rápidos</h5>
-          <ul>
-            <li><a class="grey-text text-lighten-3 footer-link" href="index.html"><i class="material-icons tiny">chevron_right</i> Inicio</a></li>
-            <li><a class="grey-text text-lighten-3 footer-link" href="saberCualP.html"><i class="material-icons tiny">chevron_right</i> Guía de Perfiles</a></li>
-          </ul>
-        </div>
-
-        <div class="col s12 m4">
-          <h5 class="white-text font-weight-bold">Soporte</h5>
-          <p class="grey-text text-lighten-2">
-            ¿Tienes dudas con el registro de tus horas?
-          </p>
-          <a href="mailto:soporte@hourcheck.com" class="btn-flat white-text footer-btn">
-            <i class="material-icons left">help_outline</i> Contactar Soporte
+        <div class="footer-action-col">
+          <a href="mailto:soporte@hourcheck.com" class="footer-support-btn">
+            <i class="material-icons">mail</i>
+            <span>Contactar Soporte</span>
           </a>
         </div>
       </div>
-    </div>
 
-    <div class="footer-copyright custom-copyright">
-      <div class="container center-align white-text">
-        © 2026 HourCheck - Todos los derechos reservados.
+      <div class="footer-bottom">
+        <p>&copy; 2026 HourCheck. Todos los derechos reservados.</p>
       </div>
     </div>
   </footer>
-
   <!-- Scripts JavaScript -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
