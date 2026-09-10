@@ -17,12 +17,67 @@
     body {
       background-color: #f4f6f9;
       font-family: 'Roboto', sans-serif;
-      padding: 20px;
+      margin: 0;
+      padding: 0;
     }
 
+    /* Estilos del Header / Navbar Superior */
+    .top-header {
+      background-color: #ffffff;
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      margin-bottom: 25px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .back-btn {
+      color: #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      transition: transform 0.2s;
+    }
+
+    .back-btn:hover {
+      transform: translateX(-3px);
+      color: #1557d0;
+    }
+
+    .back-btn i {
+      font-size: 30px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo-img {
+      height: 38px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    /* Contenedor Principal */
     .container-reporte {
       max-width: 900px;
       margin: 0 auto;
+      padding: 0 20px 40px 20px;
     }
 
     .card-panel {
@@ -45,14 +100,58 @@
       margin-bottom: 25px;
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: flex-start;
     }
 
-    .report-title {
-      font-size: 1.8rem;
+    .institution-info h3 {
+      font-size: 1.4rem;
       font-weight: 800;
+      color: #1a202c;
+      margin: 0 0 5px 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .report-title-sub {
+      font-size: 1.1rem;
+      font-weight: 700;
       color: #1557d0;
       margin: 0;
+      text-transform: uppercase;
+    }
+
+    .report-subtitle {
+      font-size: 0.9rem;
+      color: #666;
+      margin: 2px 0 0 0;
+    }
+
+    .brand-corner {
+      text-align: right;
+    }
+
+    .pdf-logo-small {
+      height: 35px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .pdf-meta-date {
+      font-size: 0.8rem;
+      color: #777;
+      margin-top: 5px;
+    }
+
+    .student-info-box {
+      background-color: #f8fafc;
+      border-left: 4px solid #1557d0;
+      padding: 15px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+
+    .student-info-box p {
+      margin: 3px 0;
     }
 
     .table-report {
@@ -66,11 +165,13 @@
       color: white;
       padding: 10px;
       text-align: left;
+      font-size: 0.9rem;
     }
 
     .table-report td {
       padding: 10px;
       border-bottom: 1px solid #ddd;
+      font-size: 0.88rem;
     }
 
     .signatures {
@@ -86,6 +187,7 @@
       margin-top: 40px;
       padding-top: 5px;
       font-weight: bold;
+      font-size: 0.9rem;
     }
 
     .btn-orange {
@@ -102,6 +204,23 @@
 </head>
 <body>
 
+  <!-- HEADER / NAVBAR SUPERIOR -->
+  <header class="top-header">
+    <div class="header-left">
+      <a href="mainPD.html" class="back-btn" title="Volver al Inicio">
+        <i class="material-icons">arrow_back</i>
+      </a>
+      <span id="docenteNombre" style="font-weight: bold;">Cargando...</span>
+    </div>
+
+    <div class="header-right">
+      <div class="logo-container">
+        <img src="logo.png" alt="HourCheck Logo" class="logo-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x40?text=HourCheck';">
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTENIDO PRINCIPAL -->
   <div class="container-reporte">
     
     <!-- Filtro de Estudiantes -->
@@ -123,20 +242,29 @@
 
     <!-- DOCUMENTO A GENERAR EN PDF -->
     <div id="hojaReporte">
-      <div class="pdf-header">
-        <img src="logo.png" alt="HourCheck Logo" class="pdf-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/150x50?text=HourCheck';">
-        <div class="pdf-title-box">
-          <h4>REPORTE DE HORAS SOCIALES</h4>
-          <p>Servicio Social Estudiantil</p>
-          <p id="pdfFechaEmision">Fecha de emisión: --/--/----</p>
+      <div class="report-header">
+        <div class="institution-info">
+          <!-- Se cargará dinámicamente la institución del docente -->
+          <h3 id="repNombreInstitucion">Cargando Institución...</h3>
+          <h4 class="report-title-sub">Reporte de Horas Sociales</h4>
+          <p class="report-subtitle">Programa de Servicio Social Estudiantil</p>
+        </div>
+        <div class="brand-corner">
+          <img src="logo.png" alt="HourCheck Logo" class="pdf-logo-small" onerror="this.onerror=null; this.src='https://via.placeholder.com/100x30?text=HourCheck';">
+          <div class="pdf-meta-date" id="pdfFechaEmision">Fecha: --/--/----</div>
         </div>
       </div>
 
-      <div class="row">
-        <div class="col s12">
-          <p><strong>Estudiante:</strong> <span id="repNombreEstudiante">Seleccione un alumno</span></p>
-          <p><strong>Correo Electrónico:</strong> <span id="repCorreoEstudiante">---</span></p>
-          <p><strong>Meta Requerida:</strong> 150 horas</p>
+      <div class="student-info-box">
+        <div class="row" style="margin-bottom: 0;">
+          <div class="col s12 m7">
+            <p><strong>Estudiante:</strong> <span id="repNombreEstudiante">Seleccione un alumno</span></p>
+            <p><strong>Correo Electrónico:</strong> <span id="repCorreoEstudiante">---</span></p>
+          </div>
+          <div class="col s12 m5">
+            <p><strong>Meta Requerida:</strong> 150 horas</p>
+            <p><strong>Estado del Proceso:</strong> En curso</p>
+          </div>
         </div>
       </div>
 
@@ -172,12 +300,6 @@
       </div>
     </div>
 
-    <div style="margin-top: 25px;">
-      <a href="mainPD.html" class="btn-flat grey-text text-darken-2">
-        <i class="material-icons left">arrow_back</i> Volver al Inicio
-      </a>
-    </div>
-
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
@@ -188,6 +310,8 @@
       getFirestore, 
       collection, 
       getDocs, 
+      getDoc,
+      doc,
       query, 
       where 
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -208,7 +332,7 @@
     let listaEstudiantes = [];
 
     document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById("repFecha").textContent = `Fecha: ${new Date().toLocaleDateString('es-ES')}`;
+      document.getElementById("pdfFechaEmision").textContent = `Fecha: ${new Date().toLocaleDateString('es-ES')}`;
     });
 
     onAuthStateChanged(auth, async (user) => {
@@ -217,12 +341,56 @@
         return;
       }
 
-      document.getElementById("repNombreDocente").textContent = user.displayName || "Docente / Supervisor";
+      // Asignar el nombre del docente tanto al Navbar superior como al documento del PDF
+      const nombreUsuario = user.displayName || "Docente / Supervisor";
+      document.getElementById("docenteNombre").textContent = nombreUsuario;
+      document.getElementById("repNombreDocente").textContent = nombreUsuario;
+
+      // Obtener la institución del docente desde Firestore
+      await cargarDatosDocente(user.uid);
 
       await cargarEstudiantes();
     });
 
-    // 1. Cargar estudiantes desde la colección "Estudiantes"
+    // Carga la institución del docente desde Firestore
+    async function cargarDatosDocente(uid) {
+      try {
+        let institucionEncontrada = "";
+
+        // 1. Intentar buscar en colección "Docentes" por el UID del usuario
+        let docRef = doc(db, "Docentes", uid);
+        let docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          institucionEncontrada = data.institucion || data.Institucion || data.colegio || data.escuela || "";
+        } else {
+          // 2. Si no se encuentra por UID, intentar buscar en "Docentes" por correo electrónico
+          if (auth.currentUser && auth.currentUser.email) {
+            const qDocente = query(
+              collection(db, "Docentes"),
+              where("email", "==", auth.currentUser.email.toLowerCase().trim())
+            );
+            const querySnap = await getDocs(qDocente);
+            if (!querySnap.empty) {
+              const data = querySnap.docs[0].data();
+              institucionEncontrada = data.institucion || data.Institucion || data.colegio || data.escuela || "";
+            }
+          }
+        }
+
+        if (institucionEncontrada) {
+          document.getElementById("repNombreInstitucion").textContent = institucionEncontrada;
+        } else {
+          document.getElementById("repNombreInstitucion").textContent = "INSTITUCIÓN EDUCATIVA";
+        }
+      } catch (error) {
+        console.error("Error al cargar datos del docente:", error);
+        document.getElementById("repNombreInstitucion").textContent = "INSTITUCIÓN EDUCATIVA";
+      }
+    }
+
+    // Cargar la lista de alumnos registrados
     async function cargarEstudiantes() {
       const select = document.getElementById("selectEstudiante");
 
@@ -238,8 +406,6 @@
 
         querySnapshot.forEach((docSnap) => {
           const data = docSnap.data();
-          
-          // Buscar dinámicamente el nombre y el correo dentro del documento del alumno
           const nombre = data.nombre || data.Nombre || data.nombreCompleto || data.name || "Estudiante sin nombre";
           const correo = data.correo || data.email || data.Correo || "";
 
@@ -258,10 +424,8 @@
           return;
         }
 
-        // Ordenar alfabéticamente por nombre
         listaEstudiantes.sort((a, b) => a.nombre.localeCompare(b.nombre));
 
-        // Rellenar Select
         select.innerHTML = '<option value="" disabled selected>Selecciona un estudiante</option>';
         listaEstudiantes.forEach((est, idx) => {
           const option = document.createElement("option");
@@ -279,7 +443,7 @@
       }
     }
 
-    // 2. Al seleccionar un alumno, cargar sus jornadas guardadas en "HorasSociales"
+    // Evento al seleccionar un estudiante
     document.getElementById("selectEstudiante").addEventListener("change", async (e) => {
       const index = e.target.value;
       const estudianteSeleccionado = listaEstudiantes[index];
@@ -295,7 +459,6 @@
       let totalHoras = 0;
 
       try {
-        // Consultar HorasSociales filtrando por el email del estudiante
         const q = query(
           collection(db, "HorasSociales"),
           where("email", "==", estudianteSeleccionado.correo)
@@ -316,7 +479,6 @@
           const horas = Number(data.Horas) || 0;
           totalHoras += horas;
 
-          // Formatear la fecha desde fechaCreacion o usar por defecto
           let fechaFormateada = "---";
           if (data.fechaCreacion && data.fechaCreacion.toDate) {
             fechaFormateada = data.fechaCreacion.toDate().toLocaleDateString('es-ES');
@@ -342,7 +504,7 @@
       }
     });
 
-    // 3. Generación y descarga del PDF
+    // Evento para generar y descargar PDF
     document.getElementById("btnDescargarPDF").addEventListener("click", () => {
       const elemento = document.getElementById("hojaReporte");
       const nombreAlumno = document.getElementById("repNombreEstudiante").textContent.trim().replace(/\s+/g, "_");

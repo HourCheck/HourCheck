@@ -3,348 +3,522 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HourCheck - Selecciona tu perfil</title>
+  <title>Generar Reporte - HourCheck</title>
   <link rel="icon" type="image/png" href="logo.png">
-
+  
   <!-- Materialize CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-  <!-- Material Icons -->
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  
+  <!-- Librería HTML2PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
   <style>
-    /* Reset & Base */
-    html, body {
-      height: 100%;
-      margin: 0;
-      font-family: 'Roboto', sans-serif;
-      background-color: #ffffff;
-    }
-
     body {
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
+      background-color: #f4f6f9;
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
     }
 
-    .main-container {
-      flex: 1 0 auto;
+    /* Estilos del Header / Navbar Superior */
+    .top-header {
+      background-color: #ffffff;
+      padding: 15px 40px;
       display: flex;
-      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      margin-bottom: 25px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .back-btn {
+      color: #333;
+      display: flex;
       align-items: center;
       justify-content: center;
-      padding: 40px 20px;
-      position: relative;
+      text-decoration: none;
+      transition: transform 0.2s;
     }
 
-    /* Logo superior */
-    .brand-logo-container {
-      position: absolute;
-      top: 30px;
-      right: 40px;
-      text-align: center;
+    .back-btn:hover {
+      transform: translateX(-3px);
+      color: #1557d0;
     }
 
-    .brand-logo-container img {
-      width: 120px;
-      height: auto;
+    .back-btn i {
+      font-size: 30px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo-img {
+      height: 38px;
+      width: auto;
       object-fit: contain;
     }
 
-    /* Título principal */
-    .main-title {
-      font-weight: 700;
-      color: #000;
-      font-size: 2.5rem;
-      margin-top: 40px;
-      margin-bottom: 40px;
+    /* Contenedor Principal */
+    .container-reporte {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 20px 40px 20px;
     }
 
-    /* Tarjetas de Perfil */
-    .profile-card-col {
+    .card-panel {
+      border-radius: 20px;
+      padding: 25px;
+    }
+
+    /* Estilos del Documento PDF */
+    #hojaReporte {
+      background: #ffffff;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      color: #333;
+    }
+
+    .report-header {
+      border-bottom: 2px solid #1557d0;
+      padding-bottom: 15px;
+      margin-bottom: 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .institution-info h3 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #1a202c;
+      margin: 0 0 5px 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .report-title-sub {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #1557d0;
+      margin: 0;
+      text-transform: uppercase;
+    }
+
+    .report-subtitle {
+      font-size: 0.9rem;
+      color: #666;
+      margin: 2px 0 0 0;
+    }
+
+    .brand-corner {
+      text-align: right;
+    }
+
+    .pdf-logo-small {
+      height: 35px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .pdf-meta-date {
+      font-size: 0.8rem;
+      color: #777;
+      margin-top: 5px;
+    }
+
+    .student-info-box {
+      background-color: #f8fafc;
+      border-left: 4px solid #1557d0;
+      padding: 15px;
+      border-radius: 4px;
       margin-bottom: 20px;
     }
 
-    .profile-card {
-      background-color: #e0e0e0;
-      border-radius: 25px;
-      padding: 30px 20px;
+    .student-info-box p {
+      margin: 3px 0;
+    }
+
+    .table-report {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    .table-report th {
+      background-color: #1557d0;
+      color: white;
+      padding: 10px;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    .table-report td {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+      font-size: 0.88rem;
+    }
+
+    .signatures {
+      margin-top: 60px;
+      display: flex;
+      justify-content: space-between;
       text-align: center;
-      transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
-      cursor: pointer;
-      min-height: 180px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-decoration: none;
     }
 
-    .profile-card:hover {
-      transform: translateY(-5px);
-      background-color: #d5d5d5;
-      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-    }
-
-    .profile-card i {
-      font-size: 60px;
-      color: #0052cc;
-      margin-bottom: 12px;
-    }
-
-    .profile-card span {
-      font-weight: bold;
-      color: #000;
-      font-size: 1.1rem;
-      display: block;
-    }
-
-    /* Texto de ayuda */
-    .help-text {
+    .signature-line {
+      border-top: 1px solid #333;
+      width: 220px;
       margin-top: 40px;
-      font-size: 1.25rem;
+      padding-top: 5px;
       font-weight: bold;
-      color: #000;
+      font-size: 0.9rem;
     }
 
-    .help-text a {
-      color: #448aff;
-      text-decoration: none;
-      margin-left: 5px;
-    }
-
-    .help-text a:hover {
-      text-decoration: underline;
-    }
-
-    /* Footer */
-    .custom-footer {
-      background-color: #1557d0 !important;
-      border-top-left-radius: 25px;
-      border-top-right-radius: 25px;
-      margin-top: 40px;
-      padding-top: 30px !important;
-      flex-shrink: 0;
-    }
-
-    .footer-container {
-      width: 90%;
-      max-width: 1100px;
-    }
-
-    .footer-brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 10px;
-    }
-
-    .footer-logo {
-      height: 35px;
-      width: auto;
-      filter: brightness(0) invert(1);
-    }
-
-    .footer-brand h5 {
-      margin: 0;
-      font-size: 1.4rem;
-    }
-
-    .footer-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      margin-bottom: 8px;
-      transition: color 0.2s, transform 0.2s;
-    }
-
-    .footer-link:hover {
-      color: #ff5500 !important;
-      transform: translateX(4px);
-    }
-
-    .footer-btn {
-      background-color: rgba(255, 255, 255, 0.15);
-      border-radius: 12px;
-      text-transform: none;
-      font-weight: 600;
-      margin-top: 10px;
-    }
-
-    .footer-btn:hover {
-      background-color: rgba(255, 255, 255, 0.25);
-    }
-
-    .custom-copyright {
-      background-color: rgba(0, 0, 0, 0.12) !important;
-      font-size: 0.85rem;
-      padding: 15px 0;
-    }
-
-    .font-weight-bold {
+    .btn-orange {
+      background-color: #ff5500 !important;
+      border-radius: 10px;
       font-weight: 700;
+      text-transform: none;
     }
 
-    /* Media Queries para Responsive en Moviles y Tablets */
-    @media (max-width: 992px) {
-      .brand-logo-container {
-        position: relative;
-        top: 0;
-        right: 0;
-        margin-bottom: 10px;
-      }
-
-      .main-container {
-        padding: 20px 15px;
-      }
-
-      .main-title {
-        font-size: 2rem;
-        margin-top: 10px;
-        margin-bottom: 30px;
-      }
-    }
-
-    @media (max-width: 600px) {
-      .main-title {
-        font-size: 1.75rem;
-      }
-
-      .help-text {
-        font-size: 1rem;
-        margin-top: 25px;
-      }
-
-      .custom-footer {
-        text-align: center;
-        border-top-left-radius: 15px;
-        border-top-right-radius: 15px;
-      }
-
-      .footer-brand {
-        justify-content: center;
-      }
-
-      .footer-link {
-        justify-content: center;
-      }
+    .btn-orange:hover {
+      background-color: #e04b00 !important;
     }
   </style>
 </head>
 <body>
 
-  <!-- Contenedor Principal -->
-  <main class="main-container">
-
-    <!-- Logo superior -->
-    <div class="brand-logo-container">
-      <img src="logo1.png" alt="HourCheck Logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x40?text=HourCheck';">
+  <!-- HEADER / NAVBAR SUPERIOR -->
+  <header class="top-header">
+    <div class="header-left">
+      <a href="mainPD.html" class="back-btn" title="Volver al Inicio">
+        <i class="material-icons">arrow_back</i>
+      </a>
+      <span id="docenteNombre" style="font-weight: bold;">Cargando...</span>
     </div>
 
-    <!-- Título principal -->
-    <h1 class="main-title center-align">Selecciona tu perfil</h1>
-
-    <!-- Opciones de Perfiles -->
-    <div class="container">
-      <div class="row">
-        
-        <div class="col s12 m4 profile-card-col">
-          <a href="loginU.html?perfil=institucion" class="profile-card waves-effect waves-light">
-            <i class="material-icons">account_balance</i>
-            <span>Instituciones</span>
-          </a>
-        </div>
-
-        <div class="col s12 m4 profile-card-col">
-          <a href="loginU.html?perfil=maestro" class="profile-card waves-effect waves-light">
-            <i class="material-icons">collections_bookmark</i>
-            <span>Maestros</span>
-          </a>
-        </div>
-
-        <div class="col s12 m4 profile-card-col">
-          <a href="loginU.html?perfil=estudiante" class="profile-card waves-effect waves-light">
-            <i class="material-icons">school</i>
-            <span>Estudiantes</span>
-          </a>
-        </div>
-
+    <div class="header-right">
+      <div class="logo-container">
+        <img src="logo.png" alt="HourCheck Logo" class="logo-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x40?text=HourCheck';">
       </div>
     </div>
-      
-    <!-- Texto de Ayuda -->
-    <div class="help-text center-align">
-      ¿No sabes cuál es tu perfil? <a href="saberCualP.html">Haz clic aquí</a>
+  </header>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <div class="container-reporte">
+    
+    <!-- Filtro de Estudiantes -->
+    <div class="card-panel white z-depth-1">
+      <div class="row" style="margin-bottom: 0;">
+        <div class="col s12 m8 input-field">
+          <select id="selectEstudiante">
+            <option value="" disabled selected>Cargando estudiantes...</option>
+          </select>
+          <label>Selecciona un estudiante</label>
+        </div>
+        <div class="col s12 m4 center-align" style="padding-top: 15px;">
+          <button id="btnDescargarPDF" class="btn btn-orange waves-effect waves-light" disabled>
+            <i class="material-icons left">picture_as_pdf</i> Descargar PDF
+          </button>
+        </div>
+      </div>
     </div>
 
-  </main>
+    <!-- DOCUMENTO A GENERAR EN PDF -->
+    <div id="hojaReporte">
+      <div class="report-header">
+        <div class="institution-info">
+          <!-- Se cargará dinámicamente la institución del docente -->
+          <h3 id="repNombreInstitucion">Cargando Institución...</h3>
+          <h4 class="report-title-sub">Reporte de Horas Sociales</h4>
+          <p class="report-subtitle">Programa de Servicio Social Estudiantil</p>
+        </div>
+        <div class="brand-corner">
+          <img src="logo.png" alt="HourCheck Logo" class="pdf-logo-small" onerror="this.onerror=null; this.src='https://via.placeholder.com/100x30?text=HourCheck';">
+          <div class="pdf-meta-date" id="pdfFechaEmision">Fecha: --/--/----</div>
+        </div>
+      </div>
 
-  <!-- Footer -->
-  <footer class="page-footer custom-footer">
-    <div class="container footer-container">
-      <div class="row">
-        
-        <!-- Columna 1: Información de la Plataforma -->
-        <div class="col s12 m4">
-          <div class="footer-brand">
-            <img src="logo.png" alt="HourCheck Logo" class="footer-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x40?text=HourCheck';">
-            <h5 class="white-text font-weight-bold">HourCheck</h5>
+      <div class="student-info-box">
+        <div class="row" style="margin-bottom: 0;">
+          <div class="col s12 m7">
+            <p><strong>Estudiante:</strong> <span id="repNombreEstudiante">Seleccione un alumno</span></p>
+            <p><strong>Correo Electrónico:</strong> <span id="repCorreoEstudiante">---</span></p>
           </div>
-          <p class="grey-text text-lighten-2">
-            Sistema para la gestión y seguimiento del Servicio Social Estudiantil. Facilitando la validación y control de horas de forma eficiente.
-          </p>
+          <div class="col s12 m5">
+            <p><strong>Meta Requerida:</strong> 150 horas</p>
+            <p><strong>Estado del Proceso:</strong> En curso</p>
+          </div>
         </div>
+      </div>
 
-        <!-- Columna 2: Enlaces Rápidos -->
-        <div class="col s12 m4">
-          <h5 class="white-text font-weight-bold">Enlaces Rápidos</h5>
-          <ul>
-            <li><a class="grey-text text-lighten-3 footer-link" href="index.html"><i class="material-icons tiny">chevron_right</i> Inicio</a></li>
-            <li><a class="grey-text text-lighten-3 footer-link" href="saberCualP.html"><i class="material-icons tiny">chevron_right</i> Guía de Perfiles</a></li>
-          </ul>
+      <table class="table-report">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Categoría</th>
+            <th>Lugar</th>
+            <th>Descripción</th>
+            <th style="text-align: right;">Horas</th>
+          </tr>
+        </thead>
+        <tbody id="repTablaCuerpo">
+          <tr>
+            <td colspan="5" class="center-align grey-text">Selecciona un estudiante para desplegar sus actividades.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="text-align: right; margin-top: 25px;">
+        <h5><strong>Total Horas Acumuladas: <span id="repTotalHoras" style="color: #1557d0;">0</span> / 150 hrs</strong></h5>
+      </div>
+
+      <div class="signatures">
+        <div>
+          <div class="signature-line" id="repNombreDocente">Docente / Supervisor</div>
+          <p style="margin: 0; font-size: 0.85rem; color: #666;">Firma de Validación</p>
         </div>
-
-        <!-- Columna 3: Soporte y Ayuda -->
-        <div class="col s12 m4">
-          <h5 class="white-text font-weight-bold">Soporte</h5>
-          <p class="grey-text text-lighten-2">
-            ¿Tienes dudas con el registro de tus horas?
-          </p>
-          <a href="mailto:soporte@hourcheck.com" class="btn-flat white-text footer-btn">
-            <i class="material-icons left">help_outline</i> Contactar Soporte
-          </a>
+        <div>
+          <div class="signature-line">Sello Institucional</div>
         </div>
-
       </div>
     </div>
 
-    <!-- Sub-footer con Derechos de Autor -->
-    <div class="footer-copyright custom-copyright">
-      <div class="container center-align white-text">
-        © 2026 HourCheck - Todos los derechos reservados.
-      </div>
-    </div>
-  </footer>
+  </div>
 
-  <!-- Firebase Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-analytics.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { 
+      getFirestore, 
+      collection, 
+      getDocs, 
+      getDoc,
+      doc,
+      query, 
+      where 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
       authDomain: "hourcheckt.firebaseapp.com",
       projectId: "hourcheckt",
-      storageBucket: "hourcheckt.firebasestorage.app",
       messagingSenderId: "83459752453",
-      appId: "1:83459752453:web:1b81724c28973bf567126c",
-      measurementId: "G-95286SR8NZ"
+      appId: "1:83459752453:web:1b81724c28973bf567126c"
     };
 
     const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-  </script>
+    const db = getFirestore(app);
+    const auth = getAuth(app);
 
-  <!-- Materialize JavaScript -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    let listaEstudiantes = [];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById("pdfFechaEmision").textContent = `Fecha: ${new Date().toLocaleDateString('es-ES')}`;
+    });
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "loginU.html";
+        return;
+      }
+
+      // Asignar el nombre del docente tanto al Navbar superior como al documento del PDF
+      const nombreUsuario = user.displayName || "Docente / Supervisor";
+      document.getElementById("docenteNombre").textContent = nombreUsuario;
+      document.getElementById("repNombreDocente").textContent = nombreUsuario;
+
+      // Obtener la institución del docente desde Firestore
+      await cargarDatosDocente(user.uid);
+
+      await cargarEstudiantes();
+    });
+
+    // Carga la institución del docente desde Firestore
+    async function cargarDatosDocente(uid) {
+      try {
+        let institucionEncontrada = "";
+
+        // 1. Intentar buscar en colección "Docentes" por el UID del usuario
+        let docRef = doc(db, "Docentes", uid);
+        let docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          institucionEncontrada = data.institucion || data.Institucion || data.colegio || data.escuela || "";
+        } else {
+          // 2. Si no se encuentra por UID, intentar buscar en "Docentes" por correo electrónico
+          if (auth.currentUser && auth.currentUser.email) {
+            const qDocente = query(
+              collection(db, "Docentes"),
+              where("email", "==", auth.currentUser.email.toLowerCase().trim())
+            );
+            const querySnap = await getDocs(qDocente);
+            if (!querySnap.empty) {
+              const data = querySnap.docs[0].data();
+              institucionEncontrada = data.institucion || data.Institucion || data.colegio || data.escuela || "";
+            }
+          }
+        }
+
+        if (institucionEncontrada) {
+          document.getElementById("repNombreInstitucion").textContent = institucionEncontrada;
+        } else {
+          document.getElementById("repNombreInstitucion").textContent = "INSTITUCIÓN EDUCATIVA";
+        }
+      } catch (error) {
+        console.error("Error al cargar datos del docente:", error);
+        document.getElementById("repNombreInstitucion").textContent = "INSTITUCIÓN EDUCATIVA";
+      }
+    }
+
+    // Cargar la lista de alumnos registrados
+    async function cargarEstudiantes() {
+      const select = document.getElementById("selectEstudiante");
+
+      try {
+        const querySnapshot = await getDocs(collection(db, "Estudiantes"));
+        listaEstudiantes = [];
+
+        if (querySnapshot.empty) {
+          select.innerHTML = '<option value="" disabled selected>No hay estudiantes registrados</option>';
+          M.FormSelect.init(select);
+          return;
+        }
+
+        querySnapshot.forEach((docSnap) => {
+          const data = docSnap.data();
+          const nombre = data.nombre || data.Nombre || data.nombreCompleto || data.name || "Estudiante sin nombre";
+          const correo = data.correo || data.email || data.Correo || "";
+
+          if (correo) {
+            listaEstudiantes.push({
+              id: docSnap.id,
+              nombre: nombre,
+              correo: correo.toLowerCase().trim()
+            });
+          }
+        });
+
+        if (listaEstudiantes.length === 0) {
+          select.innerHTML = '<option value="" disabled selected>No se encontraron estudiantes con correo válido</option>';
+          M.FormSelect.init(select);
+          return;
+        }
+
+        listaEstudiantes.sort((a, b) => a.nombre.localeCompare(b.nombre));
+
+        select.innerHTML = '<option value="" disabled selected>Selecciona un estudiante</option>';
+        listaEstudiantes.forEach((est, idx) => {
+          const option = document.createElement("option");
+          option.value = idx;
+          option.textContent = `${est.nombre} (${est.correo})`;
+          select.appendChild(option);
+        });
+
+        M.FormSelect.init(select);
+
+      } catch (error) {
+        console.error("Error al cargar lista de estudiantes:", error);
+        select.innerHTML = '<option value="" disabled selected>Error de permisos o conexión</option>';
+        M.FormSelect.init(select);
+      }
+    }
+
+    // Evento al seleccionar un estudiante
+    document.getElementById("selectEstudiante").addEventListener("change", async (e) => {
+      const index = e.target.value;
+      const estudianteSeleccionado = listaEstudiantes[index];
+
+      if (!estudianteSeleccionado) return;
+
+      document.getElementById("repNombreEstudiante").textContent = estudianteSeleccionado.nombre;
+      document.getElementById("repCorreoEstudiante").textContent = estudianteSeleccionado.correo;
+
+      const tbody = document.getElementById("repTablaCuerpo");
+      tbody.innerHTML = '<tr><td colspan="5" class="center-align grey-text">Buscando actividades en la base de datos...</td></tr>';
+      
+      let totalHoras = 0;
+
+      try {
+        const q = query(
+          collection(db, "HorasSociales"),
+          where("email", "==", estudianteSeleccionado.correo)
+        );
+
+        const querySnapshot = await getDocs(q);
+        tbody.innerHTML = "";
+
+        if (querySnapshot.empty) {
+          tbody.innerHTML = '<tr><td colspan="5" class="center-align grey-text">El estudiante no tiene horas de servicio social registradas.</td></tr>';
+          document.getElementById("repTotalHoras").textContent = "0";
+          document.getElementById("btnDescargarPDF").disabled = true;
+          return;
+        }
+
+        querySnapshot.forEach((docSnap) => {
+          const data = docSnap.data();
+          const horas = Number(data.Horas) || 0;
+          totalHoras += horas;
+
+          let fechaFormateada = "---";
+          if (data.fechaCreacion && data.fechaCreacion.toDate) {
+            fechaFormateada = data.fechaCreacion.toDate().toLocaleDateString('es-ES');
+          }
+
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${fechaFormateada}</td>
+            <td>${data.Categoria || "General"}</td>
+            <td>${data.Lugar || "N/A"}</td>
+            <td>${data.Descripcion || "Sin descripción"}</td>
+            <td style="text-align: right;"><strong>${horas}</strong> hrs</td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        document.getElementById("repTotalHoras").textContent = totalHoras;
+        document.getElementById("btnDescargarPDF").disabled = false;
+
+      } catch (error) {
+        console.error("Error al obtener actividades:", error);
+        tbody.innerHTML = '<tr><td colspan="5" class="center-align red-text">Error al cargar registros de Firestore.</td></tr>';
+      }
+    });
+
+    // Evento para generar y descargar PDF
+    document.getElementById("btnDescargarPDF").addEventListener("click", () => {
+      const elemento = document.getElementById("hojaReporte");
+      const nombreAlumno = document.getElementById("repNombreEstudiante").textContent.trim().replace(/\s+/g, "_");
+
+      const opciones = {
+        margin:       10,
+        filename:     `Reporte_Horas_${nombreAlumno}.pdf`,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2 },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      html2pdf().set(opciones).from(elemento).save();
+    });
+  </script>
 </body>
 </html>
