@@ -304,7 +304,7 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
-  <script type="module">
+<script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { 
       getFirestore, 
@@ -346,26 +346,26 @@
       document.getElementById("docenteNombre").textContent = nombreUsuario;
       document.getElementById("repNombreDocente").textContent = nombreUsuario;
 
-      // Obtener la institución del docente desde Firestore
+      // Obtener la institución del docente desde Firestore (resolviendo ID/Referencia a texto)
       await cargarDatosDocente(user.uid);
 
       await cargarEstudiantes();
     });
 
-    // Carga la institución del docente desde Firestore
+    // Carga la institución del docente desde Firestore y resuelve ID/Referencia al Nombre real
     async function cargarDatosDocente(uid) {
       try {
-        let institucionEncontrada = "";
+        let institucionValor = "";
 
-        // 1. Intentar buscar en colección "Docentes" por el UID del usuario
+        // 1. Buscar en la colección "Docentes" por el UID del usuario
         let docRef = doc(db, "Docentes", uid);
         let docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
           const data = docSnap.data();
-          institucionEncontrada = data.institucion || data.Institucion || data.colegio || data.escuela || "";
+          institucionValor = data.institucion || data.Institucion || data.colegio || data.escuela || "";
         } else {
-          // 2. Si no se encuentra por UID, intentar buscar en "Docentes" por correo electrónico
+          // 2. Buscar por correo electrónico si no se encontró por UID
           if (auth.currentUser && auth.currentUser.email) {
             const qDocente = query(
               collection(db, "Docentes"),
@@ -374,13 +374,45 @@
             const querySnap = await getDocs(qDocente);
             if (!querySnap.empty) {
               const data = querySnap.docs[0].data();
-              institucionEncontrada = data.institucion || data.Institucion || data.colegio || data.escuela || "";
+              institucionValor = data.institucion || data.Institucion || data.colegio || data.escuela || "";
             }
           }
         }
 
-        if (institucionEncontrada) {
-          document.getElementById("repNombreInstitucion").textContent = institucionEncontrada;
+        if (institucionValor) {
+          // Caso A: El campo es un objeto DocumentReference de Firestore
+          if (typeof institucionValor === 'object' && institucionValor.path) {
+            const instSnap = await getDoc(institucionValor);
+            if (instSnap.exists()) {
+              const dataInst = instSnap.data();
+              document.getElementById("repNombreInstitucion").textContent = dataInst.nombre || dataInst.Nombre || dataInst.nombreInstitucion || "INSTITUCIÓN EDUCATIVA";
+            }
+          } 
+          // Caso B: El campo es un ID en formato texto (ejemplo de id alfanumérico largo sin espacios)
+          else if (typeof institucionValor === 'string' && institucionValor.length > 15 && !institucionValor.includes(" ")) {
+            // Probar en la colección "Instituciones" (plural)
+            const instRef = doc(db, "Instituciones", institucionValor);
+            const instSnap = await getDoc(instRef);
+
+            if (instSnap.exists()) {
+              const dataInst = instSnap.data();
+              document.getElementById("repNombreInstitucion").textContent = dataInst.nombre || dataInst.Nombre || dataInst.nombreInstitucion || "INSTITUCIÓN EDUCATIVA";
+            } else {
+              // Probar en la colección "Institucion" (singular)
+              const instRefSingular = doc(db, "Institucion", institucionValor);
+              const instSnapSingular = await getDoc(instRefSingular);
+              if (instSnapSingular.exists()) {
+                const dataInst = instSnapSingular.data();
+                document.getElementById("repNombreInstitucion").textContent = dataInst.nombre || dataInst.Nombre || dataInst.nombreInstitucion || "INSTITUCIÓN EDUCATIVA";
+              } else {
+                document.getElementById("repNombreInstitucion").textContent = institucionValor;
+              }
+            }
+          } 
+          // Caso C: Ya viene la cadena de texto con el nombre de la institución
+          else {
+            document.getElementById("repNombreInstitucion").textContent = institucionValor;
+          }
         } else {
           document.getElementById("repNombreInstitucion").textContent = "INSTITUCIÓN EDUCATIVA";
         }
@@ -519,6 +551,6 @@
 
       html2pdf().set(opciones).from(elemento).save();
     });
-  </script>
+</script>
 </body>
 </html>
