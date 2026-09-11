@@ -454,7 +454,8 @@
 
         try {
           await addDoc(collection(db, "HorasSociales"), {
-            userId: institucionId, // Sustituido por el ID de la institución del estudiante
+            userId: usuarioActual.uid,
+            institucion: institucionId,
             email: usuarioActual.email || "",
             Categoria: categoriaInput,
             Descripcion: descripcionInput,
