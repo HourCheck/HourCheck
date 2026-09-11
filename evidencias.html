@@ -243,7 +243,9 @@
 
             <div>
               <label class="form-label" for="docente">Docente encargado</label>
-              <input id="docente" type="text" class="custom-input" placeholder="ej. Lic. Roberto Gómez" required>
+              <select id="docente" class="custom-select" required>
+                <option value="" disabled selected>Cargando docentes...</option>
+              </select>
             </div>
 
             <div>
@@ -326,10 +328,6 @@
 
   <!-- Script JS de Materialize -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-<!-- Script JS de Materialize -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-<!-- Script JS de Materialize -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
   <!-- Firebase Script Modular -->
   <script type="module">
@@ -342,7 +340,12 @@
       getFirestore, 
       collection, 
       addDoc, 
-      serverTimestamp 
+      serverTimestamp,
+      doc,
+      getDoc,
+      query,
+      where,
+      getDocs 
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     // Configuración de tu proyecto en Firebase
@@ -361,11 +364,44 @@
     const db = getFirestore(app);
 
     let usuarioActual = null;
+    let institucionId = null;
 
-    // Verificar autenticación
-    onAuthStateChanged(auth, (user) => {
+    // Verificar autenticación y cargar datos de institución y docentes
+    onAuthStateChanged(auth, async (user) => {
       if (user) {
         usuarioActual = user;
+        try {
+          // Buscar el documento del estudiante en la colección "Estudiantes" usando su UID
+          const studentDocRef = doc(db, "Estudiantes", user.uid);
+          const studentDocSnap = await getDoc(studentDocRef);
+
+          if (studentDocSnap.exists()) {
+            const studentData = studentDocSnap.data();
+            institucionId = studentData.institucion; // Extraer el ID de la institución
+
+            if (institucionId) {
+              // Consultar los docentes que pertenecen a la misma institución
+              const docentesRef = collection(db, "Docentes");
+              const q = query(docentesRef, where("Institucion", "==", institucionId));
+              const querySnapshot = await getDocs(q);
+
+              const docenteSelect = document.getElementById("docente");
+              docenteSelect.innerHTML = '<option value="" disabled selected>Selecciona un docente...</option>';
+
+              querySnapshot.forEach((docSnap) => {
+                const docenteData = docSnap.data();
+                const option = document.createElement("option");
+                option.value = docenteData.NameDocente;
+                option.textContent = docenteData.NameDocente;
+                docenteSelect.appendChild(option);
+              });
+            }
+          } else {
+            console.error("No se encontró el perfil del estudiante en Firestore.");
+          }
+        } catch (error) {
+          console.error("Error al cargar la información del estudiante o docentes:", error);
+        }
       } else {
         window.location.href = "loginU.html";
       }
@@ -387,9 +423,9 @@
       formulario.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        if (!usuarioActual) {
+        if (!usuarioActual || !institucionId) {
           M.toast({
-            html: '<i class="material-icons left">warning</i>Debes estar autenticado para registrar horas.',
+            html: '<i class="material-icons left">warning</i>No se pudo identificar la institución del estudiante.',
             classes: 'red darken-1 rounded'
           });
           return;
@@ -418,7 +454,7 @@
 
         try {
           await addDoc(collection(db, "HorasSociales"), {
-            userId: usuarioActual.uid,
+            userId: institucionId, // Sustituido por el ID de la institución del estudiante
             email: usuarioActual.email || "",
             Categoria: categoriaInput,
             Descripcion: descripcionInput,
