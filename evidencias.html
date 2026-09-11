@@ -3,86 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Registro de Horas Sociales - HourCheck</title>
+  <title>Generar Reporte - HourCheck</title>
+  <link rel="icon" type="image/png" href="logo.png">
   
-  <!-- CSS de Materialize -->
+  <!-- Materialize CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-  
-  <!-- Iconos de Materialize (Google Material Icons) con protocolo https explícito -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  
+  <!-- Librería HTML2PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
   <style>
-    .custom-footer {
-      background-color: #1557d0 !important;
-      border-top-left-radius: 25px;
-      border-top-right-radius: 25px;
-      margin-top: 50px;
-      padding-top: 30px !important;
-    }
-
-    .footer-container {
-      width: 90%;
-      max-width: 1100px;
-    }
-
-    .footer-brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 10px;
-    }
-
-    .footer-logo {
-      height: 35px;
-      width: auto;
-      filter: brightness(0) invert(1);
-    }
-
-    .footer-brand h5 {
-      margin: 0;
-      font-size: 1.4rem;
-    }
-
-    .footer-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      margin-bottom: 8px;
-      transition: color 0.2s, transform 0.2s;
-    }
-
-    .footer-link:hover {
-      color: #ff5500 !important;
-      transform: translateX(4px);
-    }
-
-    .footer-btn {
-      background-color: rgba(255, 255, 255, 0.15);
-      border-radius: 12px;
-      text-transform: none;
-      font-weight: 600;
-      margin-top: 5px;
-    }
-
-    .footer-btn:hover {
-      background-color: rgba(255, 255, 255, 0.25);
-    }
-
-    .custom-copyright {
-      background-color: rgba(0, 0, 0, 0.12) !important;
-      font-size: 0.85rem;
-      padding: 15px 0;
-    }
-
-    .font-weight-bold {
-      font-weight: 700;
-    }
-
     body {
-      background-color: #f7f9fc;
+      background-color: #f4f6f9;
       font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
     }
 
+    /* Estilos del Header / Navbar Superior */
     .top-header {
       background-color: #ffffff;
       padding: 15px 40px;
@@ -90,6 +29,7 @@
       justify-content: space-between;
       align-items: center;
       box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      margin-bottom: 25px;
     }
 
     .header-left {
@@ -105,16 +45,15 @@
       justify-content: center;
       text-decoration: none;
       transition: transform 0.2s;
-      width: 42px;
-      height: 42px;
-      border: 1.5px solid #333;
-      border-radius: 50%;
     }
 
     .back-btn:hover {
       transform: translateX(-3px);
-      background-color: #e0e0e0;
       color: #1557d0;
+    }
+
+    .back-btn i {
+      font-size: 30px;
     }
 
     .header-right {
@@ -134,221 +73,249 @@
       object-fit: contain;
     }
 
-    .custom-card {
-      background: #ffffff;
+    /* Contenedor Principal */
+    .container-reporte {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 20px 40px 20px;
+    }
+
+    .card-panel {
       border-radius: 20px;
-      padding: 35px 40px;
-      box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.05);
-      margin-top: 20px;
+      padding: 25px;
     }
 
-    .form-label {
-      font-weight: 700;
-      color: #000000;
-      font-size: 0.95rem;
-      margin-bottom: 6px;
-      display: block;
-    }
-
-    .custom-input, 
-    .custom-textarea,
-    .custom-select {
-      border: 1.5px solid #dcdcdc !important;
-      border-radius: 10px !important;
-      padding: 0 15px !important;
-      box-sizing: border-box !important;
-      height: 42px !important;
-      background-color: #ffffff !important;
-      margin-bottom: 18px !important;
-      box-shadow: none !important;
-    }
-
-    .custom-select {
-      display: block !important;
+    /* Estilos del Documento PDF */
+    #hojaReporte {
+      background: #ffffff;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
       color: #333;
     }
 
-    .custom-textarea {
-      height: 90px !important;
-      padding: 10px 15px !important;
-      resize: vertical;
+    .report-header {
+      border-bottom: 2px solid #1557d0;
+      padding-bottom: 15px;
+      margin-bottom: 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
     }
 
-    .custom-input:focus, 
-    .custom-textarea:focus,
-    .custom-select:focus {
-      border-color: #ff6b00 !important;
-      outline: none;
+    .institution-info h3 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #1a202c;
+      margin: 0 0 5px 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
-    .file-field .btn {
-      border-radius: 8px;
-      background-color: #e2e8f0;
-      color: #334155;
-      box-shadow: none;
-      height: 42px;
-      line-height: 42px;
+    .report-title-sub {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #1557d0;
+      margin: 0;
+      text-transform: uppercase;
+    }
+
+    .report-subtitle {
+      font-size: 0.9rem;
+      color: #666;
+      margin: 2px 0 0 0;
+    }
+
+    .brand-corner {
+      text-align: right;
+    }
+
+    .pdf-logo-small {
+      height: 35px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .pdf-meta-date {
+      font-size: 0.8rem;
+      color: #777;
+      margin-top: 5px;
+    }
+
+    .student-info-box {
+      background-color: #f8fafc;
+      border-left: 4px solid #1557d0;
+      padding: 15px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+
+    .student-info-box p {
+      margin: 3px 0;
+    }
+
+    .table-report {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    .table-report th {
+      background-color: #1557d0;
+      color: white;
+      padding: 10px;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    .table-report td {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+      font-size: 0.88rem;
+    }
+
+    .signatures {
+      margin-top: 60px;
+      display: flex;
+      justify-content: space-between;
+      text-align: center;
+    }
+
+    .signature-line {
+      border-top: 1px solid #333;
+      width: 220px;
+      margin-top: 40px;
+      padding-top: 5px;
+      font-weight: bold;
+      font-size: 0.9rem;
     }
 
     .btn-orange {
-      background-color: #ff6b00;
-      border-radius: 12px;
-      width: 100%;
-      height: 50px;
-      line-height: 50px;
-      font-size: 1.1rem;
-      font-weight: bold;
+      background-color: #ff5500 !important;
+      border-radius: 10px;
+      font-weight: 700;
       text-transform: none;
-      box-shadow: none;
+    }
+
+    .btn-orange:hover {
+      background-color: #e04b00 !important;
     }
   </style>
 </head>
 <body>
 
-  <header class="top-header">
-    <div class="header-left">
-      <a href="mainPE.html" class="back-btn" title="Volver al Inicio">
-        <i class="material-icons">arrow_back</i>
-      </a>
-    </div>
-
-    <div class="header-right">
-      <div class="logo-container">
-        <img src="logo.png" alt="HourCheck Logo" class="logo-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x40?text=HourCheck';">
-      </div>
-    </div>
-  </header>
-
-  <div class="container">
-    <div class="row">
-      <div class="col s12 m8 offset-m2 l6 offset-l3">
-        <div class="custom-card">
-
-          <form id="horasForm">
-
-            <div>
-              <label class="form-label" for="categoria">Categoría del Servicio Social</label>
-              <select id="categoria" class="custom-select" required>
-                <option value="" disabled selected>Selecciona una categoría...</option>
-                <option value="Jornadas de limpieza">Jornadas de limpieza</option>
-                <option value="Tutorías de inglés">Tutorías de inglés</option>
-                <option value="Tutorías en primera infancia">Tutorías en primera infancia</option>
-              </select>
-            </div>
-
-            <div>
-              <label class="form-label" for="lugar">Lugar donde se realizó</label>
-              <input id="lugar" type="text" class="custom-input" placeholder="ej. Básica" required>
-            </div>
-
-            <div>
-              <label class="form-label" for="docente">Docente encargado</label>
-              <select id="docente" class="custom-select" required>
-                <option value="" disabled selected>Cargando docentes...</option>
-              </select>
-            </div>
-
-            <div>
-              <label class="form-label" for="horas">Cuántas horas realizadas</label>
-              <input id="horas" type="number" min="0.5" max="150" step="0.01" class="custom-input" placeholder="ej. 15" required>
-            </div>
-
-            <div>
-              <label class="form-label" for="descripcion">Descripción</label>
-              <textarea id="descripcion" class="custom-textarea" placeholder="Escribe un breve resumen de las actividades..." required></textarea>
-            </div>
-
-            <div>
-              <label class="form-label">Adjuntar evidencia</label>
-              <div class="file-field input-field" style="margin-top: 0;">
-                <div class="btn">
-                  <span>Subir</span>
-                  <input type="file" id="evidencia" accept="image/*,.pdf" required>
-                </div>
-                <div class="file-path-wrapper">
-                  <input class="file-path custom-input" type="text" placeholder="Selecciona un archivo...">
-                </div>
-              </div>
-            </div>
-
-            <div style="margin-top: 15px;">
-              <button class="btn waves-effect waves-light btn-orange" type="submit" id="btnGuardar">
-                Guardar Registro
-              </button>
-            </div>
-
-          </form>
-
-        </div>
-      </div>
-    </div>
+<header class="top-header">
+  <div class="header-left">
+    <a href="mainPD.html" class="back-btn" title="Volver al Inicio">
+      <i class="material-icons">arrow_back</i>
+    </a>
   </div>
 
-  <footer class="page-footer custom-footer">
-    <div class="container footer-container">
-      <div class="row">
-        
-        <div class="col s12 m4">
-          <div class="footer-brand">
-            <img src="logo.png" alt="HourCheck Logo" class="footer-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x40?text=HourCheck';">
-            <h5 class="white-text font-weight-bold">HourCheck</h5>
+  <div class="header-right">
+    <div class="logo-container">
+      <img src="logo.png" alt="HourCheck Logo" class="logo-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x40?text=HourCheck';">
+    </div>
+  </div>
+</header>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <div class="container-reporte">
+    
+    <!-- Filtro de Estudiantes -->
+    <div class="card-panel white z-depth-1">
+      <div class="row" style="margin-bottom: 0;">
+        <div class="col s12 m8 input-field">
+          <select id="selectEstudiante">
+            <option value="" disabled selected>Cargando estudiantes...</option>
+          </select>
+          <label>Selecciona un estudiante</label>
+        </div>
+        <div class="col s12 m4 center-align" style="padding-top: 15px;">
+          <button id="btnDescargarPDF" class="btn btn-orange waves-effect waves-light" disabled>
+            <i class="material-icons left">picture_as_pdf</i> Descargar PDF
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- DOCUMENTO A GENERAR EN PDF -->
+    <div id="hojaReporte">
+      <div class="report-header">
+        <div class="institution-info">
+          <h3 id="repNombreInstitucion">Cargando Institución...</h3>
+          <h4 class="report-title-sub">Reporte de Horas Sociales</h4>
+          <p class="report-subtitle">Programa de Servicio Social Estudiantil</p>
+        </div>
+        <div class="brand-corner">
+          <img src="logo.png" alt="HourCheck Logo" class="pdf-logo-small" onerror="this.onerror=null; this.src='https://via.placeholder.com/100x30?text=HourCheck';">
+          <div class="pdf-meta-date" id="pdfFechaEmision">Fecha: --/--/----</div>
+        </div>
+      </div>
+
+      <div class="student-info-box">
+        <div class="row" style="margin-bottom: 0;">
+          <div class="col s12 m7">
+            <p><strong>Estudiante:</strong> <span id="repNombreEstudiante">Seleccione un alumno</span></p>
+            <p><strong>Correo Electrónico:</strong> <span id="repCorreoEstudiante">---</span></p>
           </div>
-          <p class="grey-text text-lighten-2">
-            Sistema para la gestión y seguimiento del Servicio Social Estudiantil.
-          </p>
+          <div class="col s12 m5">
+            <p><strong>Meta Requerida:</strong> 150 horas</p>
+            <p><strong>Estado del Proceso:</strong> En curso</p>
+          </div>
         </div>
+      </div>
 
-        <div class="col s12 m4">
-          <h5 class="white-text font-weight-bold">Enlaces Rápidos</h5>
-          <ul>
-            <li><a class="grey-text text-lighten-3 footer-link" href="index.html"><i class="material-icons tiny">chevron_right</i> Inicio</a></li>
-            <li><a class="grey-text text-lighten-3 footer-link" href="saberCualP.html"><i class="material-icons tiny">chevron_right</i> Guía de Perfiles</a></li>
-          </ul>
+      <table class="table-report">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Categoría</th>
+            <th>Lugar</th>
+            <th>Descripción</th>
+            <th style="text-align: right;">Horas</th>
+          </tr>
+        </thead>
+        <tbody id="repTablaCuerpo">
+          <tr>
+            <td colspan="5" class="center-align grey-text">Selecciona un estudiante para desplegar sus actividades.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="text-align: right; margin-top: 25px;">
+        <h5><strong>Total Horas Acumuladas: <span id="repTotalHoras" style="color: #1557d0;">0</span> / 150 hrs</strong></h5>
+      </div>
+
+      <div class="signatures">
+        <div>
+          <div class="signature-line" id="repNombreDocente">Docente / Supervisor</div>
+          <p style="margin: 0; font-size: 0.85rem; color: #666;">Firma de Validación</p>
         </div>
-
-        <div class="col s12 m4">
-          <h5 class="white-text font-weight-bold">Soporte</h5>
-          <p class="grey-text text-lighten-2">
-            ¿Tienes dudas con el registro de tus horas?
-          </p>
-          <a href="mailto:soporte@hourcheck.com" class="btn-flat white-text footer-btn">
-            <i class="material-icons left">help_outline</i> Contactar Soporte
-          </a>
+        <div>
+          <div class="signature-line">Sello Institucional</div>
         </div>
-
       </div>
     </div>
 
-    <div class="footer-copyright custom-copyright">
-      <div class="container center-align white-text">
-        © 2026 HourCheck - Todos los derechos reservados.
-      </div>
-    </div>
-  </footer>
+  </div>
 
-  <!-- Script JS de Materialize -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
-  <!-- Firebase Script Modular -->
-  <script type="module">
+<script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { 
-      getAuth, 
-      onAuthStateChanged 
-    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { 
       getFirestore, 
       collection, 
-      addDoc, 
-      serverTimestamp,
-      doc,
+      getDocs, 
       getDoc,
-      query,
-      where,
-      getDocs 
+      doc,
+      addDoc,
+      serverTimestamp,
+      query, 
+      where 
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-    // Configuración de tu proyecto en Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
       authDomain: "hourcheckt.firebaseapp.com",
@@ -358,140 +325,270 @@
       appId: "1:83459752453:web:1b81724c28973bf567126c"
     };
 
-    // Inicializar Servicios
     const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
     const db = getFirestore(app);
+    const auth = getAuth(app);
 
-    let usuarioActual = null;
-    let institucionId = null;
+    let listaEstudiantes = [];
+    let institucionIdActual = ""; // Variable para almacenar el ID de la institución del docente
 
-    // Verificar autenticación y cargar datos de institución y docentes
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        usuarioActual = user;
-        try {
-          // Buscar el documento del estudiante en la colección "Estudiantes" usando su UID
-          const studentDocRef = doc(db, "Estudiantes", user.uid);
-          const studentDocSnap = await getDoc(studentDocRef);
-
-          if (studentDocSnap.exists()) {
-            const studentData = studentDocSnap.data();
-            institucionId = studentData.institucion; // Extraer el ID de la institución
-
-            if (institucionId) {
-              // Consultar los docentes que pertenecen a la misma institución
-              const docentesRef = collection(db, "Docentes");
-              const q = query(docentesRef, where("Institucion", "==", institucionId));
-              const querySnapshot = await getDocs(q);
-
-              const docenteSelect = document.getElementById("docente");
-              docenteSelect.innerHTML = '<option value="" disabled selected>Selecciona un docente...</option>';
-
-              querySnapshot.forEach((docSnap) => {
-                const docenteData = docSnap.data();
-                const option = document.createElement("option");
-                option.value = docenteData.NameDocente;
-                option.textContent = docenteData.NameDocente;
-                docenteSelect.appendChild(option);
-              });
-            }
-          } else {
-            console.error("No se encontró el perfil del estudiante en Firestore.");
-          }
-        } catch (error) {
-          console.error("Error al cargar la información del estudiante o docentes:", error);
-        }
-      } else {
-        window.location.href = "loginU.html";
-      }
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById("pdfFechaEmision").textContent = `Fecha: ${new Date().toLocaleDateString('es-ES')}`;
     });
 
-    // Convertir archivo a Base64
-    function convertirImagenABase64(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = (error) => reject(error);
-      });
-    }
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "loginU.html";
+        return;
+      }
 
-    const formulario = document.getElementById("horasForm");
+      const nombreUsuario = user.displayName || "Docente / Supervisor";
+      document.getElementById("repNombreDocente").textContent = nombreUsuario;
 
-    if (formulario) {
-      formulario.addEventListener("submit", async (e) => {
-        e.preventDefault();
+      await cargarDatosDocente(user.uid);
+      await cargarEstudiantes();
+    });
 
-        if (!usuarioActual || !institucionId) {
-          M.toast({
-            html: '<i class="material-icons left">warning</i>No se pudo identificar la institución del estudiante.',
-            classes: 'red darken-1 rounded'
-          });
+    async function cargarDatosDocente(uid) {
+      try {
+        let docData = null;
+
+        let docRef = doc(db, "Docentes", uid);
+        let docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          docData = docSnap.data();
+        } else {
+          let docRefSingular = doc(db, "Docente", uid);
+          let docSnapSingular = await getDoc(docRefSingular);
+
+          if (docSnapSingular.exists()) {
+            docData = docSnapSingular.data();
+          } else if (auth.currentUser && auth.currentUser.email) {
+            const emailUser = auth.currentUser.email.toLowerCase().trim();
+            const qDocente = query(collection(db, "Docentes"), where("email", "==", emailUser));
+            const querySnap = await getDocs(qDocente);
+
+            if (!querySnap.empty) {
+              docData = querySnap.docs[0].data();
+            } else {
+              const qDocenteSingular = query(collection(db, "Docente"), where("email", "==", emailUser));
+              const querySnapSingular = await getDocs(qDocenteSingular);
+              if (!querySnapSingular.empty) {
+                docData = querySnapSingular.docs[0].data();
+              }
+            }
+          }
+        }
+
+        if (!docData) {
+          document.getElementById("repNombreInstitucion").textContent = "INSTITUCIÓN EDUCATIVA";
           return;
         }
 
-        // Deshabilitar botón mientras guarda para evitar múltiples clics
-        const btnGuardar = document.getElementById("btnGuardar");
-        btnGuardar.disabled = true;
+        let idInstitucion = docData.institucionId || docData.InstitucionId || docData.institucion || "";
+        institucionIdActual = idInstitucion; // Guardar el ID de la institución
 
-        // Capturar valores
-        const categoriaInput = document.getElementById("categoria").value;
-        const descripcionInput = document.getElementById("descripcion").value;
-        const docenteInput = document.getElementById("docente").value;
-        const horasInput = parseFloat(document.getElementById("horas").value);
-        const lugarInput = document.getElementById("lugar").value;
-        const archivoEvidencia = document.getElementById("evidencia").files[0];
+        if (!idInstitucion) {
+          document.getElementById("repNombreInstitucion").textContent = "INSTITUCIÓN EDUCATIVA";
+          return;
+        }
 
-        let evidenciaBase64 = "";
-        if (archivoEvidencia) {
+        if (typeof idInstitucion === 'object' && idInstitucion.path) {
+          const instSnap = await getDoc(idInstitucion);
+          if (instSnap.exists()) {
+            const dataInst = instSnap.data();
+            const nombre = dataInst.nombre || dataInst.Nombre || dataInst.nombreInstitucion || dataInst.institucion || "";
+            document.getElementById("repNombreInstitucion").textContent = nombre || "INSTITUCIÓN EDUCATIVA";
+          }
+          return;
+        }
+
+        const idLimpio = String(idInstitucion).trim();
+        const coleccionesAProbar = ["Instituciones", "Institucion", "Colegios", "Escuelas"];
+        let encontrada = false;
+
+        for (const colNombre of coleccionesAProbar) {
           try {
-            evidenciaBase64 = await convertirImagenABase64(archivoEvidencia);
-          } catch (err) {
-            console.error("Error al procesar la imagen:", err);
+            const instRef = doc(db, colNombre, idLimpio);
+            const instSnap = await getDoc(instRef);
+
+            if (instSnap.exists()) {
+              const dataInst = instSnap.data();
+              const nombre = dataInst.nombre || dataInst.Nombre || dataInst.nombreInstitucion || dataInst.institucion || "";
+              
+              if (nombre) {
+                document.getElementById("repNombreInstitucion").textContent = nombre;
+                encontrada = true;
+                break;
+              }
+            }
+          } catch (e) {
+            console.warn(`Error al consultar colección '${colNombre}':`, e);
           }
         }
 
-        try {
-          await addDoc(collection(db, "HorasSociales"), {
-            userId: usuarioActual.uid,
-            institucion: institucionId,
-            email: usuarioActual.email || "",
-            Categoria: categoriaInput,
-            Descripcion: descripcionInput,
-            "Docente encargado": docenteInput,
-            Evidencia: evidenciaBase64,
-            Horas: horasInput,
-            Lugar: lugarInput,
-            fechaCreacion: serverTimestamp()
-          });
-
-          // Notificación visual de éxito con Materialize Toast
-          M.toast({
-            html: '<i class="material-icons left">check_circle</i>Horas sociales registradas correctamente.',
-            classes: 'green darken-1 rounded',
-            displayLength: 2000
-          });
-
-          formulario.reset();
-
-          // Espera a que la notificación sea visible antes de redirigir
-          setTimeout(() => {
-            window.location.href = "mainPE.html";
-          }, 1500);
-
-        } catch (error) {
-          console.error("Error al guardar en Firestore: ", error);
-          btnGuardar.disabled = false;
-          
-          // Notificación visual de error
-          M.toast({
-            html: '<i class="material-icons left">error</i>Ocurrió un error al guardar. Inténtalo de nuevo.',
-            classes: 'red darken-1 rounded'
-          });
+        if (!encontrada) {
+          document.getElementById("repNombreInstitucion").textContent = idLimpio.length > 20 ? "INSTITUCIÓN EDUCATIVA" : idLimpio;
         }
-      });
+
+      } catch (error) {
+        console.error("Error en cargarDatosDocente:", error);
+        document.getElementById("repNombreInstitucion").textContent = "INSTITUCIÓN EDUCATIVA";
+      }
     }
-  </script>
+
+    async function cargarEstudiantes() {
+      const select = document.getElementById("selectEstudiante");
+
+      try {
+        const querySnapshot = await getDocs(collection(db, "Estudiantes"));
+        listaEstudiantes = [];
+
+        if (querySnapshot.empty) {
+          select.innerHTML = '<option value="" disabled selected>No hay estudiantes registrados</option>';
+          M.FormSelect.init(select);
+          return;
+        }
+
+        querySnapshot.forEach((docSnap) => {
+          const data = docSnap.data();
+          const nombre = data.nombre || data.Nombre || data.nombreCompleto || data.name || "Estudiante sin nombre";
+          const correo = data.correo || data.email || data.Correo || "";
+
+          if (correo) {
+            listaEstudiantes.push({
+              id: docSnap.id,
+              nombre: nombre,
+              correo: correo.toLowerCase().trim()
+            });
+          }
+        });
+
+        if (listaEstudiantes.length === 0) {
+          select.innerHTML = '<option value="" disabled selected>No se encontraron estudiantes con correo válido</option>';
+          M.FormSelect.init(select);
+          return;
+        }
+
+        listaEstudiantes.sort((a, b) => a.nombre.localeCompare(b.nombre));
+
+        select.innerHTML = '<option value="" disabled selected>Selecciona un estudiante</option>';
+        listaEstudiantes.forEach((est, idx) => {
+          const option = document.createElement("option");
+          option.value = idx;
+          option.textContent = `${est.nombre} (${est.correo})`;
+          select.appendChild(option);
+        });
+
+        M.FormSelect.init(select);
+
+      } catch (error) {
+        console.error("Error al cargar lista de estudiantes:", error);
+        select.innerHTML = '<option value="" disabled selected>Error de permisos o conexión</option>';
+        M.FormSelect.init(select);
+      }
+    }
+
+    document.getElementById("selectEstudiante").addEventListener("change", async (e) => {
+      const index = e.target.value;
+      const estudianteSeleccionado = listaEstudiantes[index];
+
+      if (!estudianteSeleccionado) return;
+
+      document.getElementById("repNombreEstudiante").textContent = estudianteSeleccionado.nombre;
+      document.getElementById("repCorreoEstudiante").textContent = estudianteSeleccionado.correo;
+
+      const tbody = document.getElementById("repTablaCuerpo");
+      tbody.innerHTML = '<tr><td colspan="5" class="center-align grey-text">Buscando actividades en la base de datos...</td></tr>';
+      
+      let totalHoras = 0;
+
+      try {
+        const q = query(
+          collection(db, "HorasSociales"),
+          where("email", "==", estudianteSeleccionado.correo)
+        );
+
+        const querySnapshot = await getDocs(q);
+        tbody.innerHTML = "";
+
+        if (querySnapshot.empty) {
+          tbody.innerHTML = '<tr><td colspan="5" class="center-align grey-text">El estudiante no tiene horas de servicio social registradas.</td></tr>';
+          document.getElementById("repTotalHoras").textContent = "0";
+          document.getElementById("btnDescargarPDF").disabled = true;
+          return;
+        }
+
+        querySnapshot.forEach((docSnap) => {
+          const data = docSnap.data();
+          const horas = Number(data.Horas) || 0;
+          totalHoras += horas;
+
+          let fechaFormateada = "---";
+          if (data.fechaCreacion && data.fechaCreacion.toDate) {
+            fechaFormateada = data.fechaCreacion.toDate().toLocaleDateString('es-ES');
+          }
+
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${fechaFormateada}</td>
+            <td>${data.Categoria || "General"}</td>
+            <td>${data.Lugar || "N/A"}</td>
+            <td>${data.Descripcion || "Sin descripción"}</td>
+            <td style="text-align: right;"><strong>${horas}</strong> hrs</td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        document.getElementById("repTotalHoras").textContent = totalHoras;
+        document.getElementById("btnDescargarPDF").disabled = false;
+
+      } catch (error) {
+        console.error("Error al obtener actividades:", error);
+        tbody.innerHTML = '<tr><td colspan="5" class="center-align red-text">Error al cargar registros de Firestore.</td></tr>';
+      }
+    });
+
+    // Evento para generar, descargar PDF y guardarlo en la colección "reportesDocentes"
+    document.getElementById("btnDescargarPDF").addEventListener("click", async () => {
+      const elemento = document.getElementById("hojaReporte");
+      const nombreAlumno = document.getElementById("repNombreEstudiante").textContent.trim().replace(/\s+/g, "_");
+
+      const opciones = {
+        margin:      10,
+        filename:    `Reporte_Horas_${nombreAlumno}.pdf`,
+        image:       { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2 },
+        jsPDF:       { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      try {
+        // Generar el PDF en formato base64
+        const pdfBase64 = await html2pdf().set(opciones).from(elemento).outputPdf('datauristring');
+
+        // Guardar el documento en la colección "reportesDocentes" con los campos requeridos
+        await addDoc(collection(db, "reportesDocentes"), {
+          institucion: institucionIdActual,
+          pdf: pdfBase64,
+          fechaCreacion: serverTimestamp()
+        });
+
+        M.toast({
+          html: '<i class="material-icons left">check_circle</i>Reporte guardado en Firebase y descargado.',
+          classes: 'green darken-1 rounded'
+        });
+      } catch (error) {
+        console.error("Error al guardar en Firebase:", error);
+        M.toast({
+          html: '<i class="material-icons left">warning</i>El PDF se descargó, pero ocurrió un error al guardarlo en Firebase.',
+          classes: 'orange darken-1 rounded'
+        });
+      }
+
+      // Descargar el archivo PDF localmente
+      html2pdf().set(opciones).from(elemento).save();
+    });
+</script>
 </body>
 </html>
