@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tutorías en Primera Infancia</title>
+  <title>Tutorías de Inglés</title>
   
   <!-- Materialize CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
@@ -19,6 +19,7 @@
       padding: 0;
     }
 
+    /* Header Superior */
     .top-header {
       background-color: #ffffff;
       padding: 15px 40px;
@@ -88,13 +89,6 @@
       margin: 0;
       line-height: 1.1;
       letter-spacing: -0.5px;
-    }
-
-    .banner-subtitle {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #222;
-      margin-top: 8px;
     }
 
     .banner-icon-container {
@@ -193,6 +187,24 @@
       border-radius: 50%;
     }
 
+    .search-box-container {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 10px 20px;
+      margin-top: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .search-box-container input {
+      border: none !important;
+      box-shadow: none !important;
+      margin: 0 !important;
+      height: 2.5rem !important;
+    }
+
     .students-table-container {
       background: #ffffff;
       border: 1.5px solid #222;
@@ -209,40 +221,12 @@
       padding: 16px 30px;
       border-bottom: 1.5px solid #222;
       background: #ffffff;
-      gap: 15px;
-      flex-wrap: wrap;
     }
 
     .table-header-title {
       font-size: 1.15rem;
       font-weight: 700;
       margin: 0;
-    }
-
-    /* Estilos del Buscador Integrado */
-    .search-box {
-      display: flex;
-      align-items: center;
-      background-color: #f3f6fc;
-      border-radius: 10px;
-      padding: 4px 12px;
-      border: 1px solid #ddd;
-      flex: 1;
-      max-width: 350px;
-    }
-
-    .search-box i {
-      color: #666;
-      margin-right: 8px;
-    }
-
-    .search-box input {
-      border: none !important;
-      box-shadow: none !important;
-      margin: 0 !important;
-      height: 30px !important;
-      font-size: 0.9rem !important;
-      background: transparent !important;
     }
 
     .btn-reporte {
@@ -364,11 +348,104 @@
 
     .evidencia-img {
       max-width: 100%;
-      max-height: 300px;
+      max-height: 320px;
       border-radius: 12px;
       object-fit: contain;
       border: 1px solid #ddd;
       margin-top: 10px;
+    }
+
+    .hourcheck-footer {
+      background-color: #0f172a;
+      color: #f8fafc;
+      padding: 36px 20px 20px 20px;
+      border-top: 1px solid #1e293b;
+      margin-top: 50px;
+    }
+
+    .footer-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 15px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .footer-logo-icon {
+      color: #38bdf8;
+      font-size: 26px;
+    }
+
+    .footer-description {
+      color: #94a3b8;
+      font-size: 0.88rem;
+      margin: 8px 0 0 0;
+      line-height: 1.5;
+      max-width: 480px;
+    }
+
+    .footer-action-col {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .footer-support-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: #1e293b;
+      color: #38bdf8;
+      padding: 10px 18px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 600;
+      border: 1px solid #334155;
+      transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    }
+
+    .footer-support-btn:hover {
+      background-color: #334155;
+      border-color: #475569;
+      color: #ffffff;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid #1e293b;
+      margin-top: 28px;
+      padding-top: 16px;
+      text-align: center;
+      font-size: 0.82rem;
+      color: #64748b;
+    }
+
+    .footer-bottom p {
+      margin: 0;
+    }
+
+    @media (max-width: 768px) {
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      
+      .footer-action-col {
+        justify-content: flex-start;
+      }
     }
   </style>
 </head>
@@ -379,7 +456,6 @@
       <a href="mainPD.html" class="back-btn" title="Volver al Inicio">
         <i class="material-icons">arrow_back</i>
       </a>
-      <span id="docenteNombre" style="font-weight: bold;">Cargando...</span>
     </div>
 
     <div class="header-right">
@@ -390,14 +466,12 @@
   </header>
 
   <div class="container" style="width: 90%; max-width: 1200px;">
-
     <div class="banner-card">
       <div>
-        <h1 class="banner-title">Tutorías en primera infancia</h1>
-        <p class="banner-sub">Gestión de horas sociales y evidencias</p>
+        <h1 class="banner-title">Tutorías de inglés</h1>
       </div>
       <div class="banner-icon-container">
-        <i class="material-icons" style="font-size: 3.5rem; color: #1557d0;">child_care</i>
+        <i class="material-icons" style="font-size: 3.5rem; color: #1557d0;">translate</i>
       </div>
     </div>
 
@@ -409,8 +483,8 @@
           </div>
           <div>
             <div class="card-text-title">Próxima Actividad</div>
-            <div class="card-text-sub">22 Sep 2026</div>
-            <div class="card-text-bold">Atención pedagógica</div>
+            <div class="card-text-sub">18 Sep 2026</div>
+            <div class="card-text-bold">Clase de reforzamiento</div>
           </div>
         </div>
       </div>
@@ -432,22 +506,20 @@
           <div>
             <div class="card-text-title">Evidencias subidas</div>
             <div class="card-text-bold" id="totalRegistrosTexto">0 registros</div>
-            <div class="card-text-sub">Primera infancia</div>
+            <div class="card-text-sub">Tutorías de inglés</div>
           </div>
         </div>
       </div>
     </div>
 
+    <div class="search-box-container">
+      <i class="material-icons" style="color: #666;">search</i>
+      <input type="text" id="inputBuscadorEstudiante" placeholder="Buscar estudiante por nombre o correo...">
+    </div>
+
     <div class="students-table-container">
       <div class="table-header-box">
-        <span class="table-header-title">Estudiantes</span>
-        
-        <!-- Input de Búsqueda -->
-        <div class="search-box">
-          <i class="material-icons">search</i>
-          <input type="text" id="inputBuscar" placeholder="Buscar estudiante o lugar...">
-        </div>
-
+        <span class="table-header-title">Estudiantes en Tutorías de inglés</span>
         <button class="btn-reporte" id="btnGenerarReporte">
           <i class="material-icons" style="font-size: 1.2rem;">description</i>
           Generar reporte
@@ -460,41 +532,68 @@
         </div>
       </div>
     </div>
-
   </div>
 
-  <!-- Modal Evidencia -->
   <div id="modalEvidencia" class="modal">
     <div class="modal-content">
-      <h5 id="modalUsuarioNombre" style="font-weight: bold; margin-bottom: 5px;">Detalle de Registro</h5>
-      <p><strong>Lugar:</strong> <span id="modalLugar"></span></p>
-      <p><strong>Horas Reportadas:</strong> <span id="modalHoras"></span> hrs</p>
-      <p><strong>Descripción:</strong> <span id="modalDescripcion"></span></p>
-      <p><strong>Estado Actual:</strong> <span id="modalEstadoBadge"></span></p>
-      <div style="margin-top: 15px;">
-        <strong>Evidencia Adjunta:</strong>
-        <div id="modalEvidenciaContainer"></div>
+      <h5 style="font-weight: 700; margin-top: 0;">Evidencia del Registro</h5>
+      <p id="modalEstudiante" style="margin-bottom: 5px; font-weight: 600;"></p>
+      <p id="modalDetalles" style="color: #555; margin-top: 0;"></p>
+      
+      <div style="text-align: center; margin-top: 15px;" id="modalImagenContainer">
+        <p style="color: #888;">Cargando imagen...</p>
       </div>
     </div>
-    <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 10px; padding: 15px;">
-      <button class="btn-action-icon btn-accept" id="modalBtnAprobar"><i class="material-icons" style="font-size: 1.1rem;">check</i> Aceptar</button>
-      <button class="btn-action-icon btn-reject" id="modalBtnRechazar"><i class="material-icons" style="font-size: 1.1rem;">close</i> Denegar</button>
-      <a href="#!" class="modal-close btn-flat grey lighten-2" style="border-radius: 8px;">Cerrar</a>
+    <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center; padding: 0 24px 16px 24px;">
+      <div class="action-group">
+        <button id="btnModalAceptar" class="btn-action-icon btn-accept">
+          <i class="material-icons" style="font-size: 1.1rem;">check</i> Aceptar
+        </button>
+        <button id="btnModalDenegar" class="btn-action-icon btn-reject">
+          <i class="material-icons" style="font-size: 1.1rem;">close</i> Denegar
+        </button>
+      </div>
+      <a href="#!" class="modal-close waves-effect waves-blue btn-flat" style="font-weight: 700; color: #1557d0;">Cerrar</a>
     </div>
   </div>
+
+  <footer class="hourcheck-footer">
+    <div class="footer-container">
+      <div class="footer-grid">
+        <div class="footer-brand-col">
+          <div class="footer-logo">
+            <i class="material-icons footer-logo-icon">schedule</i>
+            <span>HourCheck</span>
+          </div>
+          <p class="footer-description">
+            Plataforma web para el registro, gestión y validación transparente del Servicio Social Estudiantil.
+          </p>
+        </div>
+
+        <div class="footer-action-col">
+          <a href="mailto:soporte@hourcheck.com" class="footer-support-btn">
+            <i class="material-icons">mail</i>
+            <span>Contactar Soporte</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 HourCheck. Todos los derechos reservados.</p>
+      </div>
+    </div>
+  </footer>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, getDocs, doc, getDoc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-    import { getAuth, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
-    let modalInstance = null;
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, getDocs, doc, query, where, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
     document.addEventListener('DOMContentLoaded', function() {
-      const modalElem = document.getElementById('modalEvidencia');
-      modalInstance = M.Modal.init(modalElem);
+      const elemsModal = document.querySelectorAll('.modal');
+      M.Modal.init(elemsModal);
     });
 
     const firebaseConfig = {
@@ -513,32 +612,19 @@
       console.error("Error al configurar persistencia:", error);
     });
 
-    const CATEGORIA_ACTIVA = "Tutorías en primera infancia";
+    const CATEGORIA_ACTIVA = "Tutorías de inglés";
 
-    const docenteNombreEl = document.getElementById("docenteNombre");
     const totalEstudiantesTextoEl = document.getElementById("totalEstudiantesTexto");
     const totalRegistrosTextoEl = document.getElementById("totalRegistrosTexto");
     const gaugeChartEl = document.getElementById("gaugeChart");
     const studentsContainer = document.getElementById("studentsContainer");
     const btnGenerarReporte = document.getElementById("btnGenerarReporte");
-    const inputBuscar = document.getElementById("inputBuscar");
+    const inputBuscadorEstudiante = document.getElementById("inputBuscadorEstudiante");
 
     let registrosCache = [];
 
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        try {
-          const docRef = doc(db, "Docentes", user.uid);
-          const docSnap = await getDoc(docRef);
-          if (docSnap.exists() && docSnap.data().nombre) {
-            docenteNombreEl.textContent = docSnap.data().nombre;
-          } else {
-            docenteNombreEl.textContent = user.displayName || user.email.split('@')[0];
-          }
-        } catch (e) {
-          docenteNombreEl.textContent = user.email ? user.email.split('@')[0] : "Docente";
-        }
-
         await cargarMetricas();
       } else {
         window.location.href = "loginU.html";
@@ -567,6 +653,7 @@
         });
 
         const totalEstudiantesCategoria = estudiantesUnicos.size;
+
         totalEstudiantesTextoEl.textContent = `${totalEstudiantesCategoria} estudiante${totalEstudiantesCategoria === 1 ? '' : 's'}`;
 
         if (totalRegistros === 1) {
@@ -588,136 +675,100 @@
       }
     }
 
-    // Escuchar la escritura en el campo de búsqueda
-    inputBuscar.addEventListener("input", (e) => {
-      const termino = e.target.value.toLowerCase().trim();
-      const filtrados = registrosCache.filter(item => {
-        const usuario = (item.email || item.userId || "").toLowerCase();
-        const lugar = (item.Lugar || "").toLowerCase();
-        const descripcion = (item.Descripcion || "").toLowerCase();
-        
-        return usuario.includes(termino) || lugar.includes(termino) || descripcion.includes(termino);
-      });
-      
-      renderizarTablaRegistros(filtrados);
-    });
-
     function renderizarTablaRegistros(lista) {
       studentsContainer.innerHTML = "";
 
       if (lista.length === 0) {
         studentsContainer.innerHTML = `
           <div class="student-row" style="justify-content: center;">
-            <span style="color: #666;">No se encontraron registros.</span>
+            <span style="color: #666;">No hay registros coincidentes.</span>
           </div>`;
         return;
       }
 
       lista.forEach((item) => {
-        const usuarioNombre = item.email || item.userId || "Estudiante";
+        const usuarioNombre = item.nombre || item.email || item.userId || "Estudiante";
         const horasRealizadas = item.Horas || 0;
 
-        let badgeEstado = '<span class="status-badge status-pending">Pendiente</span>';
-        if (item.estado === true) {
-          badgeEstado = '<span class="status-badge status-approved">Aprobado</span>';
-        } else if (item.estado === false) {
-          badgeEstado = '<span class="status-badge status-rejected">Denegado</span>';
-        }
+        let badgeHTML = `<span class="status-badge status-pending">Pendiente</span>`;
+        if (item.estado === true) badgeHTML = `<span class="status-badge status-approved">Aprobado</span>`;
+        if (item.estado === false) badgeHTML = `<span class="status-badge status-rejected">Rechazado</span>`;
 
         const row = document.createElement("div");
         row.className = "student-row";
         row.innerHTML = `
           <div>
-            <span class="student-name">${usuarioNombre}</span>
-            <span style="display: block; font-size: 0.85rem; color: #666;">
+            <span class="student-name">${usuarioNombre}</span> ${badgeHTML}
+            <span style="display: block; font-size: 0.85rem; color: #666; margin-top: 4px;">
               Horas reportadas: <strong>${horasRealizadas} hrs</strong>
             </span>
           </div>
-
           <div class="action-group">
-            ${badgeEstado}
-            
-            <a class="action-link" onclick="verEvidencia('${item.id}')">Ver más</a>
-
-            <button class="btn-action-icon btn-accept" title="Aceptar horas" onclick="actualizarEstadoHoras('${item.id}', true)">
-              <i class="material-icons" style="font-size: 1.1rem;">check</i> Aceptar
+            <button class="btn-action-icon btn-accept" title="Aceptar Horas" onclick="cambiarEstadoHoras('${item.id}', true)">
+              <i class="material-icons" style="font-size: 1rem;">check</i> Aceptar
             </button>
-
-            <button class="btn-action-icon btn-reject" title="Denegar horas" onclick="actualizarEstadoHoras('${item.id}', false)">
-              <i class="material-icons" style="font-size: 1.1rem;">close</i> Rechazar
+            <button class="btn-action-icon btn-reject" title="Denegar Horas" onclick="cambiarEstadoHoras('${item.id}', false)">
+              <i class="material-icons" style="font-size: 1rem;">close</i> Rechazar
             </button>
+            <a class="action-link" style="margin-left: 6px;" onclick="verEvidencia('${item.id}')">Ver actividad</a>
           </div>
         `;
         studentsContainer.appendChild(row);
       });
     }
 
-    // Actualiza la propiedad 'estado' en Firestore
-    window.actualizarEstadoHoras = async function(registroId, nuevoEstado) {
+    window.cambiarEstadoHoras = async function(docId, nuevoEstado) {
       try {
-        const registroRef = doc(db, "HorasSociales", registroId);
-        await updateDoc(registroRef, {
+        const docRef = doc(db, "HorasSociales", docId);
+        await updateDoc(docRef, {
           estado: nuevoEstado
         });
 
-        const index = registrosCache.findIndex(r => r.id === registroId);
-        if (index !== -1) {
-          registrosCache[index].estado = nuevoEstado;
+        const registroIndex = registrosCache.findIndex(r => r.id === docId);
+        if (registroIndex !== -1) {
+          registrosCache[registroIndex].estado = nuevoEstado;
         }
 
-        const mensaje = nuevoEstado ? 'Horas aprobadas exitosamente.' : 'Horas denegadas.';
-        const colorClass = nuevoEstado ? 'green' : 'red';
-        M.toast({html: mensaje, classes: `${colorClass} rounded`});
+        const estadoTexto = nuevoEstado ? "aceptadas" : "rechazadas";
+        const colorToast = nuevoEstado ? "green rounded" : "red rounded";
+        M.toast({ html: `Horas ${estadoTexto} correctamente.`, classes: colorToast });
 
-        // Aplicar filtro actual al renderizar nuevamente
-        const termino = inputBuscar.value.toLowerCase().trim();
-        const filtrados = registrosCache.filter(item => {
-          const usuario = (item.email || item.userId || "").toLowerCase();
-          const lugar = (item.Lugar || "").toLowerCase();
-          const descripcion = (item.Descripcion || "").toLowerCase();
-          return usuario.includes(termino) || lugar.includes(termino) || descripcion.includes(termino);
-        });
-
-        renderizarTablaRegistros(filtrados);
-
-        if (modalInstance && modalInstance.isOpen) {
-          modalInstance.close();
+        const textoBusqueda = inputBuscadorEstudiante ? inputBuscadorEstudiante.value.toLowerCase().trim() : "";
+        if (textoBusqueda) {
+          const registrosFiltrados = registrosCache.filter((item) => {
+            const nombreEstudiante = (item.nombre || "").toLowerCase();
+            const emailEstudiante = (item.email || item.userId || "").toLowerCase();
+            return nombreEstudiante.includes(textoBusqueda) || emailEstudiante.includes(textoBusqueda);
+          });
+          renderizarTablaRegistros(registrosFiltrados);
+        } else {
+          renderizarTablaRegistros(registrosCache);
         }
 
+        const modalElem = document.getElementById("modalEvidencia");
+        const instance = M.Modal.getInstance(modalElem);
+        if (instance && instance.isOpen) {
+          instance.close();
+        }
       } catch (error) {
         console.error("Error al actualizar estado:", error);
-        M.toast({html: 'Ocurrió un error al actualizar el estado.', classes: 'red rounded'});
+        M.toast({ html: 'Error al actualizar el registro en Firebase.', classes: 'red rounded' });
       }
     };
 
-    window.verEvidencia = function(registroId) {
-      const item = registrosCache.find(r => r.id === registroId);
-      if (!item) return;
+    if (inputBuscadorEstudiante) {
+      inputBuscadorEstudiante.addEventListener("input", (e) => {
+        const textoBusqueda = e.target.value.toLowerCase().trim();
 
-      document.getElementById("modalUsuarioNombre").textContent = item.email || item.userId || "Estudiante";
-      document.getElementById("modalLugar").textContent = item.Lugar || "No especificado";
-      document.getElementById("modalHoras").textContent = item.Horas || 0;
-      document.getElementById("modalDescripcion").textContent = item.Descripcion || "Sin descripción";
+        const registrosFiltrados = registrosCache.filter((item) => {
+          const nombreEstudiante = (item.nombre || "").toLowerCase();
+          const emailEstudiante = (item.email || item.userId || "").toLowerCase();
+          return nombreEstudiante.includes(textoBusqueda) || emailEstudiante.includes(textoBusqueda);
+        });
 
-      let badge = '<span class="status-badge status-pending">Pendiente</span>';
-      if (item.estado === true) badge = '<span class="status-badge status-approved">Aprobado</span>';
-      if (item.estado === false) badge = '<span class="status-badge status-rejected">Denegado</span>';
-      document.getElementById("modalEstadoBadge").innerHTML = badge;
-
-      const containerEvidencia = document.getElementById("modalEvidenciaContainer");
-      if (item.Evidencia && item.Evidencia.startsWith("data:image")) {
-        containerEvidencia.innerHTML = `<img src="${item.Evidencia}" class="evidencia-img" alt="Evidencia">`;
-      } else if (item.Evidencia) {
-        containerEvidencia.innerHTML = `<a href="${item.Evidencia}" target="_blank" class="action-link">Abrir documento/imagen adjunta</a>`;
-      } else {
-        containerEvidencia.innerHTML = `<span style="color: #999;">No hay evidencia adjunta.</span>`;
-      }
-
-      document.getElementById("modalBtnAprobar").onclick = () => actualizarEstadoHoras(registroId, true);
-      document.getElementById("modalBtnRechazar").onclick = () => actualizarEstadoHoras(registroId, false);
-
-      modalInstance.open();
-    };
+        renderizarTablaRegistros(registrosFiltrados);
+      });
+    }
 
     btnGenerarReporte.addEventListener("click", () => {
       if (registrosCache.length === 0) {
@@ -726,29 +777,28 @@
       }
 
       let csvContent = "\uFEFF";
-      csvContent += "Estudiante / Email,Categoría,Lugar,Docente Encargado,Horas Reportadas,Estado,Descripción\n";
+      csvContent += "Estudiante / Nombre,Email,Categoría,Lugar,Docente Encargado,Horas Reportadas,Estado,Descripción\n";
 
       registrosCache.forEach((item) => {
-        const estudiante = `"${item.email || item.userId || 'N/A'}"`;
+        const nombreEstudiante = `"${item.nombre || 'N/A'}"`;
+        const estudianteEmail = `"${item.email || item.userId || 'N/A'}"`;
         const categoria = `"${item.Categoria || CATEGORIA_ACTIVA}"`;
         const lugar = `"${item.Lugar || 'N/A'}"`;
         const docente = `"${item['Docente encargado'] || 'N/A'}"`;
         const horas = item.Horas || 0;
-        
-        let estadoStr = "Pendiente";
-        if (item.estado === true) estadoStr = "Aprobado";
-        if (item.estado === false) estadoStr = "Denegado";
-
+        let estado = "Pendiente";
+        if (item.estado === true) estado = "Aprobado";
+        if (item.estado === false) estado = "Rechazado";
         const descripcion = `"${(item.Descripcion || '').replace(/"/g, '""')}"`;
 
-        csvContent += `${estudiante},${categoria},${lugar},${docente},${horas},${estadoStr},${descripcion}\n`;
+        csvContent += `${nombreEstudiante},${estudianteEmail},${categoria},${lugar},${docente},${horas},${estado},${descripcion}\n`;
       });
 
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const enlaceDescarga = document.createElement("a");
       enlaceDescarga.setAttribute("href", url);
-      enlaceDescarga.setAttribute("download", `Reporte_Tutorias_Primera_Infancia_${new Date().toISOString().slice(0,10)}.csv`);
+      enlaceDescarga.setAttribute("download", `Reporte_Tutorias_de_Ingles_${new Date().toISOString().slice(0,10)}.csv`);
       document.body.appendChild(enlaceDescarga);
       
       enlaceDescarga.click();
@@ -756,6 +806,38 @@
 
       M.toast({html: 'Reporte descargado exitosamente.', classes: 'green rounded'});
     });
+
+    window.verEvidencia = function(registroId) {
+      const registro = registrosCache.find(r => r.id === registroId);
+      if (!registro) {
+        M.toast({html: 'Registro no encontrado.', classes: 'red rounded'});
+        return;
+      }
+
+      const nombreEstudiante = registro.nombre || registro.email || registro.userId || "Estudiante";
+
+      document.getElementById("modalEstudiante").textContent = nombreEstudiante;
+      document.getElementById("modalDetalles").textContent = `Horas: ${registro.Horas || 0} hrs | Descripción: ${registro.Descripcion || 'Sin descripción'}`;
+
+      const imgContainer = document.getElementById("modalImagenContainer");
+      const urlImagen = registro.evidenciaUrl || registro.Evidencia || registro.imagenUrl || registro.imagen;
+
+      if (urlImagen) {
+        imgContainer.innerHTML = `<img src="${urlImagen}" alt="Evidencia" class="evidencia-img" />`;
+      } else {
+        imgContainer.innerHTML = `<p style="color: #666; padding: 20px;">Este registro no contiene imagen de evidencia adjunta.</p>`;
+      }
+
+      const btnAceptar = document.getElementById("btnModalAceptar");
+      const btnDenegar = document.getElementById("btnModalDenegar");
+
+      btnAceptar.onclick = () => cambiarEstadoHoras(registroId, true);
+      btnDenegar.onclick = () => cambiarEstadoHoras(registroId, false);
+
+      const modalElem = document.getElementById("modalEvidencia");
+      const instance = M.Modal.getInstance(modalElem);
+      instance.open();
+    };
   </script>
 </body>
 </html>

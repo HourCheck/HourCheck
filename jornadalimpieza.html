@@ -282,6 +282,24 @@
       border-radius: 50%;
     }
 
+    .search-box-container {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 10px 20px;
+      margin-top: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .search-box-container input {
+      border: none !important;
+      box-shadow: none !important;
+      margin: 0 !important;
+      height: 2.5rem !important;
+    }
+
     .students-table-container {
       background: #ffffff;
       border: 1.5px solid #222;
@@ -502,6 +520,12 @@
       </div>
     </div>
 
+    <!-- Buscador -->
+    <div class="search-box-container">
+      <i class="material-icons" style="color: #666;">search</i>
+      <input type="text" id="inputBuscadorEstudiante" placeholder="Buscar estudiante por nombre o correo...">
+    </div>
+
     <!-- Tabla de Estudiantes -->
     <div class="students-table-container">
       <div class="table-header-box">
@@ -555,7 +579,7 @@
     </div>
   </div>
 
-<!-- Footer HourCheck (Opción 4: Oscuro Slate) -->
+  <!-- Footer HourCheck (Opción 4: Oscuro Slate) -->
   <footer class="hourcheck-footer">
     <div class="footer-container">
       <div class="footer-grid">
@@ -581,8 +605,6 @@
       </div>
     </div>
   </footer>
-
-
 
   <!-- Materialize JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
@@ -614,6 +636,7 @@
     const gaugeChartEl = document.getElementById("gaugeChart");
     const studentsContainer = document.getElementById("studentsContainer");
     const btnGenerarReporte = document.getElementById("btnGenerarReporte");
+    const inputBuscadorEstudiante = document.getElementById("inputBuscadorEstudiante");
 
     let registrosCache = [];
     let modalInstance = null;
@@ -675,16 +698,15 @@
       if (lista.length === 0) {
         studentsContainer.innerHTML = `
           <div class="student-row" style="justify-content: center;">
-            <span style="color: #666;">No hay registros entregados para "Jornadas de limpieza".</span>
+            <span style="color: #666;">No hay registros coincidentes.</span>
           </div>`;
         return;
       }
 
       lista.forEach((item) => {
-        const usuarioNombre = item.email || item.userId || "Estudiante";
+        const usuarioNombre = item.nombre || item.email || item.userId || "Estudiante";
         const horasRealizadas = item.Horas || 0;
 
-        // Evaluación de estado en Firestore (true, false o undefined)
         let statusBadge = `<span class="status-badge status-pending">Pendiente</span>`;
         if (item.estado === true) {
           statusBadge = `<span class="status-badge status-approved">Aprobado</span>`;
@@ -716,13 +738,31 @@
       });
     }
 
-    // Actualiza Firestore asignando estado = true / false
+    if (inputBuscadorEstudiante) {
+      inputBuscadorEstudiante.addEventListener("input", (e) => {
+        const textoBusqueda = e.target.value.toLowerCase().trim();
+
+        const registrosFiltrados = registrosCache.filter((item) => {
+          const nombreEstudiante = (item.nombre || "").toLowerCase();
+          const emailEstudiante = (item.email || item.userId || "").toLowerCase();
+          return nombreEstudiante.includes(textoBusqueda) || emailEstudiante.includes(textoBusqueda);
+        });
+
+        renderizarTablaRegistros(registrosFiltrados);
+      });
+    }
+
     window.cambiarEstadoHora = async function(docId, nuevoEstado) {
       try {
         const docRef = doc(db, "HorasSociales", docId);
         await updateDoc(docRef, {
           estado: nuevoEstado
         });
+
+        const registroIndex = registrosCache.findIndex(r => r.id === docId);
+        if (registroIndex !== -1) {
+          registrosCache[registroIndex].estado = nuevoEstado;
+        }
 
         const msj = nuevoEstado ? 'Horas Aprobadas (true)' : 'Horas Denegadas (false)';
         const color = nuevoEstado ? 'green' : 'red';
@@ -732,21 +772,30 @@
           modalInstance.close();
         }
 
-        await cargarMetricasJornadasLimpieza();
+        const textoBusqueda = inputBuscadorEstudiante ? inputBuscadorEstudiante.value.toLowerCase().trim() : "";
+        if (textoBusqueda) {
+          const registrosFiltrados = registrosCache.filter((item) => {
+            const nombreEstudiante = (item.nombre || "").toLowerCase();
+            const emailEstudiante = (item.email || item.userId || "").toLowerCase();
+            return nombreEstudiante.includes(textoBusqueda) || emailEstudiante.includes(textoBusqueda);
+          });
+          renderizarTablaRegistros(registrosFiltrados);
+        } else {
+          renderizarTablaRegistros(registrosCache);
+        }
       } catch (error) {
         console.error("Error actualizando estado:", error);
         M.toast({ html: 'Error al actualizar Firestore', classes: 'red rounded' });
       }
     };
 
-    // Abre el modal con la vista previa y opción de aceptar/rechazar
     window.abrirModalEvidencia = function(registroId) {
       const item = registrosCache.find(r => r.id === registroId);
       if (!item) return;
 
       registroSeleccionadoId = registroId;
 
-      document.getElementById("modalEstudiante").textContent = item.email || item.userId || "Estudiante";
+      document.getElementById("modalEstudiante").textContent = item.nombre || item.email || item.userId || "Estudiante";
       document.getElementById("modalInfoMeta").textContent = `Categoría: ${item.Categoria || CATEGORIA_ACTIVA}`;
       document.getElementById("modalLugar").textContent = item.Lugar || "No especificado";
       document.getElementById("modalHoras").textContent = item.Horas || 0;
@@ -770,7 +819,6 @@
       modalInstance.open();
     };
 
-    // Exportar CSV/Excel incluyendo el estado
     btnGenerarReporte.addEventListener("click", () => {
       if (registrosCache.length === 0) {
         M.toast({html: 'No hay datos disponibles para generar el reporte.', classes: 'orange rounded'});

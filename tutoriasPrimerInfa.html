@@ -193,6 +193,24 @@
       border-radius: 50%;
     }
 
+    .search-box-container {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 10px 20px;
+      margin-top: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .search-box-container input {
+      border: none !important;
+      box-shadow: none !important;
+      margin: 0 !important;
+      height: 2.5rem !important;
+    }
+
     .students-table-container {
       background: #ffffff;
       border: 1.5px solid #222;
@@ -302,23 +320,6 @@
       color: #ef6c00;
     }
 
-.search-box-container input {
-      border: none !important;
-      box-shadow: none !important;
-      margin: 0 !important;
-      height: 2.5rem !important;
-    }
-
-    .students-table-container {
-      background: #ffffff;
-      border: 1.5px solid #222;
-      border-radius: 16px;
-      overflow: hidden;
-      margin-top: 20px;
-      margin-bottom: 40px;
-    }
-
-
     .btn-action-icon {
       border: none;
       border-radius: 8px;
@@ -426,7 +427,8 @@
         </div>
       </div>
     </div>
-  <div class="search-box-container">
+
+    <div class="search-box-container">
       <i class="material-icons" style="color: #666;">search</i>
       <input type="text" id="inputBuscadorEstudiante" placeholder="Buscar estudiante por nombre o correo...">
     </div>
@@ -507,6 +509,7 @@
     const gaugeChartEl = document.getElementById("gaugeChart");
     const studentsContainer = document.getElementById("studentsContainer");
     const btnGenerarReporte = document.getElementById("btnGenerarReporte");
+    const inputBuscadorEstudiante = document.getElementById("inputBuscadorEstudiante");
 
     let registrosCache = [];
 
@@ -579,13 +582,13 @@
       if (lista.length === 0) {
         studentsContainer.innerHTML = `
           <div class="student-row" style="justify-content: center;">
-            <span style="color: #666;">No hay registros entregados para "${CATEGORIA_ACTIVA}".</span>
+            <span style="color: #666;">No hay registros coincidentes.</span>
           </div>`;
         return;
       }
 
       lista.forEach((item) => {
-        const usuarioNombre = item.email || item.userId || "Estudiante";
+        const usuarioNombre = item.nombre || item.email || item.userId || "Estudiante";
         const horasRealizadas = item.Horas || 0;
 
         let badgeEstado = '<span class="status-badge status-pending">Pendiente</span>';
@@ -623,6 +626,20 @@
       });
     }
 
+    if (inputBuscadorEstudiante) {
+      inputBuscadorEstudiante.addEventListener("input", (e) => {
+        const textoBusqueda = e.target.value.toLowerCase().trim();
+
+        const registrosFiltrados = registrosCache.filter((item) => {
+          const nombreEstudiante = (item.nombre || "").toLowerCase();
+          const emailEstudiante = (item.email || item.userId || "").toLowerCase();
+          return nombreEstudiante.includes(textoBusqueda) || emailEstudiante.includes(textoBusqueda);
+        });
+
+        renderizarTablaRegistros(registrosFiltrados);
+      });
+    }
+
     // Actualiza la propiedad 'estado' en Firestore
     window.actualizarEstadoHoras = async function(registroId, nuevoEstado) {
       try {
@@ -640,7 +657,17 @@
         const colorClass = nuevoEstado ? 'green' : 'red';
         M.toast({html: mensaje, classes: `${colorClass} rounded`});
 
-        renderizarTablaRegistros(registrosCache);
+        const textoBusqueda = inputBuscadorEstudiante ? inputBuscadorEstudiante.value.toLowerCase().trim() : "";
+        if (textoBusqueda) {
+          const registrosFiltrados = registrosCache.filter((item) => {
+            const nombreEstudiante = (item.nombre || "").toLowerCase();
+            const emailEstudiante = (item.email || item.userId || "").toLowerCase();
+            return nombreEstudiante.includes(textoBusqueda) || emailEstudiante.includes(textoBusqueda);
+          });
+          renderizarTablaRegistros(registrosFiltrados);
+        } else {
+          renderizarTablaRegistros(registrosCache);
+        }
 
         if (modalInstance && modalInstance.isOpen) {
           modalInstance.close();
@@ -656,7 +683,7 @@
       const item = registrosCache.find(r => r.id === registroId);
       if (!item) return;
 
-      document.getElementById("modalUsuarioNombre").textContent = item.email || item.userId || "Estudiante";
+      document.getElementById("modalUsuarioNombre").textContent = item.nombre || item.email || item.userId || "Estudiante";
       document.getElementById("modalLugar").textContent = item.Lugar || "No especificado";
       document.getElementById("modalHoras").textContent = item.Horas || 0;
       document.getElementById("modalDescripcion").textContent = item.Descripcion || "Sin descripción";
@@ -691,7 +718,7 @@
       csvContent += "Estudiante / Email,Categoría,Lugar,Docente Encargado,Horas Reportadas,Estado,Descripción\n";
 
       registrosCache.forEach((item) => {
-        const estudiante = `"${item.email || item.userId || 'N/A'}"`;
+        const estudiante = `"${item.nombre || item.email || item.userId || 'N/A'}"`;
         const categoria = `"${item.Categoria || CATEGORIA_ACTIVA}"`;
         const lugar = `"${item.Lugar || 'N/A'}"`;
         const docente = `"${item['Docente encargado'] || 'N/A'}"`;

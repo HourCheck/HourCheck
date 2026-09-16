@@ -733,7 +733,17 @@
         const colorToast = nuevoEstado ? "green rounded" : "red rounded";
         M.toast({ html: `Horas ${estadoTexto} correctamente.`, classes: colorToast });
 
-        renderizarTablaRegistros(registrosCache);
+        const textoBusqueda = inputBuscadorEstudiante ? inputBuscadorEstudiante.value.toLowerCase().trim() : "";
+        if (textoBusqueda) {
+          const registrosFiltrados = registrosCache.filter((item) => {
+            const nombreEstudiante = (item.nombre || "").toLowerCase();
+            const emailEstudiante = (item.email || item.userId || "").toLowerCase();
+            return nombreEstudiante.includes(textoBusqueda) || emailEstudiante.includes(textoBusqueda);
+          });
+          renderizarTablaRegistros(registrosFiltrados);
+        } else {
+          renderizarTablaRegistros(registrosCache);
+        }
 
         const modalElem = document.getElementById("modalEvidencia");
         const instance = M.Modal.getInstance(modalElem);
@@ -752,7 +762,7 @@
 
         const registrosFiltrados = registrosCache.filter((item) => {
           const nombreEstudiante = (item.nombre || "").toLowerCase();
-          const emailEstudiante = (item.email || "").toLowerCase();
+          const emailEstudiante = (item.email || item.userId || "").toLowerCase();
           return nombreEstudiante.includes(textoBusqueda) || emailEstudiante.includes(textoBusqueda);
         });
 

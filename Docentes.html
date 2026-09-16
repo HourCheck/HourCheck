@@ -3,15 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Docentes de la Institución - Materialize</title>
+    <title>Docentes - hourcheckt</title>
     <!-- Google Icon Fonts -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!-- Materialize CSS CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <style>
-        /* Estilos personalizados para ajustar el layout con Materialize */
+        :root {
+            --primary-color: #1a73e8;
+            --bg-color: #f8f9fa;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+
         header, main, footer {
-            padding-left: 300px;
+            padding-left: 280px;
         }
 
         @media only screen and (max-width: 992px) {
@@ -20,125 +31,288 @@
             }
         }
 
-        .navbar-fixed {
-            z-index: 997;
+        /* Navbar superior limpio e idéntico al diseño original */
+        .top-navbar {
+            background-color: #ffffff !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02) !important;
+            color: #333;
         }
 
-        /* Ajuste para el dropdown del perfil en el navbar */
+        .top-navbar .nav-wrapper {
+            padding: 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .navbar-left .sidenav-trigger {
+            color: #333;
+            margin: 0;
+            cursor: pointer;
+            float: none;
+        }
+
+        .page-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #202124;
+            margin: 0;
+        }
+
+        /* Perfil de usuario en el Navbar superior */
+        .user-profile-trigger {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            color: #333;
+            padding: 4px 8px;
+            border-radius: 8px;
+        }
+
+        .user-profile-trigger:hover {
+            background-color: rgba(0,0,0,0.04);
+        }
+
+        .avatar-circle {
+            width: 36px;
+            height: 36px;
+            background-color: #1a73e8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .user-info-text {
+            line-height: 1.2;
+            text-align: left;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #202124;
+            display: block;
+        }
+
+        .user-role {
+            font-size: 0.75rem;
+            color: #5f6368;
+            display: block;
+        }
+
+        /* Dropdown custom */
         .dropdown-content {
-            margin-top: 56px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            margin-top: 50px;
         }
 
-        .card-panel-stats {
-            padding: 20px;
+        /* Menú lateral (Sidenav) idéntico a tu imagen de referencia */
+        .sidenav.sidenav-fixed {
+            background-color: #ffffff;
+            box-shadow: 1px 0 0 rgba(0,0,0,0.08);
+            width: 280px;
+            padding: 0;
+        }
+
+        .sidenav-header-box {
+            background-color: #1a73e8;
+            padding: 24px 20px;
+            color: white;
+        }
+
+        .sidenav-header-box .avatar-large {
+            width: 48px;
+            height: 48px;
+            background-color: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+
+        .sidenav-header-box .name {
+            font-weight: 600;
+            font-size: 1rem;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .sidenav-header-box .email, .sidenav-header-box .institution {
+            font-size: 0.8rem;
+            opacity: 0.9;
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .sidenav li a {
+            color: #202124;
+            font-weight: 500;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 0 24px;
+            height: 48px;
+            line-height: 48px;
+        }
+
+        .sidenav li a i {
+            color: #ff5722; /* Color naranja distintivo de los iconos del menú */
+            margin: 0;
+        }
+
+        .sidenav li a.active-link {
+            background-color: rgba(26, 115, 232, 0.08);
+            color: #1a73e8;
+        }
+
+        .sidenav-divider {
+            margin: 8px 0;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        /* Contenido Principal y Tablas */
+        main {
+            padding: 30px;
+        }
+
+        .content-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            padding: 24px;
+            border: 1px solid #eef0f2;
+        }
+
+        table.highlight > tbody > tr:hover {
+            background-color: rgba(26, 115, 232, 0.03);
+        }
+
+        table th {
+            font-weight: 600;
+            color: #5f6368;
+            font-size: 0.9rem;
         }
     </style>
 </head>
 <body>
 
-    <!-- Menú Desplegable del Perfil (Dropdown) -->
-    <ul id="profile-dropdown" class="dropdown-content">
-        <li><a href="#profile"><i class="material-icons">person</i>Mi Perfil</a></li>
-        <li><a href="#settings"><i class="material-icons">settings</i>Configuración</a></li>
+    <!-- Menú Desplegable del Perfil Superior -->
+    <ul id="user-dropdown" class="dropdown-content">
+        <li><a href="#profile"><i class="material-icons" style="color: #1a73e8 !important;">person</i>Mi Perfil</a></li>
         <li class="divider"></li>
-        <li><a href="#!" id="btnLogout" class="red-text"><i class="material-icons">exit_to_app</i>Cerrar Sesión</a></li>
+        <li><a href="#!" id="btnLogoutTop" class="red-text text-darken-2"><i class="material-icons" style="color: #d32f2f !important;">exit_to_app</i>Cerrar sesión</a></li>
     </ul>
 
     <header>
+        <!-- Navbar Superior -->
         <div class="navbar-fixed">
-            <nav class="indigo darken-3">
-                <div class="nav-wrapper container">
-                    <!-- Botón para activar el sidenav en móviles y pantallas medianas -->
-                    <a href="#" data-target="slide-out" class="sidenav-trigger show-on-large"><i class="material-icons">menu</i></a>
-                    
-                    <a href="#" class="brand-logo">Gestión Institucional</a>
+            <nav class="top-navbar">
+                <div class="nav-wrapper">
+                    <div class="navbar-left">
+                        <!-- Botón Hamburguesa Funcional -->
+                        <a href="#" data-target="slide-out" class="sidenav-trigger show-on-large">
+                            <i class="material-icons">menu</i>
+                        </a>
+                        <span class="page-title">Docentes</span>
+                    </div>
 
-                    <ul class="right hide-on-med-and-down">
-                        <!-- Enlace con Dropdown para el perfil -->
-                        <li>
-                            <a class="dropdown-trigger" href="#!" data-target="profile-dropdown">
-                                <i class="material-icons left">account_circle</i><span id="userNameHeader">Usuario</span><i class="material-icons right">arrow_drop_down</i>
-                            </a>
-                        </li>
-                    </ul>
+                    <!-- Trigger del Dropdown Superior -->
+                    <a class="dropdown-trigger user-profile-trigger" href="#!" data-target="user-dropdown">
+                        <div class="avatar-circle">
+                            <i class="material-icons">person</i>
+                        </div>
+                        <div class="user-info-text hide-on-small-only">
+                            <span class="user-name" id="topUserName">Cargando...</span>
+                            <span class="user-role" id="topUserRole">Cargando...</span>
+                        </div>
+                        <i class="material-icons" style="color: #5f6368; font-size: 20px;">arrow_drop_down</i>
+                    </a>
                 </div>
             </nav>
         </div>
 
-        <!-- Menú Lateral (Sidenav) -->
+        <!-- Menú Lateral (Sidenav) Estilo Original -->
         <ul id="slide-out" class="sidenav sidenav-fixed">
             <li>
-                <div class="user-view">
-                    <div class="background indigo darken-4"></div>
-                    <a href="#user"><img class="circle" src="https://via.placeholder.com/150" alt="Avatar"></a>
-                    <a href="#name"><span class="white-text name" id="sidenavName">Cargando...</span></a>
-                    <a href="#email"><span class="white-text email" id="sidenavEmail">cargando...</span></a>
+                <div class="sidenav-header-box">
+                    <div class="avatar-large">
+                        <i class="material-icons" style="font-size: 28px;">person</i>
+                    </div>
+                    <span class="name" id="sideUserName">Cargando...</span>
+                    <span class="email" id="sideUserEmail">cargando...</span>
+                    <span class="institution" id="sideUserInstitution" style="margin-top: 4px; opacity: 0.8;">Institución</span>
                 </div>
             </li>
-            <li><a href="#dashboard" class="waves-effect"><i class="material-icons">dashboard</i>Dashboard</a></li>
-            <li><a href="#teachers" class="waves-effect indigo-text"><i class="material-icons">supervisor_account</i>Docentes</a></li>
-            <li><a href="#students" class="waves-effect"><i class="material-icons">school</i>Estudiantes</a></li>
-            <li><a href="#reports" class="waves-effect"><i class="material-icons">assessment</i>Reportes</a></li>
-            <li><div class="divider"></div></li>
-            <li><a class="subheader">Sistema</a></li>
-            <li><a href="#settings" class="waves-effect"><i class="material-icons">settings</i>Configuración</a></li>
-            <li><a href="#!" id="btnLogoutSide" class="waves-effect red-text"><i class="material-icons">exit_to_app</i>Salir</a></li>
+            <li style="margin-top: 8px;"><a href="index.html"><i class="material-icons">assignment</i>Reporte docente</a></li>
+            <li><a href="horas.html"><i class="material-icons">trending_up</i>Horas progresadas</a></li>
+            <li><a href="docentes.html" class="active-link"><i class="material-icons">people</i>Docentes</a></li>
+            <li><a href="estudiantes.html"><i class="material-icons">people</i>Estudiantes</a></li>
+            <li><div class="sidenav-divider"></div></li>
+            <li><a href="#!" id="btnLogoutSide" class="red-text text-darken-2"><i class="material-icons" style="color: #d32f2f !important;">exit_to_app</i>Cerrar sesión</a></li>
         </ul>
     </header>
 
-    <!-- Contenido principal -->
-    <main class="container">
-        <div class="row" style="margin-top: 30px;">
+    <!-- Contenido Principal -->
+    <main>
+        <div class="row">
             <div class="col s12">
-                <h4 class="indigo-text text-darken-3">Docentes de la Institución</h4>
-                <p class="grey-text">Listado de profesores adscritos al mismo código de institución actual.</p>
-            </div>
-        </div>
-
-        <!-- Indicador de carga -->
-        <div id="loadingIndicator" class="row center" style="margin-top: 50px;">
-            <div class="preloader-wrapper big active">
-                <div class="spinner-layer spinner-indigo-only">
-                    <div class="circle-clipper left">
-                        <div class="circle"></div>
-                    </div><div class="gap-patch">
-                        <div class="circle"></div>
-                    </div><div class="circle-clipper right">
-                        <div class="circle"></div>
+                <div class="content-card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <div>
+                            <h5 style="margin: 0; font-weight: 600; color: #202124;">Docentes de la Institución</h5>
+                            <p style="margin: 4px 0 0 0; color: #5f6368; font-size: 0.9rem;">Profesores registrados bajo el mismo código institucional.</p>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <p class="grey-text">Cargando docentes...</p>
-        </div>
 
-        <!-- Tabla de Docentes -->
-        <div class="row" id="tableContainer" style="display: none;">
-            <div class="col s12">
-                <div class="card">
-                    <div class="card-content">
-                        <table class="striped highlight responsive-table">
+                    <!-- Indicador de Carga -->
+                    <div id="loadingIndicator" class="center" style="padding: 40px;">
+                        <div class="preloader-wrapper active">
+                            <div class="spinner-layer spinner-blue-only">
+                                <div class="circle-clipper left"><div class="circle"></div></div>
+                                <div class="gap-patch"><div class="circle"></div></div>
+                                <div class="circle-clipper right"><div class="circle"></div></div>
+                            </div>
+                        </div>
+                        <p style="color: #5f6368; margin-top: 15px;">Consultando base de datos...</p>
+                    </div>
+
+                    <!-- Tabla de Resultados -->
+                    <div id="tableContainer" style="display: none;">
+                        <table class="highlight responsive-table">
                             <thead>
                                 <tr>
-                                    <th>Nombre</th>
+                                    <th>Nombre del Docente</th>
                                     <th>Correo Electrónico</th>
                                     <th>Rol</th>
                                     <th>Fecha de Registro</th>
                                 </tr>
                             </thead>
                             <tbody id="teachersTableBody">
-                                <!-- Se llenará dinámicamente con JavaScript -->
+                                <!-- Datos inyectados por Firebase -->
                             </tbody>
                         </table>
                     </div>
-                </div>
-            </div>
-        </div>
 
-        <!-- Mensaje si no hay registros -->
-        <div id="noDataMessage" class="row center" style="display: none; margin-top: 40px;">
-            <div class="col s12">
-                <i class="material-icons large grey-text">sentiment_dissatisfied</i>
-                <h5>No se encontraron docentes para esta institución.</h5>
+                    <!-- Mensaje si no hay registros -->
+                    <div id="noDataMessage" class="center" style="display: none; padding: 40px;">
+                        <i class="material-icons large grey-text text-lighten-1">sentiment_dissatisfied</i>
+                        <p style="color: #5f6368; font-size: 1rem; margin-top: 10px;">No se encontraron docentes asociados a esta institución.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
@@ -148,24 +322,23 @@
     <!-- Materialize JS CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     
-    <!-- Firebase App (Modular o Compat v8/v9 según uses. Aquí usamos SDK Compat para compatibilidad directa rápida) -->
+    <!-- Firebase SDK Compat -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
-    <!-- Inicialización y lógica de datos -->
+    <!-- Lógica de Firebase y Componentes -->
     <script>
-        // TODO: Reemplaza con la configuración de tu proyecto de Firebase
+        // TODO: Reemplaza con tu configuración exacta de Firebase
         const firebaseConfig = {
-        apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
-        authDomain: "hourcheckt.firebaseapp.com",
-        projectId: "hourcheckt",
-        storageBucket: "hourcheckt.firebasestorage.app",
-        messagingSenderId: "83459752453",
-        appId: "1:83459752453:web:1b81724c28973bf567126c"
+            apiKey: "TU_API_KEY",
+            authDomain: "TU_AUTH_DOMAIN",
+            projectId: "TU_PROJECT_ID",
+            storageBucket: "TU_STORAGE_BUCKET",
+            messagingSenderId: "TU_MESSAGING_SENDER_ID",
+            appId: "TU_APP_ID"
         };
 
-        // Inicializar Firebase
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
@@ -173,19 +346,19 @@
         const db = firebase.firestore();
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Inicializar componentes de Materialize
-            M.Sidenav.init(document.querySelectorAll('.sidenav'));
+            // Inicializar componentes interactivos de Materialize obligatorios
+            M.Sidenav.init(document.querySelectorAll('.sidenav'), { edge: 'left' });
             M.Dropdown.init(document.querySelectorAll('.dropdown-trigger'), {
                 coverTrigger: false,
-                constrainWidth: false
+                constrainWidth: false,
+                alignment: 'right'
             });
 
-            // Escuchar cambios de sesión en Firebase Auth
+            // Autenticación y consulta inteligente en Firestore
             auth.onAuthStateChanged(async (user) => {
                 if (user) {
                     try {
-                        // 1. Obtener los datos del usuario actual desde Firestore (asumiendo que su UID o correo está registrado en Docentes)
-                        // Buscamos el documento del docente logueado por su Correo o UID
+                        // 1. Obtener datos del usuario logueado buscando por su correo en la colección "Docentes"
                         const teacherQuery = await db.collection("Docentes")
                             .where("Correo", "==", user.email)
                             .get();
@@ -194,23 +367,29 @@
 
                         if (!teacherQuery.empty) {
                             const userDoc = teacherQuery.docs[0].data();
-                            institucionId = userDoc.Institucion; // ID de institución (ej. "q1c6AgyhJWbdZockegt28rMT...")
+                            institucionId = userDoc.Institucion; // ID de la institución vinculada
+
+                            // Actualizar textos en la interfaz con los datos reales
+                            document.getElementById('topUserName').innerText = userDoc.NameDocente || "Usuario";
+                            document.getElementById('topUserRole').innerText = userDoc.rol || "Docente";
+                            document.getElementById('sideUserName').innerText = userDoc.NameDocente || "Usuario";
+                            document.getElementById('sideUserEmail').innerText = user.email;
                             
-                            // Actualizar la interfaz con los datos del usuario logueado
-                            document.getElementById('userNameHeader').innerText = userDoc.NameDocente || "Usuario";
-                            document.getElementById('sidenavName').innerText = userDoc.NameDocente || "Nombre de Usuario";
-                            document.getElementById('sidenavEmail').innerText = user.email;
+                            // Opcional: Si tienes una colección o nombre de institución legible, puedes mostrarla, si no, mostramos el ID o texto genérico
+                            document.getElementById('sideUserInstitution').innerText = "ID Inst: " + (institucionId.substring(0, 10) + '...');
                         } else {
-                            // Fallback si no se halla en la colección Docentes pero está autenticado
-                            document.getElementById('userNameHeader').innerText = user.displayName || "Usuario";
-                            document.getElementById('sidenavName').innerText = user.displayName || "Usuario";
-                            document.getElementById('sidenavEmail').innerText = user.email;
-                            M.toast({html: 'No se encontró el perfil docente en Firestore.', classes: 'orange'});
+                            // Si el usuario está autenticado pero no está en la colección Docentes
+                            document.getElementById('topUserName').innerText = user.displayName || "Usuario";
+                            document.getElementById('topUserRole').innerText = "Administrador";
+                            document.getElementById('sideUserName').innerText = user.displayName || "Usuario";
+                            document.getElementById('sideUserEmail').innerText = user.email;
+                            document.getElementById('sideUserInstitution').innerText = "Institución Principal";
+                            M.toast({html: 'Aviso: No se localizó el perfil en la colección Docentes.', classes: 'orange'});
                             document.getElementById('loadingIndicator').style.display = 'none';
                             return;
                         }
 
-                        // 2. Consultar todos los docentes que tengan el mismo ID de "Institucion"
+                        // 2. Consultar todos los documentos en "Docentes" que compartan exactamente el mismo campo "Institucion"
                         const querySnapshot = await db.collection("Docentes")
                             .where("Institucion", "==", institucionId)
                             .get();
@@ -221,12 +400,14 @@
                         if (!querySnapshot.empty) {
                             querySnapshot.forEach((doc) => {
                                 const data = doc.data();
-                                
-                                // Formatear fecha de registro si existe
-                                let fechaStr = "N/D";
+
+                                // Formatear la fecha de registro de forma limpia
+                                let fechaStr = "Reciente";
                                 if (data.fechaRegistro) {
                                     if (typeof data.fechaRegistro.toDate === 'function') {
-                                        fechaStr = data.fechaRegistro.toDate().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
+                                        fechaStr = data.fechaRegistro.toDate().toLocaleDateString('es-ES', { 
+                                            year: 'numeric', month: 'short', day: 'numeric' 
+                                        });
                                     } else {
                                         fechaStr = data.fechaRegistro;
                                     }
@@ -234,10 +415,14 @@
 
                                 const row = `
                                     <tr>
-                                        <td>${data.NameDocente || 'Sin nombre'}</td>
-                                        <td>${data.Correo || 'Sin correo'}</td>
-                                        <td><span class="new badge indigo" data-badge-caption="">${data.rol || 'Docente'}</span></td>
-                                        <td>${fechaStr}</td>
+                                        <td style="font-weight: 500; color: #202124;">${data.NameDocente || 'Sin nombre'}</td>
+                                        <td style="color: #5f6368;">${data.Correo || 'Sin correo'}</td>
+                                        <td>
+                                            <span style="background-color: #e8f0fe; color: #1a73e8; padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: 500;">
+                                                ${data.rol || 'Docente'}
+                                            </span>
+                                        </td>
+                                        <td style="color: #5f6368;">${fechaStr}</td>
                                     </tr>
                                 `;
                                 tbody.innerHTML += row;
@@ -253,26 +438,24 @@
                     } catch (error) {
                         console.error("Error al consultar Firestore:", error);
                         document.getElementById('loadingIndicator').style.display = 'none';
-                        M.toast({html: 'Error al cargar los docentes.', classes: 'red'});
+                        M.toast({html: 'Error al cargar la lista de docentes.', classes: 'red'});
                     }
                 } else {
-                    // Si no hay sesión iniciada, redirigir al login (cambia 'index.html' por tu ruta de inicio de sesión)
+                    // Si no hay sesión activa, redirigir al login
                     window.location.href = 'index.html';
                 }
             });
 
-            // Funcionalidad de Cerrar Sesión
-            const handleLogout = (e) => {
+            // Función global de Cerrar Sesión
+            const logoutUser = (e) => {
                 e.preventDefault();
                 auth.signOut().then(() => {
                     window.location.href = 'index.html';
-                }).catch((error) => {
-                    console.error("Error al cerrar sesión", error);
-                });
+                }).catch((err) => console.error("Error al cerrar sesión:", err));
             };
 
-            document.getElementById('btnLogout').addEventListener('click', handleLogout);
-            document.getElementById('btnLogoutSide').addEventListener('click', handleLogout);
+            document.getElementById('btnLogoutTop').addEventListener('click', logoutUser);
+            document.getElementById('btnLogoutSide').addEventListener('click', logoutUser);
         });
     </script>
 </body>
