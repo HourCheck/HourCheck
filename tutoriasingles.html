@@ -187,7 +187,6 @@
       border-radius: 50%;
     }
 
-    /* Buscador */
     .search-box-container {
       background: #ffffff;
       border-radius: 12px;
@@ -291,7 +290,6 @@
       text-decoration: underline;
     }
 
-    /* Badges de Estado Visuales */
     .status-badge {
       padding: 4px 10px;
       border-radius: 12px;
@@ -316,7 +314,6 @@
       color: #ef6c00;
     }
 
-    /* Botones de Acción con Estilos Refinados */
     .btn-action-icon {
       border: none;
       border-radius: 8px;
@@ -344,7 +341,6 @@
       color: white;
     }
 
-    /* Modal de Evidencia */
     .modal {
       border-radius: 16px;
       max-width: 650px;
@@ -359,9 +355,6 @@
       margin-top: 10px;
     }
 
-    /* ==========================================
-       FOOTER INTEGRADO - HOURCHECK (OSCURO SLATE)
-       ========================================== */
     .hourcheck-footer {
       background-color: #0f172a;
       color: #f8fafc;
@@ -472,10 +465,7 @@
     </div>
   </header>
 
-  <!-- Contenedor Principal -->
   <div class="container" style="width: 90%; max-width: 1200px;">
-
-    <!-- Banner Principal -->
     <div class="banner-card">
       <div>
         <h1 class="banner-title">Tutorías de inglés</h1>
@@ -485,7 +475,6 @@
       </div>
     </div>
 
-    <!-- Cards de Estadísticas -->
     <div class="row">
       <div class="col s12 m4">
         <div class="info-card">
@@ -523,13 +512,11 @@
       </div>
     </div>
 
-    <!-- Buscador por Estudiante -->
     <div class="search-box-container">
       <i class="material-icons" style="color: #666;">search</i>
       <input type="text" id="inputBuscadorEstudiante" placeholder="Buscar estudiante por nombre o correo...">
     </div>
 
-    <!-- Tabla de Estudiantes -->
     <div class="students-table-container">
       <div class="table-header-box">
         <span class="table-header-title">Estudiantes en Tutorías de inglés</span>
@@ -545,10 +532,8 @@
         </div>
       </div>
     </div>
-
   </div>
 
-  <!-- Modal Evidencia -->
   <div id="modalEvidencia" class="modal">
     <div class="modal-content">
       <h5 style="font-weight: 700; margin-top: 0;">Evidencia del Registro</h5>
@@ -572,7 +557,6 @@
     </div>
   </div>
 
-  <!-- Footer HourCheck (Opción 4: Oscuro Slate) -->
   <footer class="hourcheck-footer">
     <div class="footer-container">
       <div class="footer-grid">
@@ -603,9 +587,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, getDocs, doc, query, where, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-    import { getAuth, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, getDocs, doc, query, where, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
     document.addEventListener('DOMContentLoaded', function() {
       const elemsModal = document.querySelectorAll('.modal');
@@ -733,7 +717,6 @@
       });
     }
 
-    // Actualizar campo "estado" en Firestore (estado: true/false)
     window.cambiarEstadoHoras = async function(docId, nuevoEstado) {
       try {
         const docRef = doc(db, "HorasSociales", docId);
@@ -763,7 +746,6 @@
       }
     };
 
-    // Buscador interactivo
     if (inputBuscadorEstudiante) {
       inputBuscadorEstudiante.addEventListener("input", (e) => {
         const textoBusqueda = e.target.value.toLowerCase().trim();
@@ -778,7 +760,6 @@
       });
     }
 
-    // Generar Reporte CSV
     btnGenerarReporte.addEventListener("click", () => {
       if (registrosCache.length === 0) {
         M.toast({html: 'No hay datos disponibles para generar el reporte.', classes: 'orange rounded'});
@@ -816,7 +797,6 @@
       M.toast({html: 'Reporte descargado exitosamente.', classes: 'green rounded'});
     });
 
-    // Abrir Modal de Evidencia
     window.verEvidencia = function(registroId) {
       const registro = registrosCache.find(r => r.id === registroId);
       if (!registro) {

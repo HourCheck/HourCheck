@@ -53,7 +53,6 @@
       vertical-align: middle;
     }
 
-    /* Navbar Superior */
     .top-header {
       background-color: var(--card-bg);
       padding: 16px 32px;
@@ -160,7 +159,6 @@
       color: var(--text-muted);
     }
 
-    /* Sidenav */
     .sidenav {
       width: 300px;
       border-top-right-radius: 20px;
@@ -193,7 +191,6 @@
       letter-spacing: 0.8px;
     }
 
-    /* Dashboard Layout */
     .dashboard-container {
       max-width: 1200px;
       width: 100%;
@@ -202,7 +199,6 @@
       flex: 1;
     }
 
-    /* Welcome Banner */
     .welcome-banner {
       background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
       border-radius: 20px;
@@ -241,7 +237,6 @@
       z-index: 2;
     }
 
-    /* KPI Grid */
     .kpi-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -263,7 +258,6 @@
       color: inherit;
     }
 
-    /* Estilos para el menú desplegable del usuario */
     #user-dropdown {
       border-radius: 12px;
       min-width: 180px;
@@ -354,7 +348,6 @@
       color: var(--primary-color);
     }
 
-    /* Tabla de Historial */
     .section-header {
       display: flex;
       justify-content: space-between;
@@ -445,9 +438,6 @@
       background-color: currentColor;
     }
 
-    /* ==========================================
-       FOOTER INTEGRADO - HOURCHECK (OSCURO SLATE)
-       ========================================== */
     .hourcheck-footer {
       background-color: #0f172a;
       color: #f8fafc;
@@ -474,7 +464,6 @@
       align-items: center;
     }
 
-    /* Estilo optimizado para la imagen del logo */
     .footer-logo-img {
       height: 38px;
       width: auto;
@@ -538,9 +527,6 @@
       .footer-action-col {
         justify-content: flex-start;
       }
-    }
-
-    @media (max-width: 768px) {
       .top-header { padding: 16px 20px; }
       .dashboard-container { padding: 16px; }
       .welcome-banner { flex-direction: column; text-align: center; padding: 30px 20px; }
@@ -550,7 +536,6 @@
 </head>
 <body>
 
-  <!-- Sidenav Navigation -->
   <ul id="slide-out" class="sidenav">
     <li>
       <div class="user-view">
@@ -569,7 +554,6 @@
     <li><a href="#" id="btnCerrarSesion" class="waves-effect"><i class="material-icons">exit_to_app</i>Cerrar Sesión</a></li>
   </ul>
 
-  <!-- Encabezado Superior -->
   <header class="top-header">
     <div class="header-left">
       <a href="#" data-target="slide-out" class="sidenav-trigger btn-menu-trigger">
@@ -583,7 +567,6 @@
         <i class="material-icons">notifications_none</i>
       </a>
       
-      <!-- OPCIÓN B: Todo el bloque del perfil incluyendo la flecha activa el dropdown -->
       <a href="#" class="user-profile dropdown-trigger" data-target="user-dropdown">
         <div class="avatar">
           <i class="material-icons">person</i>
@@ -597,7 +580,6 @@
     </div>
   </header>
 
-  <!-- DROPDOWN DEL PERFIL (SUPERIOR DERECHO) -->
   <ul id="user-dropdown" class="dropdown-content">
     <li>
       <a href="perfilU.html">
@@ -612,10 +594,8 @@
     </li>
   </ul>
 
-  <!-- Contenido Principal -->
   <div class="dashboard-container">
     
-    <!-- Banner de Bienvenida -->
     <section class="welcome-banner">
       <div class="banner-content">
         <h2 class="banner-title">¡Bienvenido/a!</h2>
@@ -633,7 +613,6 @@
       </svg>
     </section>
 
-    <!-- Tarjetas KPI -->
     <main class="kpi-grid">
       <div class="kpi-card">
         <div class="donut-chart" id="donutHoras">
@@ -669,7 +648,6 @@
       </a>
     </main>
 
-    <!-- Historial de Horas -->
     <div class="section-header">
       <h2 class="section-title">Historial de Horas</h2>
     </div>
@@ -695,7 +673,6 @@
 
   </div>
 
- <!-- Footer HourCheck (Opción 4: Oscuro Slate) -->
   <footer class="hourcheck-footer">
     <div class="footer-container">
       <div class="footer-grid">
@@ -721,20 +698,18 @@
       </div>
     </div>
   </footer>
-  <!-- Scripts JavaScript -->
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, collection, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, collection, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     document.addEventListener('DOMContentLoaded', function() {
-      // Inicialización del Sidenav
       var elemsSidenav = document.querySelectorAll('.sidenav');
       M.Sidenav.init(elemsSidenav);
 
-      // Inicialización del Dropdown del Usuario
       var dropdownElems = document.querySelectorAll('.dropdown-trigger');
       if (typeof M !== 'undefined' && M.Dropdown) {
         M.Dropdown.init(dropdownElems, {
@@ -766,7 +741,6 @@
       if (user) {
         let nombreUsuario = user.displayName;
 
-        // Si Firebase Auth no tiene el displayName, consultamos el documento en la colección Estudiantes
         if (!nombreUsuario) {
           try {
             const docRef = doc(db, "Estudiantes", user.uid);
@@ -774,7 +748,6 @@
 
             if (docSnap.exists()) {
               const data = docSnap.data();
-              // Evalúa los posibles nombres de campo en tu Firestore (nombre, Nombre, NombreCompleto, etc.)
               nombreUsuario = data.nombre || data.Nombre || data.nombreCompleto || data.NombreCompleto;
             }
           } catch (error) {
@@ -782,7 +755,6 @@
           }
         }
 
-        // Si no se encuentra un nombre en Firestore, se usa el correo como alternativa
         if (!nombreUsuario) {
           nombreUsuario = user.email ? user.email.split('@')[0] : "Estudiante";
         }
@@ -888,12 +860,10 @@
       if (sidenavEmail) sidenavEmail.textContent = correo;
     }
 
-    // Cerrar sesión desde Sidenav
     if (btnCerrarSesion) {
       btnCerrarSesion.addEventListener("click", cerrarSesion);
     }
 
-    // Cerrar sesión desde Dropdown
     if (btnLogoutDropdown) {
       btnLogoutDropdown.addEventListener("click", cerrarSesion);
     }
