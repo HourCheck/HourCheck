@@ -3,369 +3,180 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title id="pageTitle">Categoría - HourCheck</title>
-  
-  <!-- Materialize CSS -->
+  <title>HourCheck - Registro de Docente</title>
+  <link rel="icon" type="image/png" href="logo.png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-  <!-- Material Icons -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
   <style>
-    body {
-      background-color: #f3f6fc;
-      font-family: 'Roboto', sans-serif;
-      color: #333;
+    /* ==========================================
+       ESTILOS GENERALES Y LAYOUT RESPONSIVO
+       ========================================== */
+    body, html {
+      min-height: 100vh;
       margin: 0;
-      padding: 0;
-    }
-
-    /* Header Superior */
-    .top-header {
-      background-color: #ffffff;
-      padding: 15px 40px;
+      font-family: 'Roboto', sans-serif;
+      background-color: #f8f9fa;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      flex-direction: column;
     }
 
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .back-btn {
-      color: #333;
+    .main-container {
+      flex: 1;
       display: flex;
       align-items: center;
       justify-content: center;
-      text-decoration: none;
-      transition: transform 0.2s;
+      padding: 40px 20px;
     }
 
-    .back-btn:hover {
-      transform: translateX(-3px);
-      color: #1557d0;
-    }
-
-    .back-btn i {
-      font-size: 30px;
-    }
-
-    .header-right {
+    .layout-wrapper {
       display: flex;
+      width: 100%;
+      max-width: 1100px;
       align-items: center;
+      justify-content: space-between;
+      gap: 40px;
     }
 
-    .logo-container {
+    /* SECCIÓN MARCA / IZQUIERDA */
+    .brand-section {
+      flex: 1;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 8px;
+      text-align: center;
+      width: 100%;
     }
 
-    .logo-img {
-      height: 38px;
-      width: auto;
+    .main-title {
+      font-size: 3.2rem;
+      font-weight: 800;
+      color: #000000;
+      line-height: 1.1;
+      margin: 20px 0 30px 0;
+    }
+
+    .brand-logo-img {
+      width: 100%;
+      max-width: 260px;
+      height: auto;
       object-fit: contain;
     }
 
-    .banner-card {
-      background: #ffffff;
-      border-radius: 24px;
-      padding: 35px 45px;
-      margin-top: 25px;
-      margin-bottom: 25px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+    /* SECCIÓN FORMULARIO / DERECHA */
+    .card-section {
+      flex: 1.1;
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .banner-title {
-      font-size: 2.3rem;
-      font-weight: 900;
-      color: #000;
-      margin: 0;
-      line-height: 1.1;
-      letter-spacing: -0.5px;
-    }
-
-    .banner-icon-container {
-      background-color: #e8f0fe;
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
       justify-content: center;
-      flex-shrink: 0;
+      width: 100%;
     }
 
-    .info-card {
+    .register-card {
       background: #ffffff;
-      border-radius: 20px;
-      padding: 22px;
-      height: 140px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+      border-radius: 35px;
+      padding: 40px 45px;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.06), 0 5px 15px rgba(0, 0, 0, 0.04);
+    }
+
+    .header-row {
       display: flex;
-      align-items: center;
-      gap: 18px;
+      align-items: flex-start;
+      gap: 15px;
       margin-bottom: 15px;
     }
 
-    .icon-orange-circle {
-      width: 75px;
-      height: 75px;
-      background-color: #ff5722;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      flex-shrink: 0;
-    }
-
-    .card-text-title {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: #000;
-      margin: 0 0 4px 0;
-    }
-
-    .card-text-sub {
-      font-size: 0.9rem;
-      color: #555;
-      margin: 0 0 6px 0;
-    }
-
-    .card-text-bold {
-      font-size: 1.25rem;
-      font-weight: 800;
-      color: #000;
-      margin: 0;
-    }
-
-    .donut-chart {
-      width: 75px;
-      height: 75px;
-      border-radius: 50%;
-      background: conic-gradient(#1557d0 0% 100%, #e2e8f0 0% 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      flex-shrink: 0;
-    }
-
-    .donut-chart::after {
-      content: "";
-      width: 45px;
-      height: 45px;
-      background: #ffffff;
-      border-radius: 50%;
-    }
-
-    .gauge-chart {
-      width: 75px;
-      height: 75px;
-      border-radius: 50%;
-      background: conic-gradient(#ff5722 0% 0%, #e2e8f0 0% 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      flex-shrink: 0;
-      transition: background 0.3s ease-in-out;
-    }
-
-    .gauge-chart::after {
-      content: "";
-      width: 45px;
-      height: 45px;
-      background: #ffffff;
-      border-radius: 50%;
-    }
-
-    /* Buscador */
-    .search-box-container {
-      background: #ffffff;
-      border-radius: 12px;
-      padding: 10px 20px;
-      margin-top: 20px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.02);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .search-box-container input {
-      border: none !important;
-      box-shadow: none !important;
-      margin: 0 !important;
-      height: 2.5rem !important;
-    }
-
-    .students-table-container {
-      background: #ffffff;
-      border: 1.5px solid #222;
-      border-radius: 16px;
-      overflow: hidden;
-      margin-top: 20px;
-      margin-bottom: 40px;
-    }
-
-    .table-header-box {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 16px 30px;
-      border-bottom: 1.5px solid #222;
-      background: #ffffff;
-    }
-
-    .table-header-title {
-      font-size: 1.15rem;
-      font-weight: 700;
-      margin: 0;
-    }
-
-    .btn-reporte {
-      background-color: #1557d0;
-      color: white;
-      border-radius: 10px;
-      padding: 0 16px;
-      height: 38px;
-      line-height: 38px;
-      text-transform: none;
-      font-weight: 700;
-      font-size: 0.9rem;
-      box-shadow: none;
+    .btn-back {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      cursor: pointer;
-      border: none;
-      transition: background-color 0.2s;
-    }
-
-    .btn-reporte:hover {
-      background-color: #0d47a1;
-    }
-
-    .student-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 16px 30px;
-      border-bottom: 1.5px solid #222;
-      flex-wrap: wrap;
-      gap: 15px;
-    }
-
-    .student-row:last-child {
-      border-bottom: none;
-    }
-
-    .student-name {
-      font-weight: 700;
-      font-size: 1.05rem;
-      color: #000;
-    }
-
-    .action-group {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .action-link {
-      font-weight: 700;
-      font-size: 0.95rem;
-      color: #1557d0;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border: 2px solid #000000;
+      border-radius: 50%;
+      color: #000000;
       text-decoration: none;
-      cursor: pointer;
+      transition: background-color 0.2s, transform 0.2s;
+      flex-shrink: 0;
+      margin-top: 5px;
     }
 
-    .action-link:hover {
-      text-decoration: underline;
+    .btn-back:hover {
+      background-color: #f0f0f0;
+      transform: scale(1.05);
     }
 
-    /* Badges de Estado Visuales */
-    .status-badge {
-      padding: 4px 10px;
-      border-radius: 12px;
-      font-size: 0.8rem;
-      font-weight: bold;
-      display: inline-block;
-      margin-left: 8px;
+    .btn-back i { font-size: 24px; }
+
+    .flex-grow-input { flex-grow: 1; }
+
+    .input-label {
+      font-weight: 700;
+      color: #000000;
+      font-size: 1.05rem;
+      margin-bottom: 6px;
+      display: block;
     }
 
-    .status-approved {
-      background-color: #e8f5e9;
-      color: #2e7d32;
+    .custom-input, .custom-select {
+      background-color: #ffffff !important;
+      border: 1.5px solid #e0e0e0 !important;
+      border-radius: 20px !important;
+      height: 48px !important;
+      padding: 0 18px !important;
+      box-sizing: border-box !important;
+      font-size: 0.95rem !important;
+      color: #333333 !important;
+      margin-bottom: 16px !important;
+      box-shadow: none !important;
+      transition: border-color 0.2s, box-shadow 0.2s !important;
+      width: 100% !important;
     }
 
-    .status-rejected {
-      background-color: #ffebee;
-      color: #c62828;
+    .custom-select { display: block !important; outline: none; }
+    .custom-input::placeholder { color: #cccccc; }
+
+    .custom-input:focus, .custom-select:focus {
+      border-color: #ff5500 !important;
+      box-shadow: 0 0 0 2px rgba(255, 85, 0, 0.15) !important;
     }
 
-    .status-pending {
-      background-color: #fff3e0;
-      color: #ef6c00;
-    }
-
-    /* Botones de Acción con Estilos Refinados */
-    .btn-action-icon {
+    .btn-orange-submit {
+      background-color: #ff5500 !important;
+      color: #ffffff !important;
+      font-size: 1.2rem !important;
+      font-weight: 700 !important;
+      text-transform: none !important;
+      border-radius: 30px !important;
+      height: 52px !important;
+      line-height: 52px !important;
+      width: 100% !important;
+      box-shadow: 0 4px 14px rgba(255, 85, 0, 0.3) !important;
+      transition: background-color 0.2s, transform 0.1s !important;
       border: none;
-      border-radius: 8px;
-      padding: 6px 12px;
       cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      font-weight: bold;
-      font-size: 0.85rem;
-      transition: opacity 0.2s;
-    }
-
-    .btn-action-icon:hover {
-      opacity: 0.85;
-    }
-
-    .btn-accept {
-      background-color: #2e7d32;
-      color: white;
-    }
-
-    .btn-reject {
-      background-color: #c62828;
-      color: white;
-    }
-
-    /* Modal de Evidencia */
-    .modal {
-      border-radius: 16px;
-      max-width: 650px;
-    }
-
-    .evidencia-img {
-      max-width: 100%;
-      max-height: 320px;
-      border-radius: 12px;
-      object-fit: contain;
-      border: 1px solid #ddd;
       margin-top: 10px;
     }
 
-    /* FOOTER INTEGRADO */
+    .btn-orange-submit:hover { background-color: #e64d00 !important; }
+    .btn-orange-submit:disabled { background-color: #ffaa80 !important; cursor: not-allowed; }
+
+    #boton-position {
+      text-align: left;
+      width: 100%;
+      align-self: flex-start;
+    }
+
+      /* ==========================================
+       FOOTER INTEGRADO (OSCURO SLATE)
+       ========================================== */
     .hourcheck-footer {
       background-color: #0f172a;
       color: #f8fafc;
       padding: 36px 20px 20px 20px;
       border-top: 1px solid #1e293b;
-      margin-top: 50px;
+      margin-top: auto;
     }
 
     .footer-container {
@@ -384,21 +195,19 @@
     .footer-logo {
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: 1.25rem;
-      font-weight: 800;
-      color: #ffffff;
     }
 
-    .footer-logo-icon {
-      color: #38bdf8;
-      font-size: 26px;
+    .footer-logo-img {
+      height: 38px;
+      width: auto;
+      object-fit: contain;
+      display: block;
     }
 
     .footer-description {
       color: #94a3b8;
       font-size: 0.88rem;
-      margin: 8px 0 0 0;
+      margin: 12px 0 0 0;
       line-height: 1.5;
       max-width: 480px;
     }
@@ -442,142 +251,109 @@
       margin: 0;
     }
 
-    @media (max-width: 768px) {
-      .footer-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
+
+    /* ==========================================
+       MEDIA QUERIES PARA ADAPTABILIDAD RESPONSIVA
+       ========================================== */
+    @media (max-width: 900px) {
+      .main-container {
+        padding: 20px 15px;
       }
-      
-      .footer-action-col {
-        justify-content: flex-start;
+
+      .layout-wrapper {
+        flex-direction: column;
+        gap: 30px;
+      }
+
+      .main-title {
+        font-size: 2.2rem;
+        margin: 15px 0;
+      }
+
+      .brand-logo-img {
+        max-width: 160px;
+      }
+
+      .register-card {
+        padding: 25px 20px;
+        border-radius: 25px;
+      }
+
+      .btn-orange-submit {
+        font-size: 1.1rem !important;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .footer-brand {
+        justify-content: center;
+      }
+
+      .center-on-small {
+        text-align: center;
       }
     }
   </style>
 </head>
 <body>
 
-  <header class="top-header">
-    <div class="header-left">
-      <a href="mainPD.html" class="back-btn" title="Volver al Inicio">
-        <i class="material-icons">arrow_back</i>
-      </a>
-    </div>
-
-    <div class="header-right">
-      <div class="logo-container">
-        <img src="logo.png" alt="HourCheck Logo" class="logo-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x40?text=HourCheck';">
+  <div class="main-container">
+    <div class="layout-wrapper">
+      <div class="brand-section">
+        <div id="boton-position"> 
+          <a href="loginU.html?perfil=maestro" class="btn-back waves-effect waves-light" title="Volver">
+            <i class="material-icons">arrow_back</i>
+          </a>
+        </div>
+        <h1 class="main-title">Registro de<br>Docente</h1>
+        <img src="Transparente (1).png" alt="HourCheck Logo" class="brand-logo-img">
       </div>
-    </div>
-  </header>
 
-  <!-- Contenedor Principal -->
-  <div class="container" style="width: 90%; max-width: 1200px;">
+      <div class="card-section">
+        <div class="register-card">
+          <form id="teacherForm" autocomplete="off">
+            <input type="hidden" id="tipoUsuario" name="tipo_usuario" value="docente">
 
-    <!-- Banner Principal -->
-    <div class="banner-card">
-      <div>
-        <h1 class="banner-title" id="bannerTituloCategoria">Cargando Categoría...</h1>
-      </div>
-      <div class="banner-icon-container">
-        <i class="material-icons" id="bannerIconoCategoria" style="font-size: 3.5rem; color: #1557d0;">folder</i>
-      </div>
-    </div>
+            <div class="header-row">
+              <div class="flex-grow-input">
+                <label for="nombre" class="input-label">Nombre del docente</label>
+                <input type="text" id="nombre" class="custom-input" placeholder="Ingresa tu nombre completo" required>
+              </div>
+            </div>
 
-    <!-- Cards de Estadísticas -->
-    <div class="row">
-      <div class="col s12 m4">
-        <div class="info-card">
-          <div class="icon-orange-circle">
-            <i class="material-icons" style="font-size: 2.5rem;">date_range</i>
-          </div>
-          <div>
-            <div class="card-text-title">Próxima Actividad</div>
-            <div class="card-text-sub" id="fechaProximaActividad">Por definir</div>
-            <div class="card-text-bold" id="nombreProximaActividad">Sin programar</div>
-          </div>
+            <div>
+              <label for="institucion" class="input-label">Institución</label>
+              <select id="institucion" class="custom-select" required>
+                <option value="" disabled selected hidden>Cargando instituciones...</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="correo" class="input-label">Correo electrónico</label>
+              <input type="email" id="correo" class="custom-input" placeholder="Ingresa tu correo" required autocomplete="email">
+            </div>
+
+            <div>
+              <label for="password" class="input-label">Contraseña</label>
+              <input type="password" id="password" class="custom-input" placeholder="Ingresa tu contraseña" required autocomplete="new-password">
+            </div>
+
+            <button type="submit" id="btnRegistrar" class="btn btn-orange-submit waves-effect waves-light">
+              Registrarse
+            </button>
+          </form>
         </div>
       </div>
-
-      <div class="col s12 m4">
-        <div class="info-card">
-          <div class="donut-chart"></div>
-          <div>
-            <div class="card-text-title">Estudiantes en la categoría</div>
-            <div class="card-text-bold" id="totalEstudiantesTexto">0 estudiantes</div>
-            <div class="card-text-sub">Participando</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col s12 m4">
-        <div class="info-card">
-          <div class="gauge-chart" id="gaugeChart"></div>
-          <div>
-            <div class="card-text-title">Evidencias subidas</div>
-            <div class="card-text-bold" id="totalRegistrosTexto">0 registros</div>
-            <div class="card-text-sub" id="subtituloCategoriaRegistros">Categoría</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Buscador por Estudiante -->
-    <div class="search-box-container">
-      <i class="material-icons" style="color: #666;">search</i>
-      <input type="text" id="inputBuscadorEstudiante" placeholder="Buscar estudiante por nombre o correo...">
-    </div>
-
-    <!-- Tabla de Estudiantes -->
-    <div class="students-table-container">
-      <div class="table-header-box">
-        <span class="table-header-title" id="tituloTablaEstudiantes">Estudiantes en la categoría</span>
-        <button class="btn-reporte" id="btnGenerarReporte">
-          <i class="material-icons" style="font-size: 1.2rem;">description</i>
-          Generar reporte
-        </button>
-      </div>
-
-      <div id="studentsContainer">
-        <div class="student-row" style="justify-content: center;">
-          <span style="color: #666;">Cargando lista de entregas...</span>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- Modal Evidencia -->
-  <div id="modalEvidencia" class="modal">
-    <div class="modal-content">
-      <h5 style="font-weight: 700; margin-top: 0;">Evidencia del Registro</h5>
-      <p id="modalEstudiante" style="margin-bottom: 5px; font-weight: 600;"></p>
-      <p id="modalDetalles" style="color: #555; margin-top: 0;"></p>
-      
-      <div style="text-align: center; margin-top: 15px;" id="modalImagenContainer">
-        <p style="color: #888;">Cargando imagen...</p>
-      </div>
-    </div>
-    <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center; padding: 0 24px 16px 24px;">
-      <div class="action-group">
-        <button id="btnModalAceptar" class="btn-action-icon btn-accept">
-          <i class="material-icons" style="font-size: 1.1rem;">check</i> Aceptar
-        </button>
-        <button id="btnModalDenegar" class="btn-action-icon btn-reject">
-          <i class="material-icons" style="font-size: 1.1rem;">close</i> Denegar
-        </button>
-      </div>
-      <a href="#!" class="modal-close waves-effect waves-blue btn-flat" style="font-weight: 700; color: #1557d0;">Cerrar</a>
     </div>
   </div>
 
-  <!-- Footer HourCheck -->
+ <!-- Footer HourCheck (Oscuro Slate) -->
   <footer class="hourcheck-footer">
     <div class="footer-container">
       <div class="footer-grid">
         <div class="footer-brand-col">
           <div class="footer-logo">
-            <i class="material-icons footer-logo-icon">schedule</i>
-            <span>HourCheck</span>
+            <img src="logo.png" alt="HourCheck Logo" class="footer-logo-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/140x40?text=HourCheck';">
           </div>
           <p class="footer-description">
             Plataforma web para el registro, gestión y validación transparente del Servicio Social Estudiantil.
@@ -587,7 +363,7 @@
         <div class="footer-action-col">
           <a href="mailto:soporte@hourcheck.com" class="footer-support-btn">
             <i class="material-icons">mail</i>
-            <span>Contactar Soporte</span>
+            <span>Contactar a soporte</span>
           </a>
         </div>
       </div>
@@ -598,276 +374,110 @@
     </div>
   </footer>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, getDocs, doc, query, where, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-    import { getAuth, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
-    document.addEventListener('DOMContentLoaded', function() {
-      const elemsModal = document.querySelectorAll('.modal');
-      M.Modal.init(elemsModal);
-    });
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
       authDomain: "hourcheckt.firebaseapp.com",
       projectId: "hourcheckt",
+      storageBucket: "hourcheckt.firebasestorage.app",
       messagingSenderId: "83459752453",
       appId: "1:83459752453:web:1b81724c28973bf567126c"
     };
 
     const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
     const auth = getAuth(app);
+    const db = getFirestore(app);
 
-    setPersistence(auth, browserLocalPersistence).catch((error) => {
-      console.error("Error al configurar persistencia:", error);
-    });
+    const teacherForm = document.getElementById("teacherForm");
+    const btnRegistrar = document.getElementById("btnRegistrar");
 
-    // 1. OBTENER DATO DINÁMICO DE LA URL (?categoria=NombreCategoria)
-    const urlParams = new URLSearchParams(window.location.search);
-    const CATEGORIA_ACTIVA = urlParams.get('categoria') || "General";
+    // Función para Cargar Instituciones desde Firestore
+    async function cargarInstituciones() {
+      const selectInstitucion = document.getElementById("institucion");
 
-    // Diccionario de íconos según palabras clave del nombre de categoría
-    function obtenerIconoCategoria(nombre) {
-      const lower = nombre.toLowerCase();
-      if (lower.includes('inglés') || lower.includes('idioma') || lower.includes('english')) return 'translate';
-      if (lower.includes('limpieza') || lower.includes('medio ambiente') || lower.includes('reciclaje')) return 'cleaning_services';
-      if (lower.includes('deporte') || lower.includes('fútbol') || lower.includes('torneo')) return 'sports_soccer';
-      if (lower.includes('tecnología') || lower.includes('cómputo') || lower.includes('robótica')) return 'computer';
-      if (lower.includes('biblioteca') || lower.includes('lectura') || lower.includes('libro')) return 'menu_book';
-      if (lower.includes('arte') || lower.includes('música') || lower.includes('teatro')) return 'palette';
-      return 'folder'; // Ícono por defecto
-    }
-
-    // Adaptar textos e íconos dinámicamente en el DOM
-    document.getElementById("pageTitle").textContent = `${CATEGORIA_ACTIVA} - HourCheck`;
-    document.getElementById("bannerTituloCategoria").textContent = CATEGORIA_ACTIVA;
-    document.getElementById("subtituloCategoriaRegistros").textContent = CATEGORIA_ACTIVA;
-    document.getElementById("tituloTablaEstudiantes").textContent = `Estudiantes en ${CATEGORIA_ACTIVA}`;
-    document.getElementById("bannerIconoCategoria").textContent = obtenerIconoCategoria(CATEGORIA_ACTIVA);
-
-    const totalEstudiantesTextoEl = document.getElementById("totalEstudiantesTexto");
-    const totalRegistrosTextoEl = document.getElementById("totalRegistrosTexto");
-    const gaugeChartEl = document.getElementById("gaugeChart");
-    const studentsContainer = document.getElementById("studentsContainer");
-    const btnGenerarReporte = document.getElementById("btnGenerarReporte");
-    const inputBuscadorEstudiante = document.getElementById("inputBuscadorEstudiante");
-
-    let registrosCache = [];
-
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        await cargarMetricas();
-      } else {
-        window.location.href = "loginU.html";
-      }
-    });
-
-    async function cargarMetricas() {
       try {
-        const qCategoria = query(
-          collection(db, "HorasSociales"),
-          where("Categoria", "==", CATEGORIA_ACTIVA)
-        );
-
-        const snapHoras = await getDocs(qCategoria);
-        const totalRegistros = snapHoras.size;
-
-        const estudiantesUnicos = new Set();
-        registrosCache = [];
-
-        snapHoras.forEach((docSnap) => {
-          const data = docSnap.data();
-          if (data.userId) estudiantesUnicos.add(data.userId);
-          else if (data.email) estudiantesUnicos.add(data.email);
-
-          registrosCache.push({ id: docSnap.id, ...data });
-        });
-
-        const totalEstudiantesCategoria = estudiantesUnicos.size;
-
-        totalEstudiantesTextoEl.textContent = `${totalEstudiantesCategoria} estudiante${totalEstudiantesCategoria === 1 ? '' : 's'}`;
-
-        if (totalRegistros === 1) {
-          totalRegistrosTextoEl.textContent = "1 registro";
-        } else {
-          totalRegistrosTextoEl.textContent = `${totalRegistros} registros`;
+        const querySnapshot = await getDocs(collection(db, "Institucion"));
+        
+        if (querySnapshot.empty) {
+          selectInstitucion.innerHTML = '<option value="" disabled selected hidden>No hay instituciones registradas</option>';
+          return;
         }
 
-        const porcentajeVisual = totalRegistros > 0 ? Math.min(totalRegistros * 10, 100) : 0;
-        gaugeChartEl.style.background = `conic-gradient(#ff5722 0% ${porcentajeVisual}%, #e2e8f0 ${porcentajeVisual}% 100%)`;
+        selectInstitucion.innerHTML = '<option value="" disabled selected hidden>Selecciona una opción</option>';
 
-        renderizarTablaRegistros(registrosCache);
+        querySnapshot.forEach((docSnapshot) => {
+          const data = docSnapshot.data();
+          if (data.NameInst) {
+            const option = document.createElement("option");
+            
+            option.value = docSnapshot.id; 
+            option.textContent = data.NameInst;
+            
+            selectInstitucion.appendChild(option);
+          }
+        });
 
       } catch (error) {
-        console.error("Error al obtener los datos:", error);
-        totalEstudiantesTextoEl.textContent = "0 estudiantes";
-        totalRegistrosTextoEl.textContent = "Sin registros";
-        renderizarTablaRegistros([]);
+        console.error("Error al cargar instituciones:", error);
+        M.toast({ html: 'Error al cargar instituciones: ' + error.message, classes: 'red rounded' });
+        selectInstitucion.innerHTML = '<option value="" disabled selected hidden>Error de permisos al cargar</option>';
       }
     }
 
-    function renderizarTablaRegistros(lista) {
-      studentsContainer.innerHTML = "";
+    // Cargar opciones al iniciar
+    cargarInstituciones();
 
-      if (lista.length === 0) {
-        studentsContainer.innerHTML = `
-          <div class="student-row" style="justify-content: center;">
-            <span style="color: #666;">No hay registros coincidentes para ${CATEGORIA_ACTIVA}.</span>
-          </div>`;
-        return;
-      }
+    // Evento de Envío de Formulario
+    teacherForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-      lista.forEach((item) => {
-        const usuarioNombre = item.nombre || item.email || item.userId || "Estudiante";
-        const horasRealizadas = item.Horas || 0;
+      btnRegistrar.disabled = true;
+      btnRegistrar.textContent = "Registrando...";
 
-        let badgeHTML = `<span class="status-badge status-pending">Pendiente</span>`;
-        if (item.estado === true) badgeHTML = `<span class="status-badge status-approved">Aprobado</span>`;
-        if (item.estado === false) badgeHTML = `<span class="status-badge status-rejected">Rechazado</span>`;
+      const nombreDocente = document.getElementById("nombre").value.trim();
+      const institucionId = document.getElementById("institucion").value;
+      const correo = document.getElementById("correo").value.trim();
+      const password = document.getElementById("password").value.trim();
 
-        const row = document.createElement("div");
-        row.className = "student-row";
-        row.innerHTML = `
-          <div>
-            <span class="student-name">${usuarioNombre}</span> ${badgeHTML}
-            <span style="display: block; font-size: 0.85rem; color: #666; margin-top: 4px;">
-              Horas reportadas: <strong>${horasRealizadas} hrs</strong>
-            </span>
-          </div>
-          <div class="action-group">
-            <button class="btn-action-icon btn-accept" title="Aceptar Horas" onclick="cambiarEstadoHoras('${item.id}', true)">
-              <i class="material-icons" style="font-size: 1rem;">check</i> Aceptar
-            </button>
-            <button class="btn-action-icon btn-reject" title="Denegar Horas" onclick="cambiarEstadoHoras('${item.id}', false)">
-              <i class="material-icons" style="font-size: 1rem;">close</i> Rechazar
-            </button>
-            <a class="action-link" style="margin-left: 6px;" onclick="verEvidencia('${item.id}')">Ver actividad</a>
-          </div>
-        `;
-        studentsContainer.appendChild(row);
-      });
-    }
-
-    // Actualizar campo "estado" en Firestore
-    window.cambiarEstadoHoras = async function(docId, nuevoEstado) {
       try {
-        const docRef = doc(db, "HorasSociales", docId);
-        await updateDoc(docRef, {
-          estado: nuevoEstado
+        // 1. Crear usuario en Auth
+        const userCredential = await createUserWithEmailAndPassword(auth, correo, password);
+        const uid = userCredential.user.uid;
+
+        // 2. Guardar datos en la colección Docentes
+        await setDoc(doc(db, "Docentes", uid), {
+          Correo: correo,
+          Institucion: institucionId,
+          NameDocente: nombreDocente,
+          fechaRegistro: new Date(),
+          password: password,
+          rol: "Docente"
         });
 
-        const registroIndex = registrosCache.findIndex(r => r.id === docId);
-        if (registroIndex !== -1) {
-          registrosCache[registroIndex].estado = nuevoEstado;
-        }
+        M.toast({html: 'Docente registrado exitosamente. Redirigiendo...', classes: 'green rounded'});
+        setTimeout(() => {
+          window.location.href = "loginU.html?perfil=maestro";
+        }, 1500);
 
-        const estadoTexto = nuevoEstado ? "aceptadas" : "rechazadas";
-        const colorToast = nuevoEstado ? "green rounded" : "red rounded";
-        M.toast({ html: `Horas ${estadoTexto} correctamente.`, classes: colorToast });
-
-        renderizarTablaRegistros(registrosCache);
-
-        const modalElem = document.getElementById("modalEvidencia");
-        const instance = M.Modal.getInstance(modalElem);
-        if (instance && instance.isOpen) {
-          instance.close();
-        }
       } catch (error) {
-        console.error("Error al actualizar estado:", error);
-        M.toast({ html: 'Error al actualizar el registro en Firebase.', classes: 'red rounded' });
+        console.error("Error al registrar docente:", error);
+        let mensaje = error.message;
+        if (error.code === 'auth/email-already-in-use') {
+          mensaje = "Este correo ya está registrado.";
+        } else if (error.code === 'auth/weak-password') {
+          mensaje = "La contraseña debe tener al menos 6 caracteres.";
+        }
+        M.toast({html: 'Error: ' + mensaje, classes: 'red rounded'});
+        btnRegistrar.disabled = false;
+        btnRegistrar.textContent = "Registrarse";
       }
-    };
-
-    // Buscador interactivo
-    if (inputBuscadorEstudiante) {
-      inputBuscadorEstudiante.addEventListener("input", (e) => {
-        const textoBusqueda = e.target.value.toLowerCase().trim();
-
-        const registrosFiltrados = registrosCache.filter((item) => {
-          const nombreEstudiante = (item.nombre || "").toLowerCase();
-          const emailEstudiante = (item.email || "").toLowerCase();
-          return nombreEstudiante.includes(textoBusqueda) || emailEstudiante.includes(textoBusqueda);
-        });
-
-        renderizarTablaRegistros(registrosFiltrados);
-      });
-    }
-
-    // Generar Reporte CSV Dinámico
-    btnGenerarReporte.addEventListener("click", () => {
-      if (registrosCache.length === 0) {
-        M.toast({html: 'No hay datos disponibles para generar el reporte.', classes: 'orange rounded'});
-        return;
-      }
-
-      let csvContent = "\uFEFF";
-      csvContent += "Estudiante / Nombre,Email,Categoría,Lugar,Docente Encargado,Horas Reportadas,Estado,Descripción\n";
-
-      registrosCache.forEach((item) => {
-        const nombreEstudiante = `"${item.nombre || 'N/A'}"`;
-        const estudianteEmail = `"${item.email || item.userId || 'N/A'}"`;
-        const categoria = `"${item.Categoria || CATEGORIA_ACTIVA}"`;
-        const lugar = `"${item.Lugar || 'N/A'}"`;
-        const docente = `"${item['Docente encargado'] || 'N/A'}"`;
-        const horas = item.Horas || 0;
-        let estado = "Pendiente";
-        if (item.estado === true) estado = "Aprobado";
-        if (item.estado === false) estado = "Rechazado";
-        const descripcion = `"${(item.Descripcion || '').replace(/"/g, '""')}"`;
-
-        csvContent += `${nombreEstudiante},${estudianteEmail},${categoria},${lugar},${docente},${horas},${estado},${descripcion}\n`;
-      });
-
-      const nombreLimpio = CATEGORIA_ACTIVA.replace(/[^a-zA-Z0-9]/g, "_");
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const enlaceDescarga = document.createElement("a");
-      enlaceDescarga.setAttribute("href", url);
-      enlaceDescarga.setAttribute("download", `Reporte_${nombreLimpio}_${new Date().toISOString().slice(0,10)}.csv`);
-      document.body.appendChild(enlaceDescarga);
-      
-      enlaceDescarga.click();
-      document.body.removeChild(enlaceDescarga);
-
-      M.toast({html: 'Reporte descargado exitosamente.', classes: 'green rounded'});
     });
-
-    // Abrir Modal de Evidencia
-    window.verEvidencia = function(registroId) {
-      const registro = registrosCache.find(r => r.id === registroId);
-      if (!registro) {
-        M.toast({html: 'Registro no encontrado.', classes: 'red rounded'});
-        return;
-      }
-
-      const nombreEstudiante = registro.nombre || registro.email || registro.userId || "Estudiante";
-
-      document.getElementById("modalEstudiante").textContent = nombreEstudiante;
-      document.getElementById("modalDetalles").textContent = `Horas: ${registro.Horas || 0} hrs | Descripción: ${registro.Descripcion || 'Sin descripción'}`;
-
-      const imgContainer = document.getElementById("modalImagenContainer");
-      const urlImagen = registro.evidenciaUrl || registro.Evidencia || registro.imagenUrl || registro.imagen;
-
-      if (urlImagen) {
-        imgContainer.innerHTML = `<img src="${urlImagen}" alt="Evidencia" class="evidencia-img" />`;
-      } else {
-        imgContainer.innerHTML = `<p style="color: #666; padding: 20px;">Este registro no contiene imagen de evidencia adjunta.</p>`;
-      }
-
-      const btnAceptar = document.getElementById("btnModalAceptar");
-      const btnDenegar = document.getElementById("btnModalDenegar");
-
-      btnAceptar.onclick = () => cambiarEstadoHoras(registroId, true);
-      btnDenegar.onclick = () => cambiarEstadoHoras(registroId, false);
-
-      const modalElem = document.getElementById("modalEvidencia");
-      const instance = M.Modal.getInstance(modalElem);
-      instance.open();
-    };
   </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
 </html>

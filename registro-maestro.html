@@ -9,90 +9,26 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
   <style>
-    /* Footer */
-    .custom-footer {
-      background-color: #1557d0 !important;
-      border-top-left-radius: 25px;
-      border-top-right-radius: 25px;
-      margin-top: 50px;
-      padding-top: 30px !important;
-    }
-
-    .footer-container {
-      width: 90%;
-      max-width: 1100px;
-    }
-
-    .footer-brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 10px;
-    }
-
-    .footer-logo {
-      height: 35px;
-      width: auto;
-      filter: brightness(0) invert(1);
-    }
-
-    .footer-brand h5 {
-      margin: 0;
-      font-size: 1.4rem;
-    }
-
-    .footer-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      margin-bottom: 8px;
-      transition: color 0.2s, transform 0.2s;
-    }
-
-    .footer-link:hover {
-      color: #ff5500 !important;
-      transform: translateX(4px);
-    }
-
-    .footer-btn {
-      background-color: rgba(255, 255, 255, 0.15);
-      border-radius: 12px;
-      text-transform: none;
-      font-weight: 600;
-      margin-top: 5px;
-    }
-
-    .footer-btn:hover {
-      background-color: rgba(255, 255, 255, 0.25);
-    }
-
-    .custom-copyright {
-      background-color: rgba(0, 0, 0, 0.12) !important;
-      font-size: 0.85rem;
-      padding: 15px 0;
-    }
-
-    .font-weight-bold {
-      font-weight: 700;
-    }
-    #boton-position {
-      text-align: left;
-      width: 100%;
-      align-self: flex-start;
-    }
+    /* ==========================================
+       ESTILOS GENERALES Y LAYOUT RESPONSIVO
+       ========================================== */
     body, html {
-      height: 100%;
+      min-height: 100vh;
       margin: 0;
       font-family: 'Roboto', sans-serif;
       background-color: #f8f9fa;
-    }
-    .main-container {
       display: flex;
-      min-height: 100vh;
+      flex-direction: column;
+    }
+
+    .main-container {
+      flex: 1;
+      display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px;
+      padding: 40px 20px;
     }
+
     .layout-wrapper {
       display: flex;
       width: 100%;
@@ -101,30 +37,40 @@
       justify-content: space-between;
       gap: 40px;
     }
+
+    /* SECCIÓN MARCA / IZQUIERDA */
     .brand-section {
       flex: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
+      width: 100%;
     }
+
     .main-title {
       font-size: 3.2rem;
       font-weight: 800;
       color: #000000;
       line-height: 1.1;
-      margin-bottom: 30px;
+      margin: 20px 0 30px 0;
     }
+
     .brand-logo-img {
-      width: 260px;
+      width: 100%;
+      max-width: 260px;
       height: auto;
       object-fit: contain;
     }
+
+    /* SECCIÓN FORMULARIO / DERECHA */
     .card-section {
       flex: 1.1;
       display: flex;
       justify-content: center;
+      width: 100%;
     }
+
     .register-card {
       background: #ffffff;
       border-radius: 35px;
@@ -133,12 +79,14 @@
       max-width: 500px;
       box-shadow: 0 15px 35px rgba(0, 0, 0, 0.06), 0 5px 15px rgba(0, 0, 0, 0.04);
     }
+
     .header-row {
       display: flex;
       align-items: flex-start;
       gap: 15px;
       margin-bottom: 15px;
     }
+
     .btn-back {
       display: inline-flex;
       align-items: center;
@@ -153,9 +101,16 @@
       flex-shrink: 0;
       margin-top: 5px;
     }
-    .btn-back:hover { background-color: #f0f0f0; transform: scale(1.05); }
+
+    .btn-back:hover {
+      background-color: #f0f0f0;
+      transform: scale(1.05);
+    }
+
     .btn-back i { font-size: 24px; }
+
     .flex-grow-input { flex-grow: 1; }
+
     .input-label {
       font-weight: 700;
       color: #000000;
@@ -163,11 +118,12 @@
       margin-bottom: 6px;
       display: block;
     }
+
     .custom-input, .custom-select {
       background-color: #ffffff !important;
       border: 1.5px solid #e0e0e0 !important;
       border-radius: 20px !important;
-      height: 44px !important;
+      height: 48px !important;
       padding: 0 18px !important;
       box-sizing: border-box !important;
       font-size: 0.95rem !important;
@@ -177,16 +133,19 @@
       transition: border-color 0.2s, box-shadow 0.2s !important;
       width: 100% !important;
     }
+
     .custom-select { display: block !important; outline: none; }
     .custom-input::placeholder { color: #cccccc; }
+
     .custom-input:focus, .custom-select:focus {
       border-color: #ff5500 !important;
       box-shadow: 0 0 0 2px rgba(255, 85, 0, 0.15) !important;
     }
+
     .btn-orange-submit {
       background-color: #ff5500 !important;
       color: #ffffff !important;
-      font-size: 1.3rem !important;
+      font-size: 1.2rem !important;
       font-weight: 700 !important;
       text-transform: none !important;
       border-radius: 30px !important;
@@ -199,14 +158,140 @@
       cursor: pointer;
       margin-top: 10px;
     }
+
     .btn-orange-submit:hover { background-color: #e64d00 !important; }
     .btn-orange-submit:disabled { background-color: #ffaa80 !important; cursor: not-allowed; }
 
+    #boton-position {
+      text-align: left;
+      width: 100%;
+      align-self: flex-start;
+    }
+
+      /* ==========================================
+       FOOTER INTEGRADO (OSCURO SLATE)
+       ========================================== */
+    .hourcheck-footer {
+      background-color: #0f172a;
+      color: #f8fafc;
+      padding: 36px 20px 20px 20px;
+      border-top: 1px solid #1e293b;
+      margin-top: auto;
+    }
+
+    .footer-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 15px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+    }
+
+    .footer-logo-img {
+      height: 38px;
+      width: auto;
+      object-fit: contain;
+      display: block;
+    }
+
+    .footer-description {
+      color: #94a3b8;
+      font-size: 0.88rem;
+      margin: 12px 0 0 0;
+      line-height: 1.5;
+      max-width: 480px;
+    }
+
+    .footer-action-col {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .footer-support-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: #1e293b;
+      color: #38bdf8;
+      padding: 10px 18px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 600;
+      border: 1px solid #334155;
+      transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    }
+
+    .footer-support-btn:hover {
+      background-color: #334155;
+      border-color: #475569;
+      color: #ffffff;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid #1e293b;
+      margin-top: 28px;
+      padding-top: 16px;
+      text-align: center;
+      font-size: 0.82rem;
+      color: #64748b;
+    }
+
+    .footer-bottom p {
+      margin: 0;
+    }
+
+
+    /* ==========================================
+       MEDIA QUERIES PARA ADAPTABILIDAD RESPONSIVA
+       ========================================== */
     @media (max-width: 900px) {
-      .layout-wrapper { flex-direction: column; gap: 25px; }
-      .main-title { font-size: 2.3rem; margin-bottom: 15px; }
-      .brand-logo-img { width: 160px; }
-      .register-card { padding: 30px 25px; }
+      .main-container {
+        padding: 20px 15px;
+      }
+
+      .layout-wrapper {
+        flex-direction: column;
+        gap: 30px;
+      }
+
+      .main-title {
+        font-size: 2.2rem;
+        margin: 15px 0;
+      }
+
+      .brand-logo-img {
+        max-width: 160px;
+      }
+
+      .register-card {
+        padding: 25px 20px;
+        border-radius: 25px;
+      }
+
+      .btn-orange-submit {
+        font-size: 1.1rem !important;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .footer-brand {
+        justify-content: center;
+      }
+
+      .center-on-small {
+        text-align: center;
+      }
     }
   </style>
 </head>
@@ -231,8 +316,8 @@
 
             <div class="header-row">
               <div class="flex-grow-input">
-                <label for="nombre" class="input-label">Nombre docente</label>
-                <input type="text" id="nombre" class="custom-input" placeholder="Ingresa tu nombre" required>
+                <label for="nombre" class="input-label">Nombre del docente</label>
+                <input type="text" id="nombre" class="custom-input" placeholder="Ingresa tu nombre completo" required>
               </div>
             </div>
 
@@ -244,7 +329,7 @@
             </div>
 
             <div>
-              <label for="correo" class="input-label">Correo</label>
+              <label for="correo" class="input-label">Correo electrónico</label>
               <input type="email" id="correo" class="custom-input" placeholder="Ingresa tu correo" required autocomplete="email">
             </div>
 
@@ -262,156 +347,136 @@
     </div>
   </div>
 
-  <footer class="page-footer custom-footer">
-    <div class="container footer-container">
-      <div class="row style-row">
-        
-        <!-- Columna 1: Información de la Plataforma -->
-        <div class="col s12 m4">
-          <div class="footer-brand">
-            <img src="logo.png" alt="HourCheck Logo" class="footer-logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x40?text=HourCheck';">
-            <h5 class="white-text font-weight-bold">HourCheck</h5>
+ <!-- Footer HourCheck (Oscuro Slate) -->
+  <footer class="hourcheck-footer">
+    <div class="footer-container">
+      <div class="footer-grid">
+        <div class="footer-brand-col">
+          <div class="footer-logo">
+            <img src="logo.png" alt="HourCheck Logo" class="footer-logo-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/140x40?text=HourCheck';">
           </div>
-          <p class="grey-text text-lighten-2">
-            Sistema para la gestión y seguimiento del Servicio Social Estudiantil. Facilitando la validación y control de horas de forma eficiente.
+          <p class="footer-description">
+            Plataforma web para el registro, gestión y validación transparente del Servicio Social Estudiantil.
           </p>
         </div>
 
-        <!-- Columna 2: Enlaces Rápidos -->
-        <div class="col s12 m4 center-on-small">
-          <h5 class="white-text font-weight-bold">Enlaces Rápidos</h5>
-          <ul>
-            <li><a class="grey-text text-lighten-3 footer-link" href="index.html"><i class="material-icons tiny">chevron_right</i> Inicio</a></li>
-            <li><a class="grey-text text-lighten-3 footer-link" href="saberCualP.html"><i class="material-icons tiny">chevron_right</i> Guía de Perfiles</a></li>
-          </ul>
-        </div>
-
-        <!-- Columna 3: Soporte y Ayuda -->
-        <div class="col s12 m4">
-          <h5 class="white-text font-weight-bold">Soporte</h5>
-          <p class="grey-text text-lighten-2">
-            ¿Tienes dudas con el registro de tus horas?
-          </p>
-          <a href="mailto:soporte@hourcheck.com" class="btn-flat white-text footer-btn">
-            <i class="material-icons left">help_outline</i> Contactar Soporte
+        <div class="footer-action-col">
+          <a href="mailto:soporte@hourcheck.com" class="footer-support-btn">
+            <i class="material-icons">mail</i>
+            <span>Contactar a soporte</span>
           </a>
         </div>
-
       </div>
-    </div>
 
-    <!-- Sub-footer con Derechos de Autor -->
-    <div class="footer-copyright custom-copyright">
-      <div class="container center-align white-text">
-        © 2026 HourCheck - Todos los derechos reservados.
+      <div class="footer-bottom">
+        <p>&copy; 2026 HourCheck. Todos los derechos reservados.</p>
       </div>
     </div>
   </footer>
 
   <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-  import { getFirestore, doc, setDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
-    authDomain: "hourcheckt.firebaseapp.com",
-    projectId: "hourcheckt",
-    storageBucket: "hourcheckt.firebasestorage.app",
-    messagingSenderId: "83459752453",
-    appId: "1:83459752453:web:1b81724c28973bf567126c"
-  };
+    const firebaseConfig = {
+      apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
+      authDomain: "hourcheckt.firebaseapp.com",
+      projectId: "hourcheckt",
+      storageBucket: "hourcheckt.firebasestorage.app",
+      messagingSenderId: "83459752453",
+      appId: "1:83459752453:web:1b81724c28973bf567126c"
+    };
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-  const teacherForm = document.getElementById("teacherForm");
-  const btnRegistrar = document.getElementById("btnRegistrar");
+    const teacherForm = document.getElementById("teacherForm");
+    const btnRegistrar = document.getElementById("btnRegistrar");
 
-  // Función para Cargar Instituciones desde Firestore
-  async function cargarInstituciones() {
-    const selectInstitucion = document.getElementById("institucion");
+    // Función para Cargar Instituciones desde Firestore
+    async function cargarInstituciones() {
+      const selectInstitucion = document.getElementById("institucion");
 
-    try {
-      const querySnapshot = await getDocs(collection(db, "Institucion"));
-      
-      if (querySnapshot.empty) {
-        selectInstitucion.innerHTML = '<option value="" disabled selected hidden>No hay instituciones registradas</option>';
-        return;
-      }
-
-      selectInstitucion.innerHTML = '<option value="" disabled selected hidden>Selecciona una opción</option>';
-
-      querySnapshot.forEach((docSnapshot) => {
-        const data = docSnapshot.data();
-        if (data.NameInst) {
-          const option = document.createElement("option");
-          
-          // CAMBIO 1: El value almacena el ID del documento, el texto muestra el Nombre
-          option.value = docSnapshot.id; 
-          option.textContent = data.NameInst;
-          
-          selectInstitucion.appendChild(option);
+      try {
+        const querySnapshot = await getDocs(collection(db, "Institucion"));
+        
+        if (querySnapshot.empty) {
+          selectInstitucion.innerHTML = '<option value="" disabled selected hidden>No hay instituciones registradas</option>';
+          return;
         }
-      });
 
-    } catch (error) {
-      console.error("Error al cargar instituciones:", error);
-      M.toast({ html: 'Error al cargar instituciones: ' + error.message, classes: 'red rounded' });
-      selectInstitucion.innerHTML = '<option value="" disabled selected hidden>Error de permisos al cargar</option>';
-    }
-  }
+        selectInstitucion.innerHTML = '<option value="" disabled selected hidden>Selecciona una opción</option>';
 
-  // Cargar opciones al iniciar
-  cargarInstituciones();
+        querySnapshot.forEach((docSnapshot) => {
+          const data = docSnapshot.data();
+          if (data.NameInst) {
+            const option = document.createElement("option");
+            
+            option.value = docSnapshot.id; 
+            option.textContent = data.NameInst;
+            
+            selectInstitucion.appendChild(option);
+          }
+        });
 
-  // Evento de Envío de Formulario
-  teacherForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    btnRegistrar.disabled = true;
-    btnRegistrar.textContent = "Registrando...";
-
-    const nombreDocente = document.getElementById("nombre").value.trim();
-    const institucionId = document.getElementById("institucion").value; // Obtiene el ID
-    const correo = document.getElementById("correo").value.trim();
-    const password = document.getElementById("password").value.trim();
-
-    try {
-      // 1. Crear usuario en Auth
-      const userCredential = await createUserWithEmailAndPassword(auth, correo, password);
-      const uid = userCredential.user.uid;
-
-      // 2. Guardar datos en la colección Docentes
-      await setDoc(doc(db, "Docentes", uid), {
-        Correo: correo,
-        Institucion: institucionId, // CAMBIO 2: Guarda el ID del documento en lugar del nombre
-        NameDocente: nombreDocente,
-        fechaRegistro: new Date(),
-        password: password,
-        rol: "Docente"
-      });
-
-      M.toast({html: 'Docente registrado exitosamente. Redirigiendo...', classes: 'green rounded'});
-      setTimeout(() => {
-        window.location.href = "loginU.html?perfil=maestro";
-      }, 1500);
-
-    } catch (error) {
-      console.error("Error al registrar docente:", error);
-      let mensaje = error.message;
-      if (error.code === 'auth/email-already-in-use') {
-        mensaje = "Este correo ya está registrado.";
-      } else if (error.code === 'auth/weak-password') {
-        mensaje = "La contraseña debe tener al menos 6 caracteres.";
+      } catch (error) {
+        console.error("Error al cargar instituciones:", error);
+        M.toast({ html: 'Error al cargar instituciones: ' + error.message, classes: 'red rounded' });
+        selectInstitucion.innerHTML = '<option value="" disabled selected hidden>Error de permisos al cargar</option>';
       }
-      M.toast({html: 'Error: ' + mensaje, classes: 'red rounded'});
-      btnRegistrar.disabled = false;
-      btnRegistrar.textContent = "Registrarse";
     }
-  });
-</script>
+
+    // Cargar opciones al iniciar
+    cargarInstituciones();
+
+    // Evento de Envío de Formulario
+    teacherForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      btnRegistrar.disabled = true;
+      btnRegistrar.textContent = "Registrando...";
+
+      const nombreDocente = document.getElementById("nombre").value.trim();
+      const institucionId = document.getElementById("institucion").value;
+      const correo = document.getElementById("correo").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      try {
+        // 1. Crear usuario en Auth
+        const userCredential = await createUserWithEmailAndPassword(auth, correo, password);
+        const uid = userCredential.user.uid;
+
+        // 2. Guardar datos en la colección Docentes
+        await setDoc(doc(db, "Docentes", uid), {
+          Correo: correo,
+          Institucion: institucionId,
+          NameDocente: nombreDocente,
+          fechaRegistro: new Date(),
+          password: password,
+          rol: "Docente"
+        });
+
+        M.toast({html: 'Docente registrado exitosamente. Redirigiendo...', classes: 'green rounded'});
+        setTimeout(() => {
+          window.location.href = "loginU.html?perfil=maestro";
+        }, 1500);
+
+      } catch (error) {
+        console.error("Error al registrar docente:", error);
+        let mensaje = error.message;
+        if (error.code === 'auth/email-already-in-use') {
+          mensaje = "Este correo ya está registrado.";
+        } else if (error.code === 'auth/weak-password') {
+          mensaje = "La contraseña debe tener al menos 6 caracteres.";
+        }
+        M.toast({html: 'Error: ' + mensaje, classes: 'red rounded'});
+        btnRegistrar.disabled = false;
+        btnRegistrar.textContent = "Registrarse";
+      }
+    });
+  </script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>

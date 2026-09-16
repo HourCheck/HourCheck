@@ -10,14 +10,172 @@
 
   <style>
     /* ==========================================
-       FOOTER INTEGRADO - HOURCHECK (OSCURO SLATE)
+       ESTILOS GENERALES Y LAYOUT RESPONSIVO
+       ========================================== */
+    body, html {
+      min-height: 100vh;
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      background-color: #f8f9fa;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .main-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .layout-wrapper {
+      display: flex;
+      width: 100%;
+      max-width: 1100px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 40px;
+    }
+
+    /* SECCIÓN MARCA / IZQUIERDA */
+    .brand-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      width: 100%;
+    }
+
+    .main-title {
+      font-size: 3.2rem;
+      font-weight: 800;
+      color: #000000;
+      line-height: 1.1;
+      margin: 20px 0 30px 0;
+    }
+
+    .brand-logo-img {
+      width: 100%;
+      max-width: 260px;
+      height: auto;
+      object-fit: contain;
+    }
+
+    /* SECCIÓN FORMULARIO / DERECHA */
+    .card-section {
+      flex: 1.1;
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .register-card {
+      background: #ffffff;
+      border-radius: 35px;
+      padding: 40px 45px;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.06), 0 5px 15px rgba(0, 0, 0, 0.04);
+    }
+
+    .header-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border: 2px solid #000000;
+      border-radius: 50%;
+      color: #000000;
+      text-decoration: none;
+      transition: background-color 0.2s, transform 0.2s;
+      flex-shrink: 0;
+      margin-top: 5px;
+    }
+
+    .btn-back:hover {
+      background-color: #f0f0f0;
+      transform: scale(1.05);
+    }
+
+    .btn-back i { font-size: 24px; }
+
+    .flex-grow-input { flex-grow: 1; }
+
+    .input-label {
+      font-weight: 700;
+      color: #000000;
+      font-size: 1.05rem;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .custom-input {
+      background-color: #ffffff !important;
+      border: 1.5px solid #e0e0e0 !important;
+      border-radius: 20px !important;
+      height: 48px !important;
+      padding: 0 18px !important;
+      box-sizing: border-box !important;
+      font-size: 0.95rem !important;
+      color: #333333 !important;
+      margin-bottom: 16px !important;
+      box-shadow: none !important;
+      transition: border-color 0.2s, box-shadow 0.2s !important;
+      width: 100% !important;
+    }
+
+    .custom-input::placeholder { color: #cccccc; }
+
+    .custom-input:focus {
+      border-color: #ff5500 !important;
+      box-shadow: 0 0 0 2px rgba(255, 85, 0, 0.15) !important;
+    }
+
+    .btn-orange-submit {
+      background-color: #ff5500 !important;
+      color: #ffffff !important;
+      font-size: 1.2rem !important;
+      font-weight: 700 !important;
+      text-transform: none !important;
+      border-radius: 30px !important;
+      height: 52px !important;
+      line-height: 52px !important;
+      width: 100% !important;
+      box-shadow: 0 4px 14px rgba(255, 85, 0, 0.3) !important;
+      transition: background-color 0.2s, transform 0.1s !important;
+      border: none;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .btn-orange-submit:hover { background-color: #e64d00 !important; }
+    .btn-orange-submit:disabled { background-color: #ffaa80 !important; cursor: not-allowed; }
+
+    #boton-position {
+      text-align: left;
+      width: 100%;
+      align-self: flex-start;
+    }
+
+    /* ==========================================
+       FOOTER INTEGRADO (OSCURO SLATE)
        ========================================== */
     .hourcheck-footer {
       background-color: #0f172a;
       color: #f8fafc;
       padding: 36px 20px 20px 20px;
       border-top: 1px solid #1e293b;
-      margin-top: 50px;
+      margin-top: auto;
     }
 
     .footer-container {
@@ -38,7 +196,6 @@
       align-items: center;
     }
 
-    /* Estilo optimizado para la imagen del logo */
     .footer-logo-img {
       height: 38px;
       width: auto;
@@ -93,146 +250,56 @@
       margin: 0;
     }
 
+    /* ==========================================
+       MEDIA QUERIES PARA ADAPTABILIDAD RESPONSIVA
+       ========================================== */
+    @media (max-width: 900px) {
+      .main-container {
+        padding: 20px 15px;
+      }
+
+      .layout-wrapper {
+        flex-direction: column;
+        gap: 30px;
+      }
+
+      .main-title {
+        font-size: 2.2rem;
+        margin: 15px 0;
+      }
+
+      .brand-logo-img {
+        max-width: 160px;
+      }
+
+      .register-card {
+        padding: 25px 20px;
+        border-radius: 25px;
+      }
+
+      .btn-orange-submit {
+        font-size: 1.1rem !important;
+      }
+    }
+
     @media (max-width: 768px) {
       .footer-grid {
         grid-template-columns: 1fr;
         gap: 20px;
+        text-align: center;
       }
-      
-      .footer-action-col {
-        justify-content: flex-start;
-      }
-    }
-    body, html {
-      height: 100%;
-      margin: 0;
-      font-family: 'Roboto', sans-serif;
-      background-color: #f8f9fa;
-    }
-    .main-container {
-      display: flex;
-      min-height: 100vh;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-    .layout-wrapper {
-      display: flex;
-      width: 100%;
-      max-width: 1100px;
-      align-items: center;
-      justify-content: space-between;
-      gap: 40px;
-    }
-    .brand-section {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-    }
-    .main-title {
-      font-size: 3.2rem;
-      font-weight: 800;
-      color: #000000;
-      line-height: 1.1;
-      margin-bottom: 30px;
-    }
-    .brand-logo-img {
-      width: 260px;
-      height: auto;
-      object-fit: contain;
-    }
-    .card-section {
-      flex: 1.1;
-      display: flex;
-      justify-content: center;
-    }
-    .register-card {
-      background: #ffffff;
-      border-radius: 35px;
-      padding: 40px 45px;
-      width: 100%;
-      max-width: 500px;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.06), 0 5px 15px rgba(0, 0, 0, 0.04);
-    }
-    .header-row {
-      display: flex;
-      align-items: flex-start;
-      gap: 15px;
-      margin-bottom: 15px;
-    }
-    .btn-back {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 44px;
-      height: 44px;
-      border: 2px solid #000000;
-      border-radius: 50%;
-      color: #000000;
-      text-decoration: none;
-      transition: background-color 0.2s, transform 0.2s;
-      flex-shrink: 0;
-      margin-top: 5px;
-    }
-    .btn-back:hover { background-color: #f0f0f0; transform: scale(1.05); }
-    .btn-back i { font-size: 24px; }
-    .flex-grow-input { flex-grow: 1; }
-    .input-label {
-      font-weight: 700;
-      color: #000000;
-      font-size: 1.05rem;
-      margin-bottom: 6px;
-      display: block;
-    }
-    .custom-input {
-      background-color: #ffffff !important;
-      border: 1.5px solid #e0e0e0 !important;
-      border-radius: 20px !important;
-      height: 44px !important;
-      padding: 0 18px !important;
-      box-sizing: border-box !important;
-      font-size: 0.95rem !important;
-      color: #333333 !important;
-      margin-bottom: 16px !important;
-      box-shadow: none !important;
-      transition: border-color 0.2s, box-shadow 0.2s !important;
-    }
-    .custom-input::placeholder { color: #cccccc; }
-    .custom-input:focus {
-      border-color: #ff5500 !important;
-      box-shadow: 0 0 0 2px rgba(255, 85, 0, 0.15) !important;
-    }
-    .btn-orange-submit {
-      background-color: #ff5500 !important;
-      color: #ffffff !important;
-      font-size: 1.3rem !important;
-      font-weight: 700 !important;
-      text-transform: none !important;
-      border-radius: 30px !important;
-      height: 52px !important;
-      line-height: 52px !important;
-      width: 100% !important;
-      box-shadow: 0 4px 14px rgba(255, 85, 0, 0.3) !important;
-      transition: background-color 0.2s, transform 0.1s !important;
-      border: none;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-    .btn-orange-submit:hover { background-color: #e64d00 !important; }
-    .btn-orange-submit:disabled { background-color: #ffaa80 !important; cursor: not-allowed; }
 
-    @media (max-width: 900px) {
-      .layout-wrapper { flex-direction: column; gap: 25px; }
-      .main-title { font-size: 2.3rem; margin-bottom: 15px; }
-      .brand-logo-img { width: 160px; }
-      .register-card { padding: 30px 25px; }
-    }
-    #boton-position {
-      text-align: left;
-      width: 100%;
-      align-self: flex-start;
+      .footer-logo {
+        justify-content: center;
+      }
+
+      .footer-description {
+        margin: 12px auto 0 auto;
+      }
+
+      .footer-action-col {
+        justify-content: center;
+      }
     }
   </style>
 </head>
@@ -241,9 +308,11 @@
   <div class="main-container">
     <div class="layout-wrapper">
       <div class="brand-section">
-        <div id="boton-position"> <a href="loginU.html?perfil=institucion" class="btn-back waves-effect waves-light" title="Volver">
-                <i class="material-icons">arrow_back</i>
-              </a></div>
+        <div id="boton-position">
+          <a href="loginU.html?perfil=institucion" class="btn-back waves-effect waves-light" title="Volver">
+            <i class="material-icons">arrow_back</i>
+          </a>
+        </div>
         <h1 class="main-title">Registro de<br>Institución</h1>
         <img src="Transparente (1).png" alt="HourCheck Logo" class="brand-logo-img">
       </div>
@@ -254,26 +323,25 @@
             <input type="hidden" id="tipoUsuario" name="tipo_usuario" value="institucion">
 
             <div class="header-row">
-             
               <div class="flex-grow-input">
                 <label for="nombreInstitucion" class="input-label">Nombre de la institución</label>
-                <input type="text" id="nombreInstitucion" class="custom-input" placeholder="ej. Ofelia Herrera" required>
+                <input type="text" id="nombreInstitucion" class="custom-input" placeholder="Ej. Ofelia Herrera" required>
               </div>
             </div>
 
             <div>
-              <label for="codigoInstitucion" class="input-label">Codigo institución</label>
-              <input type="text" id="codigoInstitucion" class="custom-input" placeholder="ej. 1382" required>
+              <label for="codigoInstitucion" class="input-label">Código de la institución</label>
+              <input type="text" id="codigoInstitucion" class="custom-input" placeholder="Ej. 1382" required>
             </div>
 
             <div>
-              <label for="nombreDirector" class="input-label">Nombre del director</label>
-              <input type="text" id="nombreDirector" class="custom-input" placeholder="ej. Juan Perez" required>
+              <label for="nombreDirector" class="input-label">Nombre del director/a</label>
+              <input type="text" id="nombreDirector" class="custom-input" placeholder="Ej. Juan Pérez" required>
             </div>
 
             <div>
-              <label for="correo" class="input-label">Correo</label>
-              <input type="email" id="correo" class="custom-input" placeholder="Ingresa tu correo" required>
+              <label for="correo" class="input-label">Correo electrónico</label>
+              <input type="email" id="correo" class="custom-input" placeholder="Ingresa tu correo" required autocomplete="email">
             </div>
 
             <div>
@@ -290,7 +358,7 @@
     </div>
   </div>
 
-  <!-- Footer HourCheck (Opción 4: Oscuro Slate) -->
+  <!-- Footer HourCheck (Oscuro Slate) -->
   <footer class="hourcheck-footer">
     <div class="footer-container">
       <div class="footer-grid">
@@ -306,7 +374,7 @@
         <div class="footer-action-col">
           <a href="mailto:soporte@hourcheck.com" class="footer-support-btn">
             <i class="material-icons">mail</i>
-            <span>Contactar Soporte</span>
+            <span>Contactar a soporte</span>
           </a>
         </div>
       </div>
@@ -316,7 +384,7 @@
       </div>
     </div>
   </footer>
-  
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
@@ -351,7 +419,7 @@
       const password = document.getElementById("password").value.trim();
 
       try {
-        // 1. Crear la cuenta en Auth
+        // 1. Crear la cuenta en Firebase Auth
         const userCredential = await createUserWithEmailAndPassword(auth, correo, password);
         const uid = userCredential.user.uid;
 

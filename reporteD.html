@@ -209,7 +209,6 @@
     <a href="mainPD.html" class="back-btn" title="Volver al Inicio">
       <i class="material-icons">arrow_back</i>
     </a>
-    <!-- Se remueve el span del docente -->
   </div>
 
   <div class="header-right">
@@ -243,7 +242,6 @@
     <div id="hojaReporte">
       <div class="report-header">
         <div class="institution-info">
-          <!-- Se cargará dinámicamente la institución del docente -->
           <h3 id="repNombreInstitucion">Cargando Institución...</h3>
           <h4 class="report-title-sub">Reporte de Horas Sociales</h4>
           <p class="report-subtitle">Programa de Servicio Social Estudiantil</p>
@@ -312,7 +310,8 @@
       getDoc,
       doc,
       query, 
-      where 
+      where,
+      addDoc 
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
@@ -329,6 +328,7 @@
     const auth = getAuth(app);
 
     let listaEstudiantes = [];
+    let idInstitucionGlobal = ""; // Variable global para almacenar el ID de la institución
 
     document.addEventListener('DOMContentLoaded', () => {
       document.getElementById("pdfFechaEmision").textContent = `Fecha: ${new Date().toLocaleDateString('es-ES')}`;
@@ -340,36 +340,29 @@
         return;
       }
 
-      // Asignar el nombre del docente únicamente al documento del PDF
       const nombreUsuario = user.displayName || "Docente / Supervisor";
       document.getElementById("repNombreDocente").textContent = nombreUsuario;
 
-      // Obtener la institución del docente desde Firestore resolviendo 'institucionId'
       await cargarDatosDocente(user.uid);
-
       await cargarEstudiantes();
     });
 
-    // Carga la institución del docente desde Firestore resolviendo 'institucionId'
     async function cargarDatosDocente(uid) {
       try {
         let docData = null;
 
-        // 1. Buscar en la colección "Docentes" por UID
         let docRef = doc(db, "Docentes", uid);
         let docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
           docData = docSnap.data();
         } else {
-          // 2. Buscar en "Docente" (singular) por UID
           let docRefSingular = doc(db, "Docente", uid);
           let docSnapSingular = await getDoc(docRefSingular);
 
           if (docSnapSingular.exists()) {
             docData = docSnapSingular.data();
           } else if (auth.currentUser && auth.currentUser.email) {
-            // 3. Buscar por correo electrónico
             const emailUser = auth.currentUser.email.toLowerCase().trim();
             const qDocente = query(collection(db, "Docentes"), where("email", "==", emailUser));
             const querySnap = await getDocs(qDocente);
@@ -386,27 +379,20 @@
           }
         }
 
-        console.log("📄 Documento del Docente:", docData);
-
         if (!docData) {
-          console.warn("⚠️ No se encontró el documento del docente en Firestore.");
           document.getElementById("repNombreInstitucion").textContent = "INSTITUCIÓN EDUCATIVA";
           return;
         }
 
-        // Obtención del campo institucionId
         let idInstitucion = docData.institucionId || docData.InstitucionId || docData.institucion || "";
 
-        console.log("🔍 ID de Institución detectado:", idInstitucion);
-
         if (!idInstitucion) {
-          console.warn("⚠️ El documento existe pero no tiene el campo 'institucionId'.");
           document.getElementById("repNombreInstitucion").textContent = "INSTITUCIÓN EDUCATIVA";
           return;
         }
 
-        // Caso A: Si institucionId es una referencia de Firestore (DocumentReference)
         if (typeof idInstitucion === 'object' && idInstitucion.path) {
+          idInstitucionGlobal = idInstitucion.id; // Guardar ID de referencia
           const instSnap = await getDoc(idInstitucion);
           if (instSnap.exists()) {
             const dataInst = instSnap.data();
@@ -416,8 +402,8 @@
           return;
         }
 
-        // Caso B: Si institucionId es una cadena con el ID del documento
         const idLimpio = String(idInstitucion).trim();
+        idInstitucionGlobal = idLimpio; // Asignar a variable global
         const coleccionesAProbar = ["Instituciones", "Institucion", "Colegios", "Escuelas"];
         let encontrada = false;
 
@@ -428,7 +414,6 @@
 
             if (instSnap.exists()) {
               const dataInst = instSnap.data();
-              console.log(`🏫 Datos encontrados en la colección '${colNombre}':`, dataInst);
               const nombre = dataInst.nombre || dataInst.Nombre || dataInst.nombreInstitucion || dataInst.institucion || "";
               
               if (nombre) {
@@ -443,7 +428,6 @@
         }
 
         if (!encontrada) {
-          console.warn("⚠️ No se halló el documento en ninguna colección de instituciones con el ID:", idLimpio);
           document.getElementById("repNombreInstitucion").textContent = idLimpio.length > 20 ? "INSTITUCIÓN EDUCATIVA" : idLimpio;
         }
 
@@ -453,7 +437,6 @@
       }
     }
 
-    // Cargar la lista de alumnos registrados
     async function cargarEstudiantes() {
       const select = document.getElementById("selectEstudiante");
 
@@ -506,7 +489,6 @@
       }
     }
 
-    // Evento al seleccionar un estudiante
     document.getElementById("selectEstudiante").addEventListener("change", async (e) => {
       const index = e.target.value;
       const estudianteSeleccionado = listaEstudiantes[index];
@@ -567,20 +549,38 @@
       }
     });
 
-    // Evento para generar y descargar PDF
-    document.getElementById("btnDescargarPDF").addEventListener("click", () => {
+    // Evento para generar, descargar PDF y guardar en la colección 'reportesDocentes'
+    document.getElementById("btnDescargarPDF").addEventListener("click", async () => {
       const elemento = document.getElementById("hojaReporte");
       const nombreAlumno = document.getElementById("repNombreEstudiante").textContent.trim().replace(/\s+/g, "_");
 
       const opciones = {
-        margin:       10,
-        filename:     `Reporte_Horas_${nombreAlumno}.pdf`,
-        image:        { type: 'jpeg', quality: 0.98 },
+        margin:      10,
+        filename:    `Reporte_Horas_${nombreAlumno}.pdf`,
+        image:       { type: 'jpeg', quality: 0.98 },
         html2canvas:  { scale: 2 },
-        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        jsPDF:       { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
 
-      html2pdf().set(opciones).from(elemento).save();
+      try {
+        // 1. Obtener el PDF en formato base64 (datauristring)
+        const pdfBase64 = await html2pdf().set(opciones).from(elemento).outputPdf('datauristring');
+
+        // 2. Guardar en Firestore dentro de la colección 'reportesDocentes'
+        await addDoc(collection(db, "reportesDocentes"), {
+          institucion: idInstitucionGlobal || "Sin ID",
+          pdf: pdfBase64
+        });
+
+        console.log("✅ Reporte guardado exitosamente en Firestore.");
+
+        // 3. Descargar el archivo localmente
+        html2pdf().set(opciones).from(elemento).save();
+
+      } catch (error) {
+        console.error("❌ Error al generar o guardar el PDF en Firestore:", error);
+        M.toast({html: 'Hubo un error al guardar el reporte en la base de datos.'});
+      }
     });
 </script>
 </body>
