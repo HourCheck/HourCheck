@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navbar y Sidenav - Materialize</title>
+    <!-- Google Icon Fonts -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Materialize CSS CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <style>
+        /* Estilos personalizados para ajustar el layout con Materialize */
+        header, main, footer {
+            padding-left: 300px;
+        }
+
+        @media only screen and (max-width: 992px) {
+            header, main, footer {
+                padding-left: 0;
+            }
+        }
+
+        .navbar-fixed {
+            z-index: 997;
+        }
+
+        /* Ajuste para el dropdown del perfil en el navbar */
+        .dropdown-content {
+            margin-top: 56px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Menú Desplegable del Perfil (Dropdown) -->
+    <ul id="profile-dropdown" class="dropdown-content">
+        <li><a href="#profile"><i class="material-icons">person</i>Mi Perfil</a></li>
+        <li><a href="#settings"><i class="material-icons">settings</i>Configuración</a></li>
+        <li class="divider"></li>
+        <li><a href="#logout" class="red-text"><i class="material-icons">exit_to_app</i>Cerrar Sesión</a></li>
+    </ul>
+
+    <header>
+        <div class="navbar-fixed">
+            <nav class="indigo darken-3">
+                <div class="nav-wrapper container">
+                    <!-- Botón para activar el sidenav en móviles y pantallas medianas -->
+                    <a href="#" data-target="slide-out" class="sidenav-trigger show-on-large"><i class="material-icons">menu</i></a>
+                    
+                    <a href="#" class="brand-logo">Mi Aplicación</a>
+
+                    <ul class="right hide-on-med-and-down">
+                        <!-- Enlace con Dropdown para el perfil -->
+                        <li>
+                            <a class="dropdown-trigger" href="#!" data-target="profile-dropdown">
+                                <i class="material-icons left">account_circle</i>Usuario<i class="material-icons right">arrow_drop_down</i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+
+        <!-- Menú Lateral (Sidenav) -->
+        <ul id="slide-out" class="sidenav sidenav-fixed">
+            <li>
+                <div class="user-view">
+                    <div class="background indigo darken-4">
+                        <!-- Opcional: imagen de fondo o color -->
+                    </div>
+                    <a href="#user"><img class="circle" src="https://via.placeholder.com/150" alt="Avatar"></a>
+                    <a href="#name"><span class="white-text name">Nombre de Usuario</span></a>
+                    <a href="#email"><span class="white-text email">usuario@correo.com</span></a>
+                </div>
+            </li>
+            <li><a href="#dashboard" class="waves-effect"><i class="material-icons">dashboard</i>Dashboard</a></li>
+            <li><a href="#students" class="waves-effect"><i class="material-icons">school</i>Estudiantes</a></li>
+            <li><a href="#reports" class="waves-effect"><i class="material-icons">assessment</i>Reportes</a></li>
+            <li><div class="divider"></div></li>
+            <li><a class="subheader">Sistema</a></li>
+            <li><a href="#settings" class="waves-effect"><i class="material-icons">settings</i>Configuración</a></li>
+            <li><a href="#logout" class="waves-effect red-text"><i class="material-icons">exit_to_app</i>Salir</a></li>
+        </ul>
+    </header>
+
+    <!-- Contenido principal de prueba -->
+    <main class="container">
+        <div class="row">
+            <div class="col s12">
+                <h4>Bienvenido al Sistema</h4>
+                <p>Este es el contenido principal de tu aplicación web estructurado con Materialize CSS.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Materialize JS CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    
+    <!-- Inicialización de componentes de Materialize -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar el menú lateral (Sidenav)
+            var elemsSidenav = document.querySelectorAll('.sidenav');
+            M.Sidenav.init(elemsSidenav, {});
+
+            // Inicializar el menú desplegable (Dropdown) del perfil
+            var elemsDropdown = document.querySelectorAll('.dropdown-trigger');
+            M.Dropdown.init(elemsDropdown, {
+                coverTrigger: false,
+                constrainWidth: false
+            });
+        });
+    </script>
+</body>
+</html>
