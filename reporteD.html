@@ -384,15 +384,17 @@
           return;
         }
 
-        let idInstitucion = docData.institucionId || docData.InstitucionId || docData.institucion || "";
+        // Buscamos todas las posibles variantes de nombres de campos en el documento del docente
+        let idInstitucion = docData.Institucion || docData.institucion || docData.institucionId || docData.InstitucionId || "";
 
         if (!idInstitucion) {
           document.getElementById("repNombreInstitucion").textContent = "INSTITUCIÓN EDUCATIVA";
           return;
         }
 
+        // Si es una referencia de Firestore
         if (typeof idInstitucion === 'object' && idInstitucion.path) {
-          idInstitucionGlobal = idInstitucion.id; // Guardar ID de referencia
+          idInstitucionGlobal = idInstitucion.id; 
           const instSnap = await getDoc(idInstitucion);
           if (instSnap.exists()) {
             const dataInst = instSnap.data();
@@ -403,8 +405,9 @@
         }
 
         const idLimpio = String(idInstitucion).trim();
-        idInstitucionGlobal = idLimpio; // Asignar a variable global
-        const coleccionesAProbar = ["Instituciones", "Institucion", "Colegios", "Escuelas"];
+        idInstitucionGlobal = idLimpio; // ¡Guardamos el ID correcto aquí!
+        
+        const coleccionesAProbar = ["Institucion", "Instituciones", "Colegios", "Escuelas"];
         let encontrada = false;
 
         for (const colNombre of coleccionesAProbar) {
@@ -554,19 +557,18 @@
       const elemento = document.getElementById("hojaReporte");
       const nombreAlumno = document.getElementById("repNombreEstudiante").textContent.trim().replace(/\s+/g, "_");
 
-      // Opciones optimizadas para reducir el peso del Base64
       const opciones = {
         margin:      10,
         filename:    `Reporte_Horas_${nombreAlumno}.pdf`,
-        image:       { type: 'jpeg', quality: 0.5 }, // Calidad comprimida (0.85)
-        html2canvas:  { scale: 1, useCORS: true },  // Escala reducida a 1.5 para ahorrar memoria
-        jsPDF:       { unit: 'mm', format: 'a4', orientation: 'landscape' }
+        image:       { type: 'jpeg', quality: 0.5 },
+        html2canvas:  { scale: 1, useCORS: true },
+        jsPDF:       { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
 
       try {
-        M.toast({html: 'Generando y comprimiendo reporte...'});
+        M.toast({html: 'Generando reporte...'});
 
-        // 1. Obtener el PDF en formato base64 optimizado
+        // 1. Obtener el PDF en formato base64
         const pdfBase64 = await html2pdf().set(opciones).from(elemento).outputPdf('datauristring');
 
         // 2. Guardar en Firestore dentro de la colección 'reportesDocentes'
@@ -575,7 +577,7 @@
           pdf: pdfBase64
         });
 
-        console.log("✅ Reporte guardado exitosamente en Firestore.");
+        console.log("✅ Reporte guardado exitosamente con ID de institución:", idInstitucionGlobal);
         M.toast({html: '¡Reporte guardado y descargado con éxito!'});
 
         // 3. Descargar el archivo localmente
@@ -583,7 +585,7 @@
 
       } catch (error) {
         console.error("❌ Error al generar o guardar el PDF en Firestore:", error);
-        M.toast({html: 'Error: El PDF sigue siendo muy pesado para Firestore.'});
+        M.toast({html: 'Error al guardar en la base de datos.'});
       }
     });
 </script>
