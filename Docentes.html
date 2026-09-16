@@ -155,18 +155,16 @@
 
     <!-- Inicialización y lógica de datos -->
     <script>
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        // TODO: Reemplaza con la configuración de tu proyecto de Firebase
+        const firebaseConfig = {
+        apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
+        authDomain: "hourcheckt.firebaseapp.com",
+        projectId: "hourcheckt",
+        storageBucket: "hourcheckt.firebasestorage.app",
+        messagingSenderId: "83459752453",
+        appId: "1:83459752453:web:1b81724c28973bf567126c"
+        };
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
-      authDomain: "hourcheckt.firebaseapp.com",
-      projectId: "hourcheckt",
-      storageBucket: "hourcheckt.firebasestorage.app",
-      messagingSenderId: "83459752453",
-      appId: "1:83459752453:web:1b81724c28973bf567126c"
-    };
         // Inicializar Firebase
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
