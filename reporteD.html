@@ -554,16 +554,19 @@
       const elemento = document.getElementById("hojaReporte");
       const nombreAlumno = document.getElementById("repNombreEstudiante").textContent.trim().replace(/\s+/g, "_");
 
+      // Opciones optimizadas para reducir el peso del Base64
       const opciones = {
         margin:      10,
         filename:    `Reporte_Horas_${nombreAlumno}.pdf`,
-        image:       { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2 },
+        image:       { type: 'jpeg', quality: 0.85 }, // Calidad comprimida (0.85)
+        html2canvas:  { scale: 1.5, useCORS: true },  // Escala reducida a 1.5 para ahorrar memoria
         jsPDF:       { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
 
       try {
-        // 1. Obtener el PDF en formato base64 (datauristring)
+        M.toast({html: 'Generando y comprimiendo reporte...'});
+
+        // 1. Obtener el PDF en formato base64 optimizado
         const pdfBase64 = await html2pdf().set(opciones).from(elemento).outputPdf('datauristring');
 
         // 2. Guardar en Firestore dentro de la colección 'reportesDocentes'
@@ -573,13 +576,14 @@
         });
 
         console.log("✅ Reporte guardado exitosamente en Firestore.");
+        M.toast({html: '¡Reporte guardado y descargado con éxito!'});
 
         // 3. Descargar el archivo localmente
         html2pdf().set(opciones).from(elemento).save();
 
       } catch (error) {
         console.error("❌ Error al generar o guardar el PDF en Firestore:", error);
-        M.toast({html: 'Hubo un error al guardar el reporte en la base de datos.'});
+        M.toast({html: 'Error: El PDF sigue siendo muy pesado para Firestore.'});
       }
     });
 </script>
