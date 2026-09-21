@@ -723,7 +723,7 @@
   const db = getFirestore(app);
   const auth = getAuth(app);
 
-  const contenedorHoras = document.getElementById("contenedorHoras");
+  const contenedorHoras = document.getElementById("tablaHistorial");
 
   // Verificar la sesión del usuario actual
   onAuthStateChanged(auth, (user) => {
