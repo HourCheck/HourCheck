@@ -1,13 +1,15 @@
-<DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Mis Reportes</title>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<style>  body {
+  
+  <style>
+    body {
       background-color: #f4f6f9;
       font-family: 'Roboto', sans-serif;
       margin: 0;
@@ -25,9 +27,223 @@
       flex: 1 0 auto;
       box-sizing: border-box;
     }
-/* ==========================================
-       FOOTER INTEGRADO - HOURCHECK (OSCURO SLATE)
-       ========================================== */
+
+    /* HEADER */
+    .top-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0 20px 0;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .btn-menu-trigger {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #333;
+      padding: 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .btn-menu-trigger i {
+      font-size: 30px;
+    }
+
+    .header-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #000;
+      margin: 0;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      background-color: #2979ff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+
+    .user-info {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+    }
+
+    .user-name {
+      font-weight: 700;
+      color: #000;
+      font-size: 0.95rem;
+    }
+
+    .user-role {
+      font-size: 0.8rem;
+      color: #666;
+    }
+
+    /* SIDENAV & DROPDOWN */
+    #user-dropdown {
+      border-radius: 12px;
+      min-width: 180px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      overflow: hidden;
+    }
+
+    #user-dropdown li > a {
+      color: #333;
+      display: flex;
+      align-items: center;
+      font-weight: 500;
+      font-size: 0.9rem;
+      padding: 12px 16px;
+    }
+
+    #user-dropdown li > a > i {
+      margin-right: 12px;
+      color: #1557d0;
+    }
+
+    #user-dropdown li > a.logout-item > i {
+      color: #d32f2f;
+    }
+
+    .sidenav {
+      width: 300px;
+      border-top-right-radius: 20px;
+      border-bottom-right-radius: 20px;
+    }
+
+    .sidenav .user-view {
+      padding: 32px 32px 10px 32px;
+    }
+
+    .sidenav li > a {
+      font-weight: 600;
+      color: #333333;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      font-size: 0.95rem;
+    }
+
+    .sidenav li > a > i.material-icons {
+      margin: 0;
+      color: #ff5500;
+    }
+
+    .sidenav li > a.logout-sidebar > i.material-icons {
+      color: #d32f2f;
+    }
+
+    /* SECCIÓN DE REPORTES (TARJETAS) */
+    .reports-section {
+      margin-top: 25px;
+    }
+
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .report-card {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      border: 1px solid #e2e8f0;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+    }
+
+    .report-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .report-card .card-icon {
+      background-color: #eff6ff;
+      color: #2563eb;
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 15px;
+    }
+
+    .report-card .card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin: 0 0 8px 0;
+      word-break: break-all;
+    }
+
+    .report-card .card-sub {
+      font-size: 0.82rem;
+      color: #64748b;
+      margin-bottom: 15px;
+    }
+
+    .report-card .card-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .btn-pdf {
+      background-color: #0f172a;
+      color: #ffffff;
+      border-radius: 6px;
+      text-transform: none;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 14px;
+      height: 36px;
+      line-height: 36px;
+      font-size: 0.85rem;
+    }
+
+    .btn-pdf:hover {
+      background-color: #1e293b;
+      color: #ffffff;
+    }
+
+    /* FOOTER HOURCHECK */
     .hourcheck-footer {
       background-color: #0f172a;
       color: #f8fafc;
@@ -47,19 +263,6 @@
       grid-template-columns: 2fr 1fr;
       gap: 24px;
       align-items: center;
-    }
-
-    .footer-logo {
-      display: flex;
-      align-items: center;
-    }
-
-    /* Estilo optimizado para la imagen del logo */
-    .footer-logo-img {
-      height: 38px;
-      width: auto;
-      object-fit: contain;
-      display: block;
     }
 
     .footer-description {
@@ -114,148 +317,15 @@
         grid-template-columns: 1fr;
         gap: 20px;
       }
-      
       .footer-action-col {
         justify-content: flex-start;
       }
     }
-    .top-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 0 20px 0;
-    }
-
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .btn-menu-trigger {
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: #333;
-      padding: 0;
-      display: flex;
-      align-items: center;
-    }
-
-    .btn-menu-trigger i {
-      font-size: 30px;
-    }
-
-    .header-title {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: #000;
-      margin: 0;
-    }
-
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .icon-btn {
-      position: relative;
-      cursor: pointer;
-      color: #333;
-    }
-
-    .user-profile {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-    }
-
-    .avatar {
-      width: 40px;
-      height: 40px;
-      background-color: #2979ff;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-    }
-
-    .user-info {
-      display: flex;
-      flex-direction: column;
-      line-height: 1.2;
-    }
-
-    .user-name {
-      font-weight: 700;
-      color: #000;
-      font-size: 0.95rem;
-    }
-
-    .user-role {
-      font-size: 0.8rem;
-      color: #666;
-    }
-
-    #user-dropdown {
-      border-radius: 12px;
-      min-width: 180px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      overflow: hidden;
-    }
-
-    #user-dropdown li > a {
-      color: #333;
-      display: flex;
-      align-items: center;
-      font-weight: 500;
-      font-size: 0.9rem;
-      padding: 12px 16px;
-    }
-
-    #user-dropdown li > a > i {
-      margin-right: 12px;
-      color: #1557d0;
-    }
-
-    #user-dropdown li > a.logout-item > i {
-      color: #d32f2f;
-    }
-
-    .sidenav {
-      width: 300px;
-      border-top-right-radius: 20px;
-      border-bottom-right-radius: 20px;
-    }
-
-    .sidenav .user-view {
-      padding: 32px 32px 10px 32px;
-    }
-
-    .sidenav li > a {
-      font-weight: 600;
-      color: #333333;
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      font-size: 0.95rem;
-    }
-
-    .sidenav li > a > i.material-icons {
-      margin: 0;
-      color: #ff5500;
-    }
-
-    .sidenav li > a.logout-sidebar > i.material-icons {
-      color: #d32f2f;
-    }
-</style>
+  </style>
 </head>
 <body>
-    <!-- SIDENAV ACTUALIZADO -->
+
+  <!-- SIDENAV -->
   <ul id="slide-out" class="sidenav">
     <li>
       <div class="user-view">
@@ -288,7 +358,7 @@
     </li>
   </ul>
 
-  <!-- DROPDOWN DEL PERFIL (SUPERIOR DERECHO) -->
+  <!-- DROPDOWN DEL PERFIL -->
   <ul id="user-dropdown" class="dropdown-content">
     <li>
       <a href="perfilU.html">
@@ -302,7 +372,8 @@
       </a>
     </li>
   </ul>
-    <!-- CONTENIDO PRINCIPAL -->
+
+  <!-- CONTENIDO PRINCIPAL -->
   <div class="dashboard-container">
     
     <header class="top-header">
@@ -326,7 +397,232 @@
       </div>
     </header>
 
+    <!-- APARTADO DE REPORTES DE LA SESIÓN -->
+    <section class="reports-section">
+      <div class="section-title">
+        <i class="material-icons color-primary">folder_shared</i>
+        <span>Reportes de la Institución</span>
+      </div>
+
+      <!-- Spinner de Carga -->
+      <div id="loading-reports" class="center-align" style="padding: 40px 0;">
+        <div class="preloader-wrapper small active">
+          <div class="spinner-layer spinner-blue-only">
+            <div class="circle-clipper left"><div class="circle"></div></div>
+            <div class="gap-patch"><div class="circle"></div></div>
+            <div class="circle-clipper right"><div class="circle"></div></div>
+          </div>
+        </div>
+        <p style="color: #64748b; font-size: 0.9rem; margin-top: 10px;">Cargando reportes asociados...</p>
+      </div>
+
+      <!-- Grid dinámico para renderizar las tarjetas -->
+      <div id="reports-grid" class="row" style="display: none;"></div>
+    </section>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="hourcheck-footer">
+    <div class="footer-container">
+      <div class="footer-grid">
+        <div class="footer-info">
+          <div class="footer-logo">
+            <span style="font-weight:800; font-size:1.2rem; color:#fff;">HourCheck</span>
+          </div>
+          <p class="footer-description">
+            Plataforma de gestión y seguimiento de horas sociales e instituciones académicas.
+          </p>
+        </div>
+        <div class="footer-action-col">
+          <a href="#" class="footer-support-btn">
+            <i class="material-icons" style="font-size: 18px;">help_outline</i> Soporte
+          </a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 HourCheck. Todos los derechos reservados.</p>
+      </div>
+    </div>
+  </footer>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
+  <!-- FIREBASE SCRIPT -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { 
+      getAuth, 
+      onAuthStateChanged, 
+      signOut,
+      setPersistence, 
+      browserLocalPersistence 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { 
+      getFirestore, 
+      collection, 
+      getDocs, 
+      query, 
+      where 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
+      authDomain: "hourcheckt.firebaseapp.com",
+      projectId: "hourcheckt",
+      storageBucket: "hourcheckt.firebasestorage.app",
+      messagingSenderId: "83459752453",
+      appId: "1:83459752453:web:1b81724c28973bf567126c"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    setPersistence(auth, browserLocalPersistence).catch((error) => {
+      console.error("Error ajustando persistencia:", error);
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+      var elemsSidenav = document.querySelectorAll('.sidenav');
+      M.Sidenav.init(elemsSidenav, { edge: 'left', draggable: true });
+
+      var elemsDropdown = document.querySelectorAll('.dropdown-trigger');
+      M.Dropdown.init(elemsDropdown, {
+        alignment: 'right',
+        constrainWidth: false,
+        coverTrigger: false
+      });
+    });
+
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        window.location.href = "loginU.html";
+        return;
+      }
+      verificarUsuarioYActualizar(user);
+      obtenerReportesPorSesion(user.uid);
+    });
+
+    async function verificarUsuarioYActualizar(user) {
+      let nombreEncontrado = null;
+      let institucionNombre = null;
+
+      try {
+        const querySnapshot = await getDocs(collection(db, "Institucion"));
+
+        querySnapshot.forEach((docSnap) => {
+          if (docSnap.id === user.uid) {
+            const data = docSnap.data();
+            nombreEncontrado = data.NameDirector || "Director/a";
+            institucionNombre = data.NameInst || "Institución";
+          }
+        });
+
+      } catch (error) {
+        console.error("Error al leer Firestore:", error);
+      }
+
+      actualizarInterfaz(nombreEncontrado || user.displayName || "Usuario", user.email, institucionNombre);
+    }
+
+    function actualizarInterfaz(nombre, correo, institucion) {
+      const userNameHeader = document.querySelector(".top-header .user-name");
+      if (userNameHeader) userNameHeader.textContent = nombre;
+
+      const sidenavName = document.querySelector(".sidenav .name");
+      const sidenavEmail = document.querySelector(".sidenav .email");
+      const sidenavInst = document.querySelector(".sidenav .institution");
+
+      if (sidenavName) sidenavName.textContent = nombre;
+      if (sidenavEmail) sidenavEmail.textContent = correo;
+      if (sidenavInst && institucion) sidenavInst.textContent = institucion;
+    }
+
+    /* OBTENER REPORTES CUYO CAMPO 'institucion' COINCIDA CON EL UID DE LA SESIÓN */
+    async function obtenerReportesPorSesion(uid) {
+      const grid = document.getElementById("reports-grid");
+      const loader = document.getElementById("loading-reports");
+
+      try {
+        const q = query(
+          collection(db, "reportesDocentes"), 
+          where("institucion", "==", uid)
+        );
+
+        const snapshot = await getDocs(q);
+        loader.style.display = "none";
+        grid.style.display = "flex";
+        grid.innerHTML = "";
+
+        if (snapshot.empty) {
+          grid.innerHTML = `
+            <div class="col s12 center-align" style="padding: 40px 0;">
+              <i class="material-icons" style="font-size: 48px; color: #cbd5e1;">description</i>
+              <p style="color: #64748b; font-weight: 500;">No se encontraron reportes registrados para esta sesión.</p>
+            </div>`;
+          return;
+        }
+
+        let contador = 1;
+        snapshot.forEach((docSnap) => {
+          const data = docSnap.data();
+          const pdfBase64 = data.pdf || "";
+          
+          const col = document.createElement("div");
+          col.className = "col s12 m6 l4";
+
+          col.innerHTML = `
+            <div class="report-card">
+              <div>
+                <div class="card-icon">
+                  <i class="material-icons">picture_as_pdf</i>
+                </div>
+                <h2 class="card-title">Reporte Docente #${contador}</h2>
+                <p class="card-sub">ID: ${docSnap.id}</p>
+              </div>
+              <div class="card-actions">
+                ${pdfBase64 ? `
+                  <a href="${pdfBase64}" target="_blank" class="btn btn-pdf waves-effect">
+                    <i class="material-icons" style="font-size:16px;">visibility</i> Ver PDF
+                  </a>
+                  <a href="${pdfBase64}" download="Reporte_${docSnap.id}.pdf" class="btn btn-pdf waves-effect" style="background-color: #334155;">
+                    <i class="material-icons" style="font-size:16px;">file_download</i>
+                  </a>
+                ` : `<span style="color:#ef4444; font-size:0.85rem;">Documento no disponible</span>`}
+              </div>
+            </div>
+          `;
+
+          grid.appendChild(col);
+          contador++;
+        });
+
+      } catch (error) {
+        console.error("Error consultando reportes:", error);
+        loader.style.display = "none";
+        grid.style.display = "block";
+        grid.innerHTML = `
+          <div class="col s12 center-align">
+            <p style="color: #ef4444;">Error al cargar los reportes. Revisa los permisos de lectura de Firestore.</p>
+          </div>`;
+      }
+    }
+
+    /* CIERRE DE SESIÓN */
+    function cerrarSesion(e) {
+      e.preventDefault();
+      signOut(auth).then(() => {
+        window.location.href = "loginU.html";
+      });
+    }
+
+    const btnLogout = document.getElementById("btn-logout");
+    const btnLogoutSidebar = document.getElementById("btn-logout-sidebar");
+
+    if (btnLogout) btnLogout.addEventListener("click", cerrarSesion);
+    if (btnLogoutSidebar) btnLogoutSidebar.addEventListener("click", cerrarSesion);
+  </script>
+
 </body>
+</html>
