@@ -521,7 +521,7 @@
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <script type="module">
+<script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
   import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
   import { getFirestore, doc, getDoc, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -653,6 +653,7 @@
 
   async function cargarDatosYProgreso(instId, userUid) {
     let cantEstudiantes = 0;
+    let cantDocentes = 0;
     let cantReportes = 0;
     let totalHorasCompletadas = 0;
 
@@ -673,46 +674,64 @@
       if (snapDocentes.empty && instId !== userUid) {
         snapDocentes = await getDocs(query(collection(db, "Docentes"), where("Institucion", "==", userUid)));
       }
+      cantDocentes = snapDocentes.size;
       const elemDocentes = document.getElementById("cant-docentes");
-      if (elemDocentes) elemDocentes.textContent = snapDocentes.size;
+      if (elemDocentes) elemDocentes.textContent = cantDocentes;
     } catch (e) {
       console.warn("⚠️ Error obteniendo Docentes:", e);
     }
 
-    // 3. Cargar Reportes (Estrategia multi-filtro)
+    // 3. Cargar Reportes (Estrategia de obtención directa y filtrado dinámico)
     try {
-      // Intenta consultar la colección 'Reportes' o 'reportes' por varios nombres de campo posibles
-      let snapReportes = await consultarFirestoreFlexible("Reportes", ["institucion", "idInstitucion", "ID_Institucion"], [instId, userUid]);
-      
-      if (snapReportes.empty) {
-        snapReportes = await consultarFirestoreFlexible("reportes", ["institucion", "idInstitucion", "ID_Institucion"], [instId, userUid]);
+      let snapReportes;
+      try {
+        snapReportes = await getDocs(collection(db, "Reportes"));
+      } catch (err) {
+        snapReportes = await getDocs(collection(db, "reportes"));
       }
-      
-      cantReportes = snapReportes.size;
+
+      snapReportes.forEach(docSnap => {
+        const data = docSnap.data();
+        const instReporte = data.institucion || data.idInstitucion || data.ID_Institucion || data.institucionId || data.id_institucion;
+
+        // Compara si el reporte pertenece a la institución o al ID del usuario
+        if (instReporte === instId || instReporte === userUid) {
+          cantReportes++;
+        }
+      });
+
       const elemReportes = document.getElementById("cant-reportes");
-      if (elemReportes) elemReportes.textContent = cantReportes;
+      if (elemReportes) {
+        elemReportes.textContent = cantReportes;
+      }
     } catch (e) {
       console.warn("⚠️ Error obteniendo Reportes:", e);
     }
 
     // 4. Cargar Horas Sociales
     try {
-      let snapHoras = await consultarFirestoreFlexible("HorasSociales", ["institucion", "idInstitucion"], [instId, userUid]);
-      if (snapHoras.empty) {
-        snapHoras = await consultarFirestoreFlexible("horasSociales", ["institucion", "idInstitucion"], [instId, userUid]);
+      let snapHoras;
+      try {
+        snapHoras = await getDocs(collection(db, "HorasSociales"));
+      } catch (err) {
+        snapHoras = await getDocs(collection(db, "horasSociales"));
       }
 
       snapHoras.forEach(docSnap => {
         const data = docSnap.data();
-        if (data.estado === true || data.Estado === true || data.estado === "Aprobado" || data.estado === "aprobado") {
-          totalHorasCompletadas += Number(data.Horas || data.horas || 0);
+        const instHoras = data.institucion || data.idInstitucion || data.ID_Institucion || data.institucionId;
+        
+        if (instHoras === instId || instHoras === userUid) {
+          if (data.estado === true || data.Estado === true || data.estado === "Aprobado" || data.estado === "aprobado") {
+            totalHorasCompletadas += Number(data.Horas || data.horas || 0);
+          }
         }
       });
     } catch (e) {
       console.warn("⚠️ Error obteniendo Horas Sociales:", e);
     }
 
-    // 5. Calcular porcentaje y Renderizar Gráfico
+    // 5. Calcular progreso y renderizar dona de Chart.js
     const metaGlobalHoras = cantEstudiantes * 150;
     let porcentajeCalculado = 0;
 
@@ -727,23 +746,6 @@
     }
 
     renderDoughnutChart(porcentajeCalculado);
-  }
-
-  // Función auxiliar para buscar en Firestore aunque varíen las mayúsculas/minúsculas de las colecciones o campos
-  async function consultarFirestoreFlexible(nombreColeccion, campos, valores) {
-    for (const campo of campos) {
-      for (const valor of valores) {
-        if (!valor) continue;
-        try {
-          const q = query(collection(db, nombreColeccion), where(campo, "==", valor));
-          const snap = await getDocs(q);
-          if (!snap.empty) return snap;
-        } catch (e) {
-          // Si falla la consulta individual continúa probando
-        }
-      }
-    }
-    return { empty: true, size: 0, forEach: () => {} };
   }
 
   function renderDoughnutChart(porcentaje) {
