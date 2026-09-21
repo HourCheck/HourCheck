@@ -3,841 +3,312 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tutorías de Inglés</title>
+  <title>Historial de Reportes - HourCheck</title>
   
   <!-- Materialize CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   <!-- Material Icons -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
+  
   <style>
+    :root {
+      --primary-color: #2563eb;
+      --primary-dark: #1d4ed8;
+      --bg-light: #f8fafc;
+      --text-dark: #1e293b;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+    }
+
     body {
-      background-color: #f3f6fc;
-      font-family: 'Roboto', sans-serif;
-      color: #333;
-      margin: 0;
-      padding: 0;
+      background-color: var(--bg-light);
+      color: var(--text-dark);
+      font-family: 'Segoe UI', Roboto, sans-serif;
     }
 
-    /* Header Superior */
-    .top-header {
+    /* Navbar y Header */
+    nav.custom-nav {
       background-color: #ffffff;
-      padding: 15px 40px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      padding: 0 1.5rem;
+      height: 64px;
+      line-height: 64px;
     }
 
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .back-btn {
-      color: #333;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-decoration: none;
-      transition: transform 0.2s;
-    }
-
-    .back-btn:hover {
-      transform: translateX(-3px);
-      color: #1557d0;
-    }
-
-    .back-btn i {
-      font-size: 30px;
-    }
-
-    .header-right {
-      display: flex;
-      align-items: center;
-    }
-
-    .logo-container {
+    .brand-logo-custom {
+      font-weight: 700;
+      color: var(--primary-color) !important;
+      font-size: 1.4rem;
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
-    .logo-img {
-      height: 38px;
-      width: auto;
-      object-fit: contain;
+    .sidenav-trigger-custom {
+      color: var(--text-dark) !important;
+      margin: 0 !important;
+      cursor: pointer;
     }
 
-    .banner-card {
-      background: #ffffff;
-      border-radius: 24px;
-      padding: 35px 45px;
-      margin-top: 25px;
-      margin-bottom: 25px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.03);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    /* Banner Institucional */
+    .banner-institucion {
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+      color: #ffffff;
+      padding: 2.5rem 2rem;
+      border-radius: 12px;
+      margin-top: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
     }
 
-    .banner-title {
-      font-size: 2.3rem;
-      font-weight: 900;
-      color: #000;
+    .banner-institucion h4 {
       margin: 0;
-      line-height: 1.1;
-      letter-spacing: -0.5px;
-    }
-
-    .banner-icon-container {
-      background-color: #e8f0fe;
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .info-card {
-      background: #ffffff;
-      border-radius: 20px;
-      padding: 22px;
-      height: 140px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      margin-bottom: 15px;
-    }
-
-    .icon-orange-circle {
-      width: 75px;
-      height: 75px;
-      background-color: #ff5722;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      flex-shrink: 0;
-    }
-
-    .card-text-title {
-      font-size: 1.05rem;
       font-weight: 700;
-      color: #000;
-      margin: 0 0 4px 0;
+      font-size: 1.8rem;
     }
 
-    .card-text-sub {
-      font-size: 0.9rem;
-      color: #555;
-      margin: 0 0 6px 0;
+    .banner-institucion p {
+      margin: 6px 0 0 0;
+      opacity: 0.9;
+      font-size: 1rem;
     }
 
-    .card-text-bold {
-      font-size: 1.25rem;
-      font-weight: 800;
-      color: #000;
-      margin: 0;
-    }
-
-    .donut-chart {
-      width: 75px;
-      height: 75px;
-      border-radius: 50%;
-      background: conic-gradient(#1557d0 0% 100%, #e2e8f0 0% 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      flex-shrink: 0;
-    }
-
-    .donut-chart::after {
-      content: "";
-      width: 45px;
-      height: 45px;
-      background: #ffffff;
-      border-radius: 50%;
-    }
-
-    .gauge-chart {
-      width: 75px;
-      height: 75px;
-      border-radius: 50%;
-      background: conic-gradient(#ff5722 0% 0%, #e2e8f0 0% 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      flex-shrink: 0;
-      transition: background 0.3s ease-in-out;
-    }
-
-    .gauge-chart::after {
-      content: "";
-      width: 45px;
-      height: 45px;
-      background: #ffffff;
-      border-radius: 50%;
-    }
-
-    .search-box-container {
+    /* Contenedor de Tabla de Reportes */
+    .reports-card {
       background: #ffffff;
       border-radius: 12px;
-      padding: 10px 20px;
-      margin-top: 20px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+      border: 1px solid var(--border-color);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+      padding: 1.5rem;
+    }
+
+    .table-header-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 1.5rem;
       display: flex;
       align-items: center;
       gap: 10px;
     }
 
-    .search-box-container input {
-      border: none !important;
-      box-shadow: none !important;
-      margin: 0 !important;
-      height: 2.5rem !important;
+    table.custom-table {
+      border-collapse: separate;
+      border-spacing: 0;
     }
 
-    .students-table-container {
-      background: #ffffff;
-      border: 1.5px solid #222;
-      border-radius: 16px;
-      overflow: hidden;
-      margin-top: 20px;
-      margin-bottom: 40px;
+    table.custom-table thead th {
+      color: var(--text-muted);
+      font-weight: 600;
+      border-bottom: 2px solid var(--border-color);
+      padding: 12px 16px;
     }
 
-    .table-header-box {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 16px 30px;
-      border-bottom: 1.5px solid #222;
-      background: #ffffff;
+    table.custom-table tbody td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border-color);
     }
 
-    .table-header-title {
-      font-size: 1.15rem;
-      font-weight: 700;
-      margin: 0;
+    /* Estilos del Sidenav */
+    .sidenav {
+      width: 280px;
     }
 
-    .btn-reporte {
-      background-color: #1557d0;
-      color: white;
-      border-radius: 10px;
-      padding: 0 16px;
-      height: 38px;
-      line-height: 38px;
-      text-transform: none;
-      font-weight: 700;
-      font-size: 0.9rem;
+    .sidenav .user-view {
+      background-color: var(--primary-color);
+      padding: 24px 24px 12px 24px;
+    }
+
+    .sidenav .user-view .name,
+    .sidenav .user-view .email {
+      color: #ffffff;
+    }
+
+    .btn-download {
+      background-color: #eff6ff;
+      color: var(--primary-color);
       box-shadow: none;
+      font-weight: 600;
+      border-radius: 6px;
+      text-transform: none;
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      cursor: pointer;
-      border: none;
-      transition: background-color 0.2s;
     }
 
-    .btn-reporte:hover {
-      background-color: #0d47a1;
-    }
-
-    .student-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 16px 30px;
-      border-bottom: 1.5px solid #222;
-      flex-wrap: wrap;
-      gap: 15px;
-    }
-
-    .student-row:last-child {
-      border-bottom: none;
-    }
-
-    .student-name {
-      font-weight: 700;
-      font-size: 1.05rem;
-      color: #000;
-    }
-
-    .action-group {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .action-link {
-      font-weight: 700;
-      font-size: 0.95rem;
-      color: #1557d0;
-      text-decoration: none;
-      cursor: pointer;
-    }
-
-    .action-link:hover {
-      text-decoration: underline;
-    }
-
-    .status-badge {
-      padding: 4px 10px;
-      border-radius: 12px;
-      font-size: 0.8rem;
-      font-weight: bold;
-      display: inline-block;
-      margin-left: 8px;
-    }
-
-    .status-approved {
-      background-color: #e8f5e9;
-      color: #2e7d32;
-    }
-
-    .status-rejected {
-      background-color: #ffebee;
-      color: #c62828;
-    }
-
-    .status-pending {
-      background-color: #fff3e0;
-      color: #ef6c00;
-    }
-
-    .btn-action-icon {
-      border: none;
-      border-radius: 8px;
-      padding: 6px 12px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      font-weight: bold;
-      font-size: 0.85rem;
-      transition: opacity 0.2s;
-    }
-
-    .btn-action-icon:hover {
-      opacity: 0.85;
-    }
-
-    .btn-accept {
-      background-color: #2e7d32;
-      color: white;
-    }
-
-    .btn-reject {
-      background-color: #c62828;
-      color: white;
-    }
-
-    .modal {
-      border-radius: 16px;
-      max-width: 650px;
-    }
-
-    .evidencia-img {
-      max-width: 100%;
-      max-height: 320px;
-      border-radius: 12px;
-      object-fit: contain;
-      border: 1px solid #ddd;
-      margin-top: 10px;
-    }
-
-    .hourcheck-footer {
-      background-color: #0f172a;
-      color: #f8fafc;
-      padding: 36px 20px 20px 20px;
-      border-top: 1px solid #1e293b;
-      margin-top: 50px;
-    }
-
-    .footer-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 15px;
-    }
-
-    .footer-grid {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 24px;
-      align-items: center;
-    }
-
-    .footer-logo {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 1.25rem;
-      font-weight: 800;
-      color: #ffffff;
-    }
-
-    .footer-logo-icon {
-      color: #38bdf8;
-      font-size: 26px;
-    }
-
-    .footer-description {
-      color: #94a3b8;
-      font-size: 0.88rem;
-      margin: 8px 0 0 0;
-      line-height: 1.5;
-      max-width: 480px;
-    }
-
-    .footer-action-col {
-      display: flex;
-      justify-content: flex-end;
-    }
-
-    .footer-support-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background-color: #1e293b;
-      color: #38bdf8;
-      padding: 10px 18px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-size: 0.88rem;
-      font-weight: 600;
-      border: 1px solid #334155;
-      transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-    }
-
-    .footer-support-btn:hover {
-      background-color: #334155;
-      border-color: #475569;
-      color: #ffffff;
-    }
-
-    .footer-bottom {
-      border-top: 1px solid #1e293b;
-      margin-top: 28px;
-      padding-top: 16px;
-      text-align: center;
-      font-size: 0.82rem;
-      color: #64748b;
-    }
-
-    .footer-bottom p {
-      margin: 0;
-    }
-
-    @media (max-width: 768px) {
-      .footer-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-      }
-      
-      .footer-action-col {
-        justify-content: flex-start;
-      }
+    .btn-download:hover {
+      background-color: #dbeafe;
+      box-shadow: none;
     }
   </style>
 </head>
 <body>
 
-  <header class="top-header">
-    <div class="header-left">
-      <a href="mainPD.html" class="back-btn" title="Volver al Inicio">
-        <i class="material-icons">arrow_back</i>
+  <!-- BARRA SUPERIOR DE NAVEGACIÓN -->
+  <nav class="custom-nav">
+    <div class="nav-wrapper display-flex" style="display: flex; justify-content: space-between; align-items: center;">
+      <!-- Izquierda: Botón para abrir Menú Desplegable -->
+      <a href="#" data-target="slide-out" class="sidenav-trigger sidenav-trigger-custom show-on-large">
+        <i class="material-icons" style="font-size: 28px;">menu</i>
+      </a>
+
+      <!-- Derecha: Logo de HourCheck -->
+      <a href="#" class="brand-logo-custom">
+        <i class="material-icons left" style="font-size: 26px; margin-right: 4px;">schedule</i>
+        HourCheck
       </a>
     </div>
+  </nav>
 
-    <div class="header-right">
-      <div class="logo-container">
-        <img src="logo.png" alt="HourCheck Logo" class="logo-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x40?text=HourCheck';">
+  <!-- SIDEVAR DESPLEGABLE (MENÚ LATERAL) -->
+  <ul id="slide-out" class="sidenav">
+    <li>
+      <div class="user-view">
+        <span class="white-text name" style="font-weight: 700; font-size: 1.1rem;">Panel del Docente</span>
+        <span class="white-text email">docente@institucion.edu.sv</span>
       </div>
-    </div>
-  </header>
+    </li>
+    <li><a href="inicioM.html"><i class="material-icons">dashboard</i>Inicio</a></li>
+    <li><a href="notiM.html"><i class="material-icons">notifications</i>Notificaciones</a></li>
+    <li><a href="estudiantesM.html"><i class="material-icons">people</i>Lista de Estudiantes</a></li>
+    <li class="active"><a href="reportesM.html"><i class="material-icons">assessment</i>Historial de Reportes</a></li>
+    <li><div class="divider"></div></li>
+    <li><a href="login.html" class="red-text"><i class="material-icons red-text">exit_to_app</i>Cerrar Sesión</a></li>
+  </ul>
 
+  <!-- CONTENIDO PRINCIPAL -->
   <div class="container" style="width: 90%; max-width: 1200px;">
-    <div class="banner-card">
-      <div>
-        <h1 class="banner-title">Tutorías de inglés</h1>
-      </div>
-      <div class="banner-icon-container">
-        <i class="material-icons" style="font-size: 3.5rem; color: #1557d0;">translate</i>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col s12 m4">
-        <div class="info-card">
-          <div class="icon-orange-circle">
-            <i class="material-icons" style="font-size: 2.5rem;">date_range</i>
-          </div>
-          <div>
-            <div class="card-text-title">Próxima Actividad</div>
-            <div class="card-text-sub">18 Sep 2026</div>
-            <div class="card-text-bold">Clase de reforzamiento</div>
-          </div>
+    
+    <!-- BANNER DE LA INSTITUCIÓN -->
+    <div class="banner-institucion">
+      <div class="row style-margin-0" style="margin: 0;">
+        <div class="col s12 m9">
+          <h4 id="nombre-institucion">Instituto Nacional Dr. Manuel Luis Escamilla</h4>
+          <p>Módulo de Generación e Historial de Reportes de Servicio Social</p>
         </div>
-      </div>
-
-      <div class="col s12 m4">
-        <div class="info-card">
-          <div class="donut-chart"></div>
-          <div>
-            <div class="card-text-title">Estudiantes en la categoría</div>
-            <div class="card-text-bold" id="totalEstudiantesTexto">0 estudiantes</div>
-            <div class="card-text-sub">Participando</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col s12 m4">
-        <div class="info-card">
-          <div class="gauge-chart" id="gaugeChart"></div>
-          <div>
-            <div class="card-text-title">Evidencias subidas</div>
-            <div class="card-text-bold" id="totalRegistrosTexto">0 registros</div>
-            <div class="card-text-sub">Tutorías de inglés</div>
-          </div>
+        <div class="col s12 m3 right-align hide-on-small-only" style="margin-top: 10px;">
+          <i class="material-icons" style="font-size: 64px; opacity: 0.3;">school</i>
         </div>
       </div>
     </div>
 
-    <div class="search-box-container">
-      <i class="material-icons" style="color: #666;">search</i>
-      <input type="text" id="inputBuscadorEstudiante" placeholder="Buscar estudiante por nombre o correo...">
-    </div>
-
-    <div class="students-table-container">
-      <div class="table-header-box">
-        <span class="table-header-title">Estudiantes en Tutorías de inglés</span>
-        <button class="btn-reporte" id="btnGenerarReporte">
-          <i class="material-icons" style="font-size: 1.2rem;">description</i>
-          Generar reporte
-        </button>
+    <!-- SECCIÓN DE HISTORIAL DE REPORTES -->
+    <div class="reports-card">
+      <div class="table-header-title">
+        <i class="material-icons blue-text">history</i>
+        Historial de Reportes Generados por Maestros
       </div>
 
-      <div id="studentsContainer">
-        <div class="student-row" style="justify-content: center;">
-          <span style="color: #666;">Cargando lista de entregas...</span>
-        </div>
+      <div class="responsive-table">
+        <table class="custom-table highlight">
+          <thead>
+            <tr>
+              <th>Docente</th>
+              <th>Título del Reporte</th>
+              <th>Sección / Grado</th>
+              <th>Fecha de Generación</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-reportes-body">
+            <!-- Datos de ejemplo vacíos o precargados -->
+            <tr>
+              <td><strong>Prof. Carlos Mendoza</strong></td>
+              <td>Reporte Trimestral de Servicio Social</td>
+              <td>1° Bachillerato General "A"</td>
+              <td>18/09/2026</td>
+              <td>
+                <a href="#" class="btn waves-effect btn-download btn-small">
+                  <i class="material-icons" style="font-size: 16px;">file_download</i> PDF
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Profa. María López</strong></td>
+              <td>Aprobación de Horas - Módulo 2</td>
+              <td>2° Bachillerato Técnico "B"</td>
+              <td>12/09/2026</td>
+              <td>
+                <a href="#" class="btn waves-effect btn-download btn-small">
+                  <i class="material-icons" style="font-size: 16px;">file_download</i> PDF
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
+
   </div>
 
-  <div id="modalEvidencia" class="modal">
-    <div class="modal-content">
-      <h5 style="font-weight: 700; margin-top: 0;">Evidencia del Registro</h5>
-      <p id="modalEstudiante" style="margin-bottom: 5px; font-weight: 600;"></p>
-      <p id="modalDetalles" style="color: #555; margin-top: 0;"></p>
-      
-      <div style="text-align: center; margin-top: 15px;" id="modalImagenContainer">
-        <p style="color: #888;">Cargando imagen...</p>
-      </div>
-    </div>
-    <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center; padding: 0 24px 16px 24px;">
-      <div class="action-group">
-        <button id="btnModalAceptar" class="btn-action-icon btn-accept">
-          <i class="material-icons" style="font-size: 1.1rem;">check</i> Aceptar
-        </button>
-        <button id="btnModalDenegar" class="btn-action-icon btn-reject">
-          <i class="material-icons" style="font-size: 1.1rem;">close</i> Denegar
-        </button>
-      </div>
-      <a href="#!" class="modal-close waves-effect waves-blue btn-flat" style="font-weight: 700; color: #1557d0;">Cerrar</a>
-    </div>
-  </div>
-
-  <footer class="hourcheck-footer">
-    <div class="footer-container">
-      <div class="footer-grid">
-        <div class="footer-brand-col">
-          <div class="footer-logo">
-            <i class="material-icons footer-logo-icon">schedule</i>
-            <span>HourCheck</span>
-          </div>
-          <p class="footer-description">
-            Plataforma web para el registro, gestión y validación transparente del Servicio Social Estudiantil.
-          </p>
-        </div>
-
-        <div class="footer-action-col">
-          <a href="mailto:soporte@hourcheck.com" class="footer-support-btn">
-            <i class="material-icons">mail</i>
-            <span>Contactar Soporte</span>
-          </a>
-        </div>
-      </div>
-
-      <div class="footer-bottom">
-        <p>&copy; 2026 HourCheck. Todos los derechos reservados.</p>
-      </div>
-    </div>
-  </footer>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, collection, getDocs, doc, query, where, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-    import { getAuth, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-
+  <!-- Materialize JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.js"></script>
+  
+  <script>
     document.addEventListener('DOMContentLoaded', function() {
-      const elemsModal = document.querySelectorAll('.modal');
-      M.Modal.init(elemsModal);
+      // Inicializar Sidebar Desplegable (Sidenav)
+      var elemsSidenav = document.querySelectorAll('.sidenav');
+      M.Sidenav.init(elemsSidenav, {
+        edge: 'left',
+        draggable: true
+      });
     });
+  </script>
 
+  <!-- Firebase Script para cargar los reportes de Firestore en tiempo real -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // Reemplaza con tu configuración de Firebase
     const firebaseConfig = {
-      apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
-      authDomain: "hourcheckt.firebaseapp.com",
-      projectId: "hourcheckt",
-      messagingSenderId: "83459752453",
-      appId: "1:83459752453:web:1b81724c28973bf567126c"
+      apiKey: "TU_API_KEY",
+      authDomain: "TU_PROJECT.firebaseapp.com",
+      projectId: "TU_PROJECT_ID",
+      storageBucket: "TU_PROJECT.appspot.com",
+      messagingSenderId: "TU_SENDER_ID",
+      appId: "TU_APP_ID"
     };
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-    const auth = getAuth(app);
 
-    setPersistence(auth, browserLocalPersistence).catch((error) => {
-      console.error("Error al configurar persistencia:", error);
-    });
+    // Cargar reportes desde Firestore
+    function cargarReportesMaestros() {
+      const q = query(collection(db, "ReportesGenerados"), orderBy("fecha", "desc"));
 
-    const CATEGORIA_ACTIVA = "Tutorías de inglés";
+      onSnapshot(q, (snapshot) => {
+        const tbody = document.getElementById("tabla-reportes-body");
+        tbody.innerHTML = "";
 
-    const totalEstudiantesTextoEl = document.getElementById("totalEstudiantesTexto");
-    const totalRegistrosTextoEl = document.getElementById("totalRegistrosTexto");
-    const gaugeChartEl = document.getElementById("gaugeChart");
-    const studentsContainer = document.getElementById("studentsContainer");
-    const btnGenerarReporte = document.getElementById("btnGenerarReporte");
-    const inputBuscadorEstudiante = document.getElementById("inputBuscadorEstudiante");
-
-    let registrosCache = [];
-
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        await cargarMetricas();
-      } else {
-        window.location.href = "loginU.html";
-      }
-    });
-
-    async function cargarMetricas() {
-      try {
-        const qCategoria = query(
-          collection(db, "HorasSociales"),
-          where("Categoria", "==", CATEGORIA_ACTIVA)
-        );
-
-        const snapHoras = await getDocs(qCategoria);
-        const totalRegistros = snapHoras.size;
-
-        const estudiantesUnicos = new Set();
-        registrosCache = [];
-
-        snapHoras.forEach((docSnap) => {
-          const data = docSnap.data();
-          if (data.userId) estudiantesUnicos.add(data.userId);
-          else if (data.email) estudiantesUnicos.add(data.email);
-
-          registrosCache.push({ id: docSnap.id, ...data });
-        });
-
-        const totalEstudiantesCategoria = estudiantesUnicos.size;
-
-        totalEstudiantesTextoEl.textContent = `${totalEstudiantesCategoria} estudiante${totalEstudiantesCategoria === 1 ? '' : 's'}`;
-
-        if (totalRegistros === 1) {
-          totalRegistrosTextoEl.textContent = "1 registro";
-        } else {
-          totalRegistrosTextoEl.textContent = `${totalRegistros} registros`;
+        if (snapshot.empty) {
+          tbody.innerHTML = `<tr><td colspan="5" class="center-align grey-text">No hay reportes generados aún.</td></tr>`;
+          return;
         }
 
-        const porcentajeVisual = totalRegistros > 0 ? Math.min(totalRegistros * 10, 100) : 0;
-        gaugeChartEl.style.background = `conic-gradient(#ff5722 0% ${porcentajeVisual}%, #e2e8f0 ${porcentajeVisual}% 100%)`;
+        snapshot.forEach((docSnap) => {
+          const reporte = docSnap.data();
+          const fechaTexto = reporte.fecha ? new Date(reporte.fecha.seconds * 1000).toLocaleDateString() : 'Reciente';
 
-        renderizarTablaRegistros(registrosCache);
-
-      } catch (error) {
-        console.error("Error al obtener los datos:", error);
-        totalEstudiantesTextoEl.textContent = "0 estudiantes";
-        totalRegistrosTextoEl.textContent = "Sin registros";
-        renderizarTablaRegistros([]);
-      }
-    }
-
-    function renderizarTablaRegistros(lista) {
-      studentsContainer.innerHTML = "";
-
-      if (lista.length === 0) {
-        studentsContainer.innerHTML = `
-          <div class="student-row" style="justify-content: center;">
-            <span style="color: #666;">No hay registros coincidentes.</span>
-          </div>`;
-        return;
-      }
-
-      lista.forEach((item) => {
-        const usuarioNombre = item.nombre || item.email || item.userId || "Estudiante";
-        const horasRealizadas = item.Horas || 0;
-
-        let badgeHTML = `<span class="status-badge status-pending">Pendiente</span>`;
-        if (item.estado === true) badgeHTML = `<span class="status-badge status-approved">Aprobado</span>`;
-        if (item.estado === false) badgeHTML = `<span class="status-badge status-rejected">Rechazado</span>`;
-
-        const row = document.createElement("div");
-        row.className = "student-row";
-        row.innerHTML = `
-          <div>
-            <span class="student-name">${usuarioNombre}</span> ${badgeHTML}
-            <span style="display: block; font-size: 0.85rem; color: #666; margin-top: 4px;">
-              Horas reportadas: <strong>${horasRealizadas} hrs</strong>
-            </span>
-          </div>
-          <div class="action-group">
-            <button class="btn-action-icon btn-accept" title="Aceptar Horas" onclick="cambiarEstadoHoras('${item.id}', true)">
-              <i class="material-icons" style="font-size: 1rem;">check</i> Aceptar
-            </button>
-            <button class="btn-action-icon btn-reject" title="Denegar Horas" onclick="cambiarEstadoHoras('${item.id}', false)">
-              <i class="material-icons" style="font-size: 1rem;">close</i> Rechazar
-            </button>
-            <a class="action-link" style="margin-left: 6px;" onclick="verEvidencia('${item.id}')">Ver actividad</a>
-          </div>
-        `;
-        studentsContainer.appendChild(row);
+          tbody.innerHTML += `
+            <tr>
+              <td><strong>${reporte.nombreDocente || 'Docente'}</strong></td>
+              <td>${reporte.titulo || 'Reporte General'}</td>
+              <td>${reporte.seccion || 'N/A'}</td>
+              <td style="color: var(--text-muted);">${fechaTexto}</td>
+              <td>
+                <a href="${reporte.urlPdf || '#'}" target="_blank" class="btn waves-effect btn-download btn-small">
+                  <i class="material-icons" style="font-size: 16px;">file_download</i> PDF
+                </a>
+              </td>
+            </tr>
+          `;
+        });
       });
     }
 
-    window.cambiarEstadoHoras = async function(docId, nuevoEstado) {
-      try {
-        const docRef = doc(db, "HorasSociales", docId);
-        await updateDoc(docRef, {
-          estado: nuevoEstado
-        });
-
-        const registroIndex = registrosCache.findIndex(r => r.id === docId);
-        if (registroIndex !== -1) {
-          registrosCache[registroIndex].estado = nuevoEstado;
-        }
-
-        const estadoTexto = nuevoEstado ? "aceptadas" : "rechazadas";
-        const colorToast = nuevoEstado ? "green rounded" : "red rounded";
-        M.toast({ html: `Horas ${estadoTexto} correctamente.`, classes: colorToast });
-
-        const textoBusqueda = inputBuscadorEstudiante ? inputBuscadorEstudiante.value.toLowerCase().trim() : "";
-        if (textoBusqueda) {
-          const registrosFiltrados = registrosCache.filter((item) => {
-            const nombreEstudiante = (item.nombre || "").toLowerCase();
-            const emailEstudiante = (item.email || item.userId || "").toLowerCase();
-            return nombreEstudiante.includes(textoBusqueda) || emailEstudiante.includes(textoBusqueda);
-          });
-          renderizarTablaRegistros(registrosFiltrados);
-        } else {
-          renderizarTablaRegistros(registrosCache);
-        }
-
-        const modalElem = document.getElementById("modalEvidencia");
-        const instance = M.Modal.getInstance(modalElem);
-        if (instance && instance.isOpen) {
-          instance.close();
-        }
-      } catch (error) {
-        console.error("Error al actualizar estado:", error);
-        M.toast({ html: 'Error al actualizar el registro en Firebase.', classes: 'red rounded' });
-      }
-    };
-
-    if (inputBuscadorEstudiante) {
-      inputBuscadorEstudiante.addEventListener("input", (e) => {
-        const textoBusqueda = e.target.value.toLowerCase().trim();
-
-        const registrosFiltrados = registrosCache.filter((item) => {
-          const nombreEstudiante = (item.nombre || "").toLowerCase();
-          const emailEstudiante = (item.email || item.userId || "").toLowerCase();
-          return nombreEstudiante.includes(textoBusqueda) || emailEstudiante.includes(textoBusqueda);
-        });
-
-        renderizarTablaRegistros(registrosFiltrados);
-      });
-    }
-
-    btnGenerarReporte.addEventListener("click", () => {
-      if (registrosCache.length === 0) {
-        M.toast({html: 'No hay datos disponibles para generar el reporte.', classes: 'orange rounded'});
-        return;
-      }
-
-      let csvContent = "\uFEFF";
-      csvContent += "Estudiante / Nombre,Email,Categoría,Lugar,Docente Encargado,Horas Reportadas,Estado,Descripción\n";
-
-      registrosCache.forEach((item) => {
-        const nombreEstudiante = `"${item.nombre || 'N/A'}"`;
-        const estudianteEmail = `"${item.email || item.userId || 'N/A'}"`;
-        const categoria = `"${item.Categoria || CATEGORIA_ACTIVA}"`;
-        const lugar = `"${item.Lugar || 'N/A'}"`;
-        const docente = `"${item['Docente encargado'] || 'N/A'}"`;
-        const horas = item.Horas || 0;
-        let estado = "Pendiente";
-        if (item.estado === true) estado = "Aprobado";
-        if (item.estado === false) estado = "Rechazado";
-        const descripcion = `"${(item.Descripcion || '').replace(/"/g, '""')}"`;
-
-        csvContent += `${nombreEstudiante},${estudianteEmail},${categoria},${lugar},${docente},${horas},${estado},${descripcion}\n`;
-      });
-
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const enlaceDescarga = document.createElement("a");
-      enlaceDescarga.setAttribute("href", url);
-      enlaceDescarga.setAttribute("download", `Reporte_Tutorias_de_Ingles_${new Date().toISOString().slice(0,10)}.csv`);
-      document.body.appendChild(enlaceDescarga);
-      
-      enlaceDescarga.click();
-      document.body.removeChild(enlaceDescarga);
-
-      M.toast({html: 'Reporte descargado exitosamente.', classes: 'green rounded'});
-    });
-
-    window.verEvidencia = function(registroId) {
-      const registro = registrosCache.find(r => r.id === registroId);
-      if (!registro) {
-        M.toast({html: 'Registro no encontrado.', classes: 'red rounded'});
-        return;
-      }
-
-      const nombreEstudiante = registro.nombre || registro.email || registro.userId || "Estudiante";
-
-      document.getElementById("modalEstudiante").textContent = nombreEstudiante;
-      document.getElementById("modalDetalles").textContent = `Horas: ${registro.Horas || 0} hrs | Descripción: ${registro.Descripcion || 'Sin descripción'}`;
-
-      const imgContainer = document.getElementById("modalImagenContainer");
-      const urlImagen = registro.evidenciaUrl || registro.Evidencia || registro.imagenUrl || registro.imagen;
-
-      if (urlImagen) {
-        imgContainer.innerHTML = `<img src="${urlImagen}" alt="Evidencia" class="evidencia-img" />`;
-      } else {
-        imgContainer.innerHTML = `<p style="color: #666; padding: 20px;">Este registro no contiene imagen de evidencia adjunta.</p>`;
-      }
-
-      const btnAceptar = document.getElementById("btnModalAceptar");
-      const btnDenegar = document.getElementById("btnModalDenegar");
-
-      btnAceptar.onclick = () => cambiarEstadoHoras(registroId, true);
-      btnDenegar.onclick = () => cambiarEstadoHoras(registroId, false);
-
-      const modalElem = document.getElementById("modalEvidencia");
-      const instance = M.Modal.getInstance(modalElem);
-      instance.open();
-    };
+    // Ejecutar al cargar la vista
+    // cargarReportesMaestros();
   </script>
 </body>
 </html>
