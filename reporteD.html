@@ -312,7 +312,7 @@ import {
   query, 
   where,
   addDoc,
-  serverTimestamp // <--- Importado para guardar la fecha en Firestore
+  serverTimestamp 
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
@@ -330,6 +330,10 @@ const auth = getAuth(app);
 
 let listaEstudiantes = [];
 let idInstitucionGlobal = "";
+
+// Variables para almacenar el userId y Docente encargado extraídos del registro de HorasSociales
+let userIdEstudianteGlobal = "";
+let docenteEncargadoGlobal = "";
 
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById("pdfFechaEmision").textContent = `Fecha: ${new Date().toLocaleDateString('es-ES')}`;
@@ -578,6 +582,8 @@ document.getElementById("selectEstudiante").addEventListener("change", async (e)
   tbody.innerHTML = '<tr><td colspan="5" class="center-align grey-text">Buscando actividades en la base de datos...</td></tr>';
   
   let totalHoras = 0;
+  userIdEstudianteGlobal = "";
+  docenteEncargadoGlobal = "";
 
   try {
     const q = query(
@@ -594,6 +600,11 @@ document.getElementById("selectEstudiante").addEventListener("change", async (e)
       document.getElementById("btnDescargarPDF").disabled = true;
       return;
     }
+
+    // Extraer userId y Docente encargado del primer documento coincidente
+    const primerDoc = querySnapshot.docs[0].data();
+    userIdEstudianteGlobal = primerDoc.userId || "";
+    docenteEncargadoGlobal = primerDoc["Docente encargado"] || primerDoc.docenteEncargado || "";
 
     querySnapshot.forEach((docSnap) => {
       const data = docSnap.data();
@@ -642,21 +653,20 @@ document.getElementById("btnDescargarPDF").addEventListener("click", async () =>
 
     const pdfBase64 = await html2pdf().set(opciones).from(elemento).outputPdf('datauristring');
 
-    // Obtener datos del usuario logueado en este instante
-    const currentUser = auth.currentUser;
-    const userId = currentUser ? currentUser.uid : "";
-    const docenteEncargado = document.getElementById("repNombreDocente").textContent.trim();
-
-    // Guardar en la colección reportesDocentes con la estructura requerida
+    // Se guardan exactos los campos userId, Docente encargado y fechaCreacion
     await addDoc(collection(db, "reportesDocentes"), {
       institucion: idInstitucionGlobal || "Sin ID",
-      userId: userId,
-      "Docente encargado": docenteEncargado,
+      userId: userIdEstudianteGlobal,
+      "Docente encargado": docenteEncargadoGlobal,
       fechaCreacion: serverTimestamp(),
       pdf: pdfBase64
     });
 
-    console.log("✅ Reporte guardado exitosamente con ID de institución, userId, docente y fecha:", idInstitucionGlobal);
+    console.log("✅ Reporte guardado con userId y Docente encargado extraídos de HorasSociales:", {
+      userId: userIdEstudianteGlobal,
+      docenteEncargado: docenteEncargadoGlobal
+    });
+    
     M.toast({html: '¡Reporte guardado y descargado con éxito!'});
 
     html2pdf().set(opciones).from(elemento).save();
