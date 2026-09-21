@@ -204,23 +204,15 @@
     }
 
     .report-card .card-title {
-      font-size: 1rem;
+      font-size: 1.05rem;
       font-weight: 700;
       color: #1e293b;
-      margin: 0 0 8px 0;
-      word-break: break-all;
-    }
-
-    .report-card .card-sub {
-      font-size: 0.82rem;
-      color: #64748b;
-      margin-bottom: 15px;
+      margin: 0 0 15px 0;
     }
 
     .report-card .card-actions {
       display: flex;
       gap: 10px;
-      margin-top: 10px;
     }
 
     .btn-pdf {
@@ -236,11 +228,37 @@
       height: 36px;
       line-height: 36px;
       font-size: 0.85rem;
+      cursor: pointer;
     }
 
     .btn-pdf:hover {
       background-color: #1e293b;
       color: #ffffff;
+    }
+
+    /* MODAL PREVIEW PDF */
+    #modal-preview {
+      width: 85% !important;
+      max-width: 900px !important;
+      height: 85% !important;
+      max-height: 800px !important;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    #modal-preview .modal-content {
+      padding: 16px 24px;
+      height: calc(100% - 56px);
+      display: flex;
+      flex-direction: column;
+    }
+
+    #modal-preview iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      border-radius: 8px;
+      margin-top: 10px;
     }
 
     /* FOOTER HOURCHECK */
@@ -319,6 +337,10 @@
       }
       .footer-action-col {
         justify-content: flex-start;
+      }
+      #modal-preview {
+        width: 95% !important;
+        height: 90% !important;
       }
     }
   </style>
@@ -422,6 +444,17 @@
 
   </div>
 
+  <!-- MODAL DE PREVISUALIZACIÓN DE PDF -->
+  <div id="modal-preview" class="modal">
+    <div class="modal-content">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+        <h5 style="margin: 0; font-weight: 700; font-size: 1.1rem; color: #0f172a;">Vista Previa del Reporte</h5>
+        <a href="#!" class="modal-close waves-effect btn-flat" style="padding: 0 10px;"><i class="material-icons">close</i></a>
+      </div>
+      <iframe id="pdf-frame" src=""></iframe>
+    </div>
+  </div>
+
   <!-- FOOTER -->
   <footer class="hourcheck-footer">
     <div class="footer-container">
@@ -479,6 +512,8 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    let modalPreviewInstance = null;
+
     setPersistence(auth, browserLocalPersistence).catch((error) => {
       console.error("Error ajustando persistencia:", error);
     });
@@ -493,6 +528,18 @@
         constrainWidth: false,
         coverTrigger: false
       });
+
+      // Inicialización del Modal para la vista previa
+      var elemsModal = document.querySelectorAll('.modal');
+      var instancesModal = M.Modal.init(elemsModal, {
+        onCloseEnd: function() {
+          // Limpiar iframe al cerrar para no consumir memoria
+          document.getElementById('pdf-frame').src = '';
+        }
+      });
+      if(instancesModal.length > 0) {
+        modalPreviewInstance = instancesModal[0];
+      }
     });
 
     onAuthStateChanged(auth, (user) => {
@@ -539,7 +586,7 @@
       if (sidenavInst && institucion) sidenavInst.textContent = institucion;
     }
 
-    /* OBTENER REPORTES CUYO CAMPO 'institucion' COINCIDA CON EL UID DE LA SESIÓN */
+    /* OBTENER REPORTES Y REGISTRAR EVENTO DE PREVISUALIZACIÓN EN MODAL */
     async function obtenerReportesPorSesion(uid) {
       const grid = document.getElementById("reports-grid");
       const loader = document.getElementById("loading-reports");
@@ -564,10 +611,15 @@
           return;
         }
 
-        let contador = 1;
+        window.reportesData = {};
+
         snapshot.forEach((docSnap) => {
           const data = docSnap.data();
+          const docId = docSnap.id;
           const pdfBase64 = data.pdf || "";
+
+          // Almacenar el base64 temporalmente
+          window.reportesData[docId] = pdfBase64;
           
           const col = document.createElement("div");
           col.className = "col s12 m6 l4";
@@ -578,15 +630,14 @@
                 <div class="card-icon">
                   <i class="material-icons">picture_as_pdf</i>
                 </div>
-                <h2 class="card-title">Reporte Docente #${contador}</h2>
-                <p class="card-sub">ID: ${docSnap.id}</p>
+                <h2 class="card-title">Reporte Docente</h2>
               </div>
               <div class="card-actions">
                 ${pdfBase64 ? `
-                  <a href="${pdfBase64}" target="_blank" class="btn btn-pdf waves-effect">
+                  <button class="btn btn-pdf waves-effect btn-preview-pdf" data-id="${docId}">
                     <i class="material-icons" style="font-size:16px;">visibility</i> Ver PDF
-                  </a>
-                  <a href="${pdfBase64}" download="Reporte_${docSnap.id}.pdf" class="btn btn-pdf waves-effect" style="background-color: #334155;">
+                  </button>
+                  <a href="${pdfBase64}" download="Reporte_Docente.pdf" class="btn btn-pdf waves-effect" style="background-color: #334155;">
                     <i class="material-icons" style="font-size:16px;">file_download</i>
                   </a>
                 ` : `<span style="color:#ef4444; font-size:0.85rem;">Documento no disponible</span>`}
@@ -595,7 +646,21 @@
           `;
 
           grid.appendChild(col);
-          contador++;
+        });
+
+        // Listener para abrir el preview en el modal
+        document.querySelectorAll('.btn-preview-pdf').forEach(btn => {
+          btn.addEventListener('click', function() {
+            const id = this.getAttribute('data-id');
+            const pdfUrl = window.reportesData[id];
+            
+            if (pdfUrl) {
+              document.getElementById('pdf-frame').src = pdfUrl;
+              if (modalPreviewInstance) {
+                modalPreviewInstance.open();
+              }
+            }
+          });
         });
 
       } catch (error) {

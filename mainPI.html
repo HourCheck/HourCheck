@@ -1,4 +1,4 @@
-*<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -28,7 +28,8 @@
       flex: 1 0 auto;
       box-sizing: border-box;
     }
-/* ==========================================
+
+    /* ==========================================
        FOOTER INTEGRADO - HOURCHECK (OSCURO SLATE)
        ========================================== */
     .hourcheck-footer {
@@ -57,7 +58,6 @@
       align-items: center;
     }
 
-    /* Estilo optimizado para la imagen del logo */
     .footer-logo-img {
       height: 38px;
       width: auto;
@@ -122,6 +122,7 @@
         justify-content: flex-start;
       }
     }
+
     .top-header {
       display: flex;
       justify-content: space-between;
@@ -160,12 +161,6 @@
       display: flex;
       align-items: center;
       gap: 20px;
-    }
-
-    .icon-btn {
-      position: relative;
-      cursor: pointer;
-      color: #333;
     }
 
     .user-profile {
@@ -343,7 +338,7 @@
 </head>
 <body>
   
-  <!-- SIDENAV ACTUALIZADO -->
+  <!-- SIDENAV -->
   <ul id="slide-out" class="sidenav">
     <li>
       <div class="user-view">
@@ -376,7 +371,7 @@
     </li>
   </ul>
 
-  <!-- DROPDOWN DEL PERFIL (SUPERIOR DERECHO) -->
+  <!-- DROPDOWN DEL PERFIL -->
   <ul id="user-dropdown" class="dropdown-content">
     <li>
       <a href="perfilU.html">
@@ -433,7 +428,7 @@
         <!-- Tarjeta Progreso General -->
         <div class="card white custom-card" style="border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #f0f0f0; margin: 0;">
           <div class="card-content" style="padding: 20px;">
-            <span class="card-title grey-text text-darken-4" style="font-size: 0.85rem; font-weight: bold; letter-spacing: 0.5px;">■ PROGRESO GENERAL</span>
+            <span class="card-title grey-text text-darken-4" style="font-size: 0.85rem; font-weight: bold; letter-spacing: 0.5px;">PROGRESO GENERAL</span>
             <div class="center-align">
               <div class="chart-container">
                 <canvas id="doughnutChart"></canvas>
@@ -446,7 +441,7 @@
         <!-- Tarjeta: Estudiantes y Docentes de la Institución -->
         <div class="card white custom-card" style="border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #f0f0f0; margin: 0;">
           <div class="card-content" style="padding: 20px;">
-            <span class="card-title grey-text text-darken-4" style="font-size: 0.85rem; font-weight: bold; letter-spacing: 0.5px;">👥 MIEMBROS DE LA INSTITUCIÓN</span>
+            <span class="card-title grey-text text-darken-4" style="font-size: 0.85rem; font-weight: bold; letter-spacing: 0.5px;">MIEMBROS DE LA INSTITUCIÓN</span>
             
             <div class="metric-box">
               <div style="background-color: #e3f2fd; border-radius: 50%; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; margin-right: 15px; flex-shrink: 0;">
@@ -476,13 +471,14 @@
       <div class="col s12 m12 l6" style="display: flex;">
         <div class="card white custom-card" style="border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #f0f0f0; width: 100%; margin: 0;">
           <div class="card-content" style="padding: 20px;">
-            <span class="card-title grey-text text-darken-4" style="font-size: 0.85rem; font-weight: bold; letter-spacing: 0.5px;">▲ REPORTES DE MAESTROS</span>
+            <span class="card-title grey-text text-darken-4" style="font-size: 0.85rem; font-weight: bold; letter-spacing: 0.5px;">REPORTES DE MAESTROS</span>
             <div class="metric-box" style="margin-top: 25px; padding: 20px;">
               <div style="background-color: #fff3e0; border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; margin-right: 15px; flex-shrink: 0;">
                 <i class="material-icons orange-text text-darken-2" style="font-size: 28px;">assignment_late</i>
               </div>
               <div>
-                <h4 style="margin: 0; font-weight: bold; color: #2c3e50; font-size: 1.8rem;">15</h4>
+                <!-- Se agregó id="cant-reportes" -->
+                <h4 id="cant-reportes" style="margin: 0; font-weight: bold; color: #2c3e50; font-size: 1.8rem;">0</h4>
                 <span class="grey-text" style="font-size: 0.8rem;">Reportes pendientes</span>
               </div>
             </div>
@@ -493,7 +489,7 @@
     </div>
   </div>
 
- <!-- Footer HourCheck (Opción 4: Oscuro Slate) -->
+  <!-- Footer HourCheck -->
   <footer class="hourcheck-footer">
     <div class="footer-container">
       <div class="footer-grid">
@@ -519,7 +515,6 @@
       </div>
     </div>
   </footer>
-
 
   <!-- Materialize JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
@@ -547,13 +542,11 @@
     let myDoughnutChart = null;
 
     document.addEventListener('DOMContentLoaded', function() {
-      // Inicializar Sidenav
       var sidenavElems = document.querySelectorAll('.sidenav');
       if (typeof M !== 'undefined' && M.Sidenav) {
         M.Sidenav.init(sidenavElems, { edge: 'left', draggable: true });
       }
 
-      // Inicializar Dropdown del Usuario
       var dropdownElems = document.querySelectorAll('.dropdown-trigger');
       if (typeof M !== 'undefined' && M.Dropdown) {
         M.Dropdown.init(dropdownElems, {
@@ -563,7 +556,6 @@
         });
       }
 
-      // Manejar Cierre de Sesión (Dropdown superior)
       const logoutBtn = document.getElementById('btn-logout');
       if (logoutBtn) {
         logoutBtn.addEventListener('click', async (e) => {
@@ -577,7 +569,6 @@
         });
       }
 
-      // Manejar Cierre de Sesión (Menú lateral / Sidenav)
       const logoutSidebarBtn = document.getElementById('btn-logout-sidebar');
       if (logoutSidebarBtn) {
         logoutSidebarBtn.addEventListener('click', async (e) => {
@@ -662,6 +653,7 @@
 
     async function cargarDatosYProgreso(instId, userUid) {
       try {
+        // 1. Cargar Estudiantes
         const qEstudiantes = query(collection(db, "Estudiantes"), where("institucion", "==", instId));
         const snapEstudiantes = await getDocs(qEstudiantes);
         const cantEstudiantes = snapEstudiantes.size;
@@ -669,6 +661,7 @@
         const elemEstudiantes = document.getElementById("cant-estudiantes");
         if (elemEstudiantes) elemEstudiantes.textContent = cantEstudiantes;
 
+        // 2. Cargar Docentes
         let snapDocentes = await getDocs(query(collection(db, "Docentes"), where("Institucion", "==", instId)));
         if (snapDocentes.empty && instId !== userUid) {
           snapDocentes = await getDocs(query(collection(db, "Docentes"), where("Institucion", "==", userUid)));
@@ -676,6 +669,21 @@
         const elemDocentes = document.getElementById("cant-docentes");
         if (elemDocentes) elemDocentes.textContent = snapDocentes.size;
 
+        // 3. Cargar Reportes de Docentes
+        let snapReportes = await getDocs(query(collection(db, "Reportes"), where("institucion", "==", instId)));
+        if (snapReportes.empty && instId !== userUid) {
+          snapReportes = await getDocs(query(collection(db, "Reportes"), where("institucion", "==", userUid)));
+        }
+        
+        // Si en Firestore tu campo usa otra variante (por ejemplo: idInstitucion o ID_Institucion)
+        if (snapReportes.empty) {
+          snapReportes = await getDocs(query(collection(db, "Reportes"), where("idInstitucion", "==", instId)));
+        }
+
+        const elemReportes = document.getElementById("cant-reportes");
+        if (elemReportes) elemReportes.textContent = snapReportes.size;
+
+        // 4. Cargar Horas Sociales y Progreso
         let totalHorasCompletadas = 0;
         let snapHoras = await getDocs(query(collection(db, "HorasSociales"), where("institucion", "==", instId)));
         
@@ -683,7 +691,6 @@
           snapHoras = await getDocs(query(collection(db, "HorasSociales"), where("institucion", "==", userUid)));
         }
 
-        // SE FILTRAN ÚNICAMENTE LAS HORAS CON estado === true
         snapHoras.forEach(docSnap => {
           const data = docSnap.data();
           if (data.estado === true) {
@@ -707,7 +714,7 @@
         renderDoughnutChart(porcentajeCalculado);
 
       } catch (e) {
-        console.error("Error obteniendo miembros y horas sociales de la institución:", e);
+        console.error("Error obteniendo miembros y datos de la institución:", e);
       }
     }
 

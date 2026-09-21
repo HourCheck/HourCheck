@@ -260,7 +260,7 @@
           </div>
           <div class="col s12 m5">
             <p><strong>Meta Requerida:</strong> 150 horas</p>
-            <p><strong>Estado del Proceso:</strong> En curso</p>
+            <p><strong>Estado del Proceso:</strong> <span id="repEstadoProceso">Completado</span></p>
           </div>
         </div>
       </div>
@@ -302,352 +302,370 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { 
-      getFirestore, 
-      collection, 
-      getDocs, 
-      getDoc,
-      doc,
-      query, 
-      where,
-      addDoc 
-    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { 
+  getFirestore, 
+  collection, 
+  getDocs, 
+  getDoc,
+  doc,
+  query, 
+  where,
+  addDoc,
+  serverTimestamp // <--- Importado para guardar la fecha en Firestore
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
-      authDomain: "hourcheckt.firebaseapp.com",
-      projectId: "hourcheckt",
-      messagingSenderId: "83459752453",
-      appId: "1:83459752453:web:1b81724c28973bf567126c"
-    };
+const firebaseConfig = {
+  apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
+  authDomain: "hourcheckt.firebaseapp.com",
+  projectId: "hourcheckt",
+  messagingSenderId: "83459752453",
+  appId: "1:83459752453:web:1b81724c28973bf567126c"
+};
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const auth = getAuth(app);
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
 
-    let listaEstudiantes = [];
-    let idInstitucionGlobal = "";
+let listaEstudiantes = [];
+let idInstitucionGlobal = "";
 
-    document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById("pdfFechaEmision").textContent = `Fecha: ${new Date().toLocaleDateString('es-ES')}`;
-    });
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById("pdfFechaEmision").textContent = `Fecha: ${new Date().toLocaleDateString('es-ES')}`;
+});
 
-    onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        window.location.href = "loginU.html";
-        return;
-      }
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    window.location.href = "loginU.html";
+    return;
+  }
 
-      const nombreUsuario = user.displayName || "Docente / Supervisor";
-      document.getElementById("repNombreDocente").textContent = nombreUsuario;
+  const nombreUsuario = user.displayName || "Docente / Supervisor";
+  document.getElementById("repNombreDocente").textContent = nombreUsuario;
 
-      await cargarDatosDocente(user.uid);
-      await cargarEstudiantes();
-    });
+  await cargarDatosDocente(user.uid);
+  await cargarEstudiantes();
+});
 
-    async function cargarDatosDocente(uid) {
-      try {
-        let docData = null;
+async function cargarDatosDocente(uid) {
+  try {
+    let docData = null;
 
-        let docRef = doc(db, "Docentes", uid);
-        let docSnap = await getDoc(docRef);
+    let docRef = doc(db, "Docentes", uid);
+    let docSnap = await getDoc(docRef);
 
-        if (docSnap.exists()) {
-          docData = docSnap.data();
+    if (docSnap.exists()) {
+      docData = docSnap.data();
+    } else {
+      let docRefSingular = doc(db, "Docente", uid);
+      let docSnapSingular = await getDoc(docRefSingular);
+
+      if (docSnapSingular.exists()) {
+        docData = docSnapSingular.data();
+      } else if (auth.currentUser && auth.currentUser.email) {
+        const emailUser = auth.currentUser.email.toLowerCase().trim();
+        const qDocente = query(collection(db, "Docentes"), where("email", "==", emailUser));
+        const querySnap = await getDocs(qDocente);
+
+        if (!querySnap.empty) {
+          docData = querySnap.docs[0].data();
         } else {
-          let docRefSingular = doc(db, "Docente", uid);
-          let docSnapSingular = await getDoc(docRefSingular);
-
-          if (docSnapSingular.exists()) {
-            docData = docSnapSingular.data();
-          } else if (auth.currentUser && auth.currentUser.email) {
-            const emailUser = auth.currentUser.email.toLowerCase().trim();
-            const qDocente = query(collection(db, "Docentes"), where("email", "==", emailUser));
-            const querySnap = await getDocs(qDocente);
-
-            if (!querySnap.empty) {
-              docData = querySnap.docs[0].data();
-            } else {
-              const qDocenteSingular = query(collection(db, "Docente"), where("email", "==", emailUser));
-              const querySnapSingular = await getDocs(qDocenteSingular);
-              if (!querySnapSingular.empty) {
-                docData = querySnapSingular.docs[0].data();
-              }
-            }
-          }
-        }
-
-        if (!docData) {
-          console.warn("⚠️ No se encontraron datos para el docente.");
-          document.getElementById("repNombreInstitucion").textContent = "INSTITUCIÓN EDUCATIVA";
-          return;
-        }
-
-        // 2. Extraer el valor de la institución contemplando NameInst y otras variables
-        let idInstitucion = docData.NameInst || docData.nameInst || docData.Institucion || docData.institucion || docData.institucionId || docData.InstitucionId || docData.nombreInstitucion || docData.NombreInstitucion || "";
-
-        if (!idInstitucion) {
-          document.getElementById("repNombreInstitucion").textContent = "INSTITUCIÓN EDUCATIVA";
-          return;
-        }
-
-        // Si ya viene escrito el nombre directamente (con espacios)
-        if (typeof idInstitucion === 'string' && idInstitucion.trim().includes(" ")) {
-          idInstitucionGlobal = idInstitucion;
-          document.getElementById("repNombreInstitucion").textContent = idInstitucion;
-          return;
-        }
-
-        // Si es un objeto DocumentReference
-        if (typeof idInstitucion === 'object' && idInstitucion.path) {
-          idInstitucionGlobal = idInstitucion.id; 
-          const instSnap = await getDoc(idInstitucion);
-          if (instSnap.exists()) {
-            const dataInst = instSnap.data();
-            const nombre = extraerNombreDinamico(dataInst);
-            document.getElementById("repNombreInstitucion").textContent = nombre || idInstitucion.id;
-          }
-          return;
-        }
-
-        const idLimpio = String(idInstitucion).trim();
-        idInstitucionGlobal = idLimpio;
-        
-        const coleccionesAProbar = ["Institucion", "Instituciones", "Colegios", "Escuelas", "instituciones", "institucion", "colegios", "escuelas"];
-        let encontrada = false;
-
-        // Búsqueda 1: Por ID exacto de documento
-        for (const colNombre of coleccionesAProbar) {
-          try {
-            const instRef = doc(db, colNombre, idLimpio);
-            const instSnap = await getDoc(instRef);
-
-            if (instSnap.exists()) {
-              const dataInst = instSnap.data();
-              const nombre = extraerNombreDinamico(dataInst);
-              
-              if (nombre) {
-                document.getElementById("repNombreInstitucion").textContent = nombre;
-                encontrada = true;
-                break;
-              }
-            }
-          } catch (e) {
-            console.warn(`Error al consultar colección '${colNombre}' por ID:`, e);
-          }
-        }
-
-        // Búsqueda 2: Por atributo 'id' o 'NameInst' en los documentos
-        if (!encontrada) {
-          for (const colNombre of coleccionesAProbar) {
-            try {
-              const qInst = query(collection(db, colNombre), where("id", "==", idLimpio));
-              const qSnap = await getDocs(qInst);
-
-              if (!qSnap.empty) {
-                const dataInst = qSnap.docs[0].data();
-                const nombre = extraerNombreDinamico(dataInst);
-                if (nombre) {
-                  document.getElementById("repNombreInstitucion").textContent = nombre;
-                  encontrada = true;
-                  break;
-                }
-              }
-            } catch (e) {
-              console.warn(`Error al consultar colección '${colNombre}' por query:`, e);
-            }
-          }
-        }
-
-        if (!encontrada) {
-          document.getElementById("repNombreInstitucion").textContent = idLimpio;
-        }
-
-      } catch (error) {
-        console.error("❌ Error en cargarDatosDocente:", error);
-        document.getElementById("repNombreInstitucion").textContent = "INSTITUCIÓN EDUCATIVA";
-      }
-    }
-
-    // Función auxiliar que extrae NameInst directamente
-    function extraerNombreDinamico(data) {
-      if (!data) return null;
-      
-      if (data.NameInst) return data.NameInst;
-      if (data.nameInst) return data.nameInst;
-      if (data.nombre) return data.nombre;
-      if (data.Nombre) return data.Nombre;
-      if (data.nombreInstitucion) return data.nombreInstitucion;
-      if (data.NombreInstitucion) return data.NombreInstitucion;
-      if (data.institucion) return data.institucion;
-      if (data.Institucion) return data.Institucion;
-
-      const keys = Object.keys(data);
-      for (const k of keys) {
-        const keyLower = k.toLowerCase();
-        if (keyLower.includes("name") || keyLower.includes("inst") || keyLower.includes("nombre")) {
-          if (typeof data[k] === 'string' && data[k].length > 0) {
-            return data[k];
+          const qDocenteSingular = query(collection(db, "Docente"), where("email", "==", emailUser));
+          const querySnapSingular = await getDocs(qDocenteSingular);
+          if (!querySnapSingular.empty) {
+            docData = querySnapSingular.docs[0].data();
           }
         }
       }
-
-      return null;
     }
 
-    async function cargarEstudiantes() {
-      const select = document.getElementById("selectEstudiante");
+    if (!docData) {
+      console.warn("⚠️ No se encontraron datos para el docente.");
+      document.getElementById("repNombreInstitucion").textContent = "INSTITUCIÓN EDUCATIVA";
+      return;
+    }
 
+    let idInstitucion = docData.NameInst || docData.nameInst || docData.Institucion || docData.institucion || docData.institucionId || docData.InstitucionId || docData.nombreInstitucion || docData.NombreInstitucion || "";
+
+    if (!idInstitucion) {
+      document.getElementById("repNombreInstitucion").textContent = "INSTITUCIÓN EDUCATIVA";
+      return;
+    }
+
+    if (typeof idInstitucion === 'string' && idInstitucion.trim().includes(" ")) {
+      idInstitucionGlobal = idInstitucion;
+      document.getElementById("repNombreInstitucion").textContent = idInstitucion;
+      return;
+    }
+
+    if (typeof idInstitucion === 'object' && idInstitucion.path) {
+      idInstitucionGlobal = idInstitucion.id; 
+      const instSnap = await getDoc(idInstitucion);
+      if (instSnap.exists()) {
+        const dataInst = instSnap.data();
+        const nombre = extraerNombreDinamico(dataInst);
+        document.getElementById("repNombreInstitucion").textContent = nombre || idInstitucion.id;
+      }
+      return;
+    }
+
+    const idLimpio = String(idInstitucion).trim();
+    idInstitucionGlobal = idLimpio;
+    
+    const coleccionesAProbar = ["Institucion", "Instituciones", "Colegios", "Escuelas", "instituciones", "institucion", "colegios", "escuelas"];
+    let encontrada = false;
+
+    for (const colNombre of coleccionesAProbar) {
       try {
-        const querySnapshot = await getDocs(collection(db, "Estudiantes"));
-        listaEstudiantes = [];
+        const instRef = doc(db, colNombre, idLimpio);
+        const instSnap = await getDoc(instRef);
 
-        if (querySnapshot.empty) {
-          select.innerHTML = '<option value="" disabled selected>No hay estudiantes registrados</option>';
-          M.FormSelect.init(select);
-          return;
-        }
-
-        querySnapshot.forEach((docSnap) => {
-          const data = docSnap.data();
-          const nombre = data.nombre || data.Nombre || data.nombreCompleto || data.name || "Estudiante sin nombre";
-          const correo = (data.correo || data.email || data.Correo || "").toLowerCase().trim();
+        if (instSnap.exists()) {
+          const dataInst = instSnap.data();
+          const nombre = extraerNombreDinamico(dataInst);
           
-          const instEstudiante = String(data.NameInst || data.nameInst || data.Institucion || data.institucion || data.institucionId || data.InstitucionId || "").trim();
-
-          // Filtro: Coincide la institución o posee correo con dominio institucional @clases.edu.sv
-          const perteneceAInstitucion = 
-            (idInstitucionGlobal && instEstudiante === idInstitucionGlobal) || 
-            correo.endsWith("@clases.edu.sv");
-
-          if (correo && perteneceAInstitucion) {
-            listaEstudiantes.push({
-              id: docSnap.id,
-              nombre: nombre,
-              correo: correo
-            });
+          if (nombre) {
+            document.getElementById("repNombreInstitucion").textContent = nombre;
+            encontrada = true;
+            break;
           }
-        });
-
-        if (listaEstudiantes.length === 0) {
-          select.innerHTML = '<option value="" disabled selected>No hay estudiantes registrados para esta institución</option>';
-          M.FormSelect.init(select);
-          return;
         }
-
-        listaEstudiantes.sort((a, b) => a.nombre.localeCompare(b.nombre));
-
-        select.innerHTML = '<option value="" disabled selected>Selecciona un estudiante</option>';
-        listaEstudiantes.forEach((est, idx) => {
-          const option = document.createElement("option");
-          option.value = idx;
-          option.textContent = `${est.nombre} (${est.correo})`;
-          select.appendChild(option);
-        });
-
-        M.FormSelect.init(select);
-
-      } catch (error) {
-        console.error("Error al cargar lista de estudiantes:", error);
-        select.innerHTML = '<option value="" disabled selected>Error de permisos o conexión</option>';
-        M.FormSelect.init(select);
+      } catch (e) {
+        console.warn(`Error al consultar colección '${colNombre}' por ID:`, e);
       }
     }
 
-    document.getElementById("selectEstudiante").addEventListener("change", async (e) => {
-      const index = e.target.value;
-      const estudianteSeleccionado = listaEstudiantes[index];
+    if (!encontrada) {
+      for (const colNombre of coleccionesAProbar) {
+        try {
+          const qInst = query(collection(db, colNombre), where("id", "==", idLimpio));
+          const qSnap = await getDocs(qInst);
 
-      if (!estudianteSeleccionado) return;
-
-      document.getElementById("repNombreEstudiante").textContent = estudianteSeleccionado.nombre;
-      document.getElementById("repCorreoEstudiante").textContent = estudianteSeleccionado.correo;
-
-      const tbody = document.getElementById("repTablaCuerpo");
-      tbody.innerHTML = '<tr><td colspan="5" class="center-align grey-text">Buscando actividades en la base de datos...</td></tr>';
-      
-      let totalHoras = 0;
-
-      try {
-        const q = query(
-          collection(db, "HorasSociales"),
-          where("email", "==", estudianteSeleccionado.correo)
-        );
-
-        const querySnapshot = await getDocs(q);
-        tbody.innerHTML = "";
-
-        if (querySnapshot.empty) {
-          tbody.innerHTML = '<tr><td colspan="5" class="center-align grey-text">El estudiante no tiene horas de servicio social registradas.</td></tr>';
-          document.getElementById("repTotalHoras").textContent = "0";
-          document.getElementById("btnDescargarPDF").disabled = true;
-          return;
-        }
-
-        querySnapshot.forEach((docSnap) => {
-          const data = docSnap.data();
-          const horas = Number(data.Horas) || 0;
-          totalHoras += horas;
-
-          let fechaFormateada = "---";
-          if (data.fechaCreacion && data.fechaCreacion.toDate) {
-            fechaFormateada = data.fechaCreacion.toDate().toLocaleDateString('es-ES');
+          if (!qSnap.empty) {
+            const dataInst = qSnap.docs[0].data();
+            const nombre = extraerNombreDinamico(dataInst);
+            if (nombre) {
+              document.getElementById("repNombreInstitucion").textContent = nombre;
+              encontrada = true;
+              break;
+            }
           }
+        } catch (e) {
+          console.warn(`Error al consultar colección '${colNombre}' por query:`, e);
+        }
+      }
+    }
 
-          const tr = document.createElement("tr");
-          tr.innerHTML = `
-            <td>${fechaFormateada}</td>
-            <td>${data.Categoria || "General"}</td>
-            <td>${data.Lugar || "N/A"}</td>
-            <td>${data.Descripcion || "Sin descripción"}</td>
-            <td style="text-align: right;"><strong>${horas}</strong> hrs</td>
-          `;
-          tbody.appendChild(tr);
+    if (!encontrada) {
+      document.getElementById("repNombreInstitucion").textContent = idLimpio;
+    }
+
+  } catch (error) {
+    console.error("❌ Error en cargarDatosDocente:", error);
+    document.getElementById("repNombreInstitucion").textContent = "INSTITUCIÓN EDUCATIVA";
+  }
+}
+
+function extraerNombreDinamico(data) {
+  if (!data) return null;
+  
+  if (data.NameInst) return data.NameInst;
+  if (data.nameInst) return data.nameInst;
+  if (data.nombre) return data.nombre;
+  if (data.Nombre) return data.Nombre;
+  if (data.nombreInstitucion) return data.nombreInstitucion;
+  if (data.NombreInstitucion) return data.NombreInstitucion;
+  if (data.institucion) return data.institucion;
+  if (data.Institucion) return data.Institucion;
+
+  const keys = Object.keys(data);
+  for (const k of keys) {
+    const keyLower = k.toLowerCase();
+    if (keyLower.includes("name") || keyLower.includes("inst") || keyLower.includes("nombre")) {
+      if (typeof data[k] === 'string' && data[k].length > 0) {
+        return data[k];
+      }
+    }
+  }
+
+  return null;
+}
+
+async function cargarEstudiantes() {
+  const select = document.getElementById("selectEstudiante");
+
+  try {
+    const querySnapshot = await getDocs(collection(db, "Estudiantes"));
+    listaEstudiantes = [];
+
+    if (querySnapshot.empty) {
+      select.innerHTML = '<option value="" disabled selected>No hay estudiantes registrados</option>';
+      M.FormSelect.init(select);
+      return;
+    }
+
+    for (const docSnap of querySnapshot.docs) {
+      const data = docSnap.data();
+      const nombre = data.nombre || data.Nombre || data.nombreCompleto || data.name || "Estudiante sin nombre";
+      const correo = (data.correo || data.email || data.Correo || "").toLowerCase().trim();
+      
+      const instEstudiante = String(data.NameInst || data.nameInst || data.Institucion || data.institucion || data.institucionId || data.InstitucionId || "").trim();
+
+      const perteneceAInstitucion = 
+        (idInstitucionGlobal && instEstudiante === idInstitucionGlobal) || 
+        correo.endsWith("@clases.edu.sv");
+
+      if (correo && perteneceAInstitucion) {
+        const qHoras = query(
+          collection(db, "HorasSociales"),
+          where("email", "==", correo)
+        );
+        const snapHoras = await getDocs(qHoras);
+
+        let totalHorasEstudiante = 0;
+        snapHoras.forEach((hDoc) => {
+          const hData = hDoc.data();
+          totalHorasEstudiante += Number(hData.Horas) || 0;
         });
 
-        document.getElementById("repTotalHoras").textContent = totalHoras;
-        document.getElementById("btnDescargarPDF").disabled = false;
-
-      } catch (error) {
-        console.error("Error al obtener actividades:", error);
-        tbody.innerHTML = '<tr><td colspan="5" class="center-align red-text">Error al cargar registros de Firestore.</td></tr>';
+        if (totalHorasEstudiante >= 150) {
+          listaEstudiantes.push({
+            id: docSnap.id,
+            nombre: nombre,
+            correo: correo,
+            totalHoras: totalHorasEstudiante
+          });
+        }
       }
+    }
+
+    if (listaEstudiantes.length === 0) {
+      select.innerHTML = '<option value="" disabled selected>No hay estudiantes con 150 horas completadas</option>';
+      M.FormSelect.init(select);
+      return;
+    }
+
+    listaEstudiantes.sort((a, b) => a.nombre.localeCompare(b.nombre));
+
+    select.innerHTML = '<option value="" disabled selected>Selecciona un estudiante</option>';
+    listaEstudiantes.forEach((est, idx) => {
+      const option = document.createElement("option");
+      option.value = idx;
+      option.textContent = `${est.nombre} (${est.totalHoras} hrs)`;
+      select.appendChild(option);
     });
 
-    document.getElementById("btnDescargarPDF").addEventListener("click", async () => {
-      const elemento = document.getElementById("hojaReporte");
-      const nombreAlumno = document.getElementById("repNombreEstudiante").textContent.trim().replace(/\s+/g, "_");
+    M.FormSelect.init(select);
 
-      const opciones = {
-        margin:      10,
-        filename:    `Reporte_Horas_${nombreAlumno}.pdf`,
-        image:       { type: 'jpeg', quality: 0.85 },
-        html2canvas:  { scale: 1.5, useCORS: true },
-        jsPDF:       { unit: 'mm', format: 'a4', orientation: 'portrait' }
-      };
+  } catch (error) {
+    console.error("Error al cargar lista de estudiantes:", error);
+    select.innerHTML = '<option value="" disabled selected>Error de permisos o conexión</option>';
+    M.FormSelect.init(select);
+  }
+}
 
-      try {
-        M.toast({html: 'Generando reporte...'});
+document.getElementById("selectEstudiante").addEventListener("change", async (e) => {
+  const index = e.target.value;
+  const estudianteSeleccionado = listaEstudiantes[index];
 
-        const pdfBase64 = await html2pdf().set(opciones).from(elemento).outputPdf('datauristring');
+  if (!estudianteSeleccionado) return;
 
-        await addDoc(collection(db, "reportesDocentes"), {
-          institucion: idInstitucionGlobal || "Sin ID",
-          pdf: pdfBase64
-        });
+  document.getElementById("repNombreEstudiante").textContent = estudianteSeleccionado.nombre;
+  document.getElementById("repCorreoEstudiante").textContent = estudianteSeleccionado.correo;
 
-        console.log("✅ Reporte guardado exitosamente con ID de institución:", idInstitucionGlobal);
-        M.toast({html: '¡Reporte guardado y descargado con éxito!'});
+  const tbody = document.getElementById("repTablaCuerpo");
+  tbody.innerHTML = '<tr><td colspan="5" class="center-align grey-text">Buscando actividades en la base de datos...</td></tr>';
+  
+  let totalHoras = 0;
 
-        html2pdf().set(opciones).from(elemento).save();
+  try {
+    const q = query(
+      collection(db, "HorasSociales"),
+      where("email", "==", estudianteSeleccionado.correo)
+    );
 
-      } catch (error) {
-        console.error("❌ Error al generar o guardar el PDF en Firestore:", error);
-        M.toast({html: 'Error al guardar en la base de datos.'});
+    const querySnapshot = await getDocs(q);
+    tbody.innerHTML = "";
+
+    if (querySnapshot.empty) {
+      tbody.innerHTML = '<tr><td colspan="5" class="center-align grey-text">El estudiante no tiene horas de servicio social registradas.</td></tr>';
+      document.getElementById("repTotalHoras").textContent = "0";
+      document.getElementById("btnDescargarPDF").disabled = true;
+      return;
+    }
+
+    querySnapshot.forEach((docSnap) => {
+      const data = docSnap.data();
+      const horas = Number(data.Horas) || 0;
+      totalHoras += horas;
+
+      let fechaFormateada = "---";
+      if (data.fechaCreacion && data.fechaCreacion.toDate) {
+        fechaFormateada = data.fechaCreacion.toDate().toLocaleDateString('es-ES');
       }
+
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${fechaFormateada}</td>
+        <td>${data.Categoria || "General"}</td>
+        <td>${data.Lugar || "N/A"}</td>
+        <td>${data.Descripcion || "Sin descripción"}</td>
+        <td style="text-align: right;"><strong>${horas}</strong> hrs</td>
+      `;
+      tbody.appendChild(tr);
     });
+
+    document.getElementById("repTotalHoras").textContent = totalHoras;
+    document.getElementById("btnDescargarPDF").disabled = false;
+
+  } catch (error) {
+    console.error("Error al obtener actividades:", error);
+    tbody.innerHTML = '<tr><td colspan="5" class="center-align red-text">Error al cargar registros de Firestore.</td></tr>';
+  }
+});
+
+document.getElementById("btnDescargarPDF").addEventListener("click", async () => {
+  const elemento = document.getElementById("hojaReporte");
+  const nombreAlumno = document.getElementById("repNombreEstudiante").textContent.trim().replace(/\s+/g, "_");
+
+  const opciones = {
+    margin:      10,
+    filename:    `Reporte_Horas_${nombreAlumno}.pdf`,
+    image:       { type: 'jpeg', quality: 0.85 },
+    html2canvas:  { scale: 1.5, useCORS: true },
+    jsPDF:       { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
+
+  try {
+    M.toast({html: 'Generando reporte...'});
+
+    const pdfBase64 = await html2pdf().set(opciones).from(elemento).outputPdf('datauristring');
+
+    // Obtener datos del usuario logueado en este instante
+    const currentUser = auth.currentUser;
+    const userId = currentUser ? currentUser.uid : "";
+    const docenteEncargado = document.getElementById("repNombreDocente").textContent.trim();
+
+    // Guardar en la colección reportesDocentes con la estructura requerida
+    await addDoc(collection(db, "reportesDocentes"), {
+      institucion: idInstitucionGlobal || "Sin ID",
+      userId: userId,
+      "Docente encargado": docenteEncargado,
+      fechaCreacion: serverTimestamp(),
+      pdf: pdfBase64
+    });
+
+    console.log("✅ Reporte guardado exitosamente con ID de institución, userId, docente y fecha:", idInstitucionGlobal);
+    M.toast({html: '¡Reporte guardado y descargado con éxito!'});
+
+    html2pdf().set(opciones).from(elemento).save();
+
+  } catch (error) {
+    console.error("❌ Error al generar o guardar el PDF en Firestore:", error);
+    M.toast({html: 'Error al guardar en la base de datos.'});
+  }
+});
 </script>
 </body>
 </html>
