@@ -711,15 +711,14 @@
   } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
   // Reemplaza con la configuración de tu proyecto de Firebase
-  const firebaseConfig = {
-    apiKey: "TU_API_KEY",
-    authDomain: "TU_PROJECT_ID.firebaseapp.com",
-    projectId: "TU_PROJECT_ID",
-    storageBucket: "TU_PROJECT_ID.appspot.com",
-    messagingSenderId: "TU_SENDER_ID",
-    appId: "TU_APP_ID"
-  };
-
+   const firebaseConfig = {
+      apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
+      authDomain: "hourcheckt.firebaseapp.com",
+      projectId: "hourcheckt",
+      storageBucket: "hourcheckt.firebasestorage.app",
+      messagingSenderId: "83459752453",
+      appId: "1:83459752453:web:1b81724c28973bf567126c"
+    };
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
   const auth = getAuth(app);
