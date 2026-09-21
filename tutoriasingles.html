@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tutorías de Inglés</title>
-  
+  <link rel="icon" type="image/png" href="logo.png">
   <!-- Materialize CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   <!-- Material Icons -->
@@ -227,29 +227,6 @@
       font-size: 1.15rem;
       font-weight: 700;
       margin: 0;
-    }
-
-    .btn-reporte {
-      background-color: #1557d0;
-      color: white;
-      border-radius: 10px;
-      padding: 0 16px;
-      height: 38px;
-      line-height: 38px;
-      text-transform: none;
-      font-weight: 700;
-      font-size: 0.9rem;
-      box-shadow: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-      border: none;
-      transition: background-color 0.2s;
-    }
-
-    .btn-reporte:hover {
-      background-color: #0d47a1;
     }
 
     .student-row {
@@ -520,7 +497,6 @@
     <div class="students-table-container">
       <div class="table-header-box">
         <span class="table-header-title">Estudiantes en Tutorías de inglés</span>
-      
       </div>
 
       <div id="studentsContainer">
@@ -615,7 +591,6 @@
     const totalRegistrosTextoEl = document.getElementById("totalRegistrosTexto");
     const gaugeChartEl = document.getElementById("gaugeChart");
     const studentsContainer = document.getElementById("studentsContainer");
-    const btnGenerarReporte = document.getElementById("btnGenerarReporte");
     const inputBuscadorEstudiante = document.getElementById("inputBuscadorEstudiante");
 
     let registrosCache = [];
@@ -684,7 +659,7 @@
       }
 
       lista.forEach((item) => {
-        const usuarioNombre = item.nombre || item.email || item.userId || "Estudiante";
+        const usuarioNombre = item.nombre || item.Nombre || item.email || item.userId || "Estudiante";
         const horasRealizadas = item.Horas || 0;
 
         let badgeHTML = `<span class="status-badge status-pending">Pendiente</span>`;
@@ -733,7 +708,7 @@
         const textoBusqueda = inputBuscadorEstudiante ? inputBuscadorEstudiante.value.toLowerCase().trim() : "";
         if (textoBusqueda) {
           const registrosFiltrados = registrosCache.filter((item) => {
-            const nombreEstudiante = (item.nombre || "").toLowerCase();
+            const nombreEstudiante = (item.nombre || item.Nombre || "").toLowerCase();
             const emailEstudiante = (item.email || item.userId || "").toLowerCase();
             return nombreEstudiante.includes(textoBusqueda) || emailEstudiante.includes(textoBusqueda);
           });
@@ -758,7 +733,7 @@
         const textoBusqueda = e.target.value.toLowerCase().trim();
 
         const registrosFiltrados = registrosCache.filter((item) => {
-          const nombreEstudiante = (item.nombre || "").toLowerCase();
+          const nombreEstudiante = (item.nombre || item.Nombre || "").toLowerCase();
           const emailEstudiante = (item.email || item.userId || "").toLowerCase();
           return nombreEstudiante.includes(textoBusqueda) || emailEstudiante.includes(textoBusqueda);
         });
@@ -767,43 +742,6 @@
       });
     }
 
-    btnGenerarReporte.addEventListener("click", () => {
-      if (registrosCache.length === 0) {
-        M.toast({html: 'No hay datos disponibles para generar el reporte.', classes: 'orange rounded'});
-        return;
-      }
-
-      let csvContent = "\uFEFF";
-      csvContent += "Estudiante / Nombre,Email,Categoría,Lugar,Docente Encargado,Horas Reportadas,Estado,Descripción\n";
-
-      registrosCache.forEach((item) => {
-        const nombreEstudiante = `"${item.nombre || 'N/A'}"`;
-        const estudianteEmail = `"${item.email || item.userId || 'N/A'}"`;
-        const categoria = `"${item.Categoria || CATEGORIA_ACTIVA}"`;
-        const lugar = `"${item.Lugar || 'N/A'}"`;
-        const docente = `"${item['Docente encargado'] || 'N/A'}"`;
-        const horas = item.Horas || 0;
-        let estado = "Pendiente";
-        if (item.estado === true) estado = "Aprobado";
-        if (item.estado === false) estado = "Rechazado";
-        const descripcion = `"${(item.Descripcion || '').replace(/"/g, '""')}"`;
-
-        csvContent += `${nombreEstudiante},${estudianteEmail},${categoria},${lugar},${docente},${horas},${estado},${descripcion}\n`;
-      });
-
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const enlaceDescarga = document.createElement("a");
-      enlaceDescarga.setAttribute("href", url);
-      enlaceDescarga.setAttribute("download", `Reporte_Tutorias_de_Ingles_${new Date().toISOString().slice(0,10)}.csv`);
-      document.body.appendChild(enlaceDescarga);
-      
-      enlaceDescarga.click();
-      document.body.removeChild(enlaceDescarga);
-
-      M.toast({html: 'Reporte descargado exitosamente.', classes: 'green rounded'});
-    });
-
     window.verEvidencia = function(registroId) {
       const registro = registrosCache.find(r => r.id === registroId);
       if (!registro) {
@@ -811,16 +749,17 @@
         return;
       }
 
-      const nombreEstudiante = registro.nombre || registro.email || registro.userId || "Estudiante";
+      const nombreEstudiante = registro.nombre || registro.Nombre || registro.email || registro.userId || "Estudiante";
 
       document.getElementById("modalEstudiante").textContent = nombreEstudiante;
       document.getElementById("modalDetalles").textContent = `Horas: ${registro.Horas || 0} hrs | Descripción: ${registro.Descripcion || 'Sin descripción'}`;
 
       const imgContainer = document.getElementById("modalImagenContainer");
-      const urlImagen = registro.evidenciaUrl || registro.Evidencia || registro.imagenUrl || registro.imagen;
+      
+      const urlImagen = registro.Evidencia || registro.evidenciaUrl || registro.evidencia || registro.imagenUrl || registro.imagen;
 
-      if (urlImagen) {
-        imgContainer.innerHTML = `<img src="${urlImagen}" alt="Evidencia" class="evidencia-img" />`;
+      if (urlImagen && urlImagen.trim() !== "") {
+        imgContainer.innerHTML = `<img src="${urlImagen}" alt="Evidencia" class="evidencia-img" onerror="this.onerror=null; this.parentNode.innerHTML='<p style=\\'color:#c62828; padding:20px;\\'>No se pudo cargar la imagen de la evidencia.</p>';" />`;
       } else {
         imgContainer.innerHTML = `<p style="color: #666; padding: 20px;">Este registro no contiene imagen de evidencia adjunta.</p>`;
       }
@@ -832,7 +771,10 @@
       btnDenegar.onclick = () => cambiarEstadoHoras(registroId, false);
 
       const modalElem = document.getElementById("modalEvidencia");
-      const instance = M.Modal.getInstance(modalElem);
+      let instance = M.Modal.getInstance(modalElem);
+      if (!instance) {
+        instance = M.Modal.init(modalElem);
+      }
       instance.open();
     };
   </script>
