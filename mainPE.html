@@ -52,18 +52,17 @@
       -webkit-font-smoothing: antialiased;
       vertical-align: middle;
     }
-
-    .top-header {
-      background-color: var(--card-bg);
-      padding: 16px 32px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid var(--border-color);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
+.top-header {
+  background-color: var(--bg-body); /* Ahora usa el color de fondo general */
+  padding: 16px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: none; /* Si prefieres quitar la línea, cambia por: border-bottom: none; */
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
 
     .header-left {
       display: flex;
@@ -549,9 +548,9 @@
    
     <li><div class="divider"></div></li>
     <li><a class="subheader">Mi Servicio Social</a></li>
-    <li><a href="historialE.html" class="waves-effect"><i class="material-icons">history</i>Historial de Horas</a></li>
+    <li><a href="#" class="waves-effect"><i class="material-icons">history</i>Historial de Horas</a></li>
     <li><a href="evidencias.html" class="waves-effect"><i class="material-icons">add_circle_outline</i>Subir Jornada</a></li>
-    <li><a href="#" id="btnCerrarSesion" class="waves-effect"><i class="material-icons">exit_to_app</i>Cerrar Sesión</a></li>
+    <li><a href="index.html" id="btnCerrarSesion" class="waves-effect"><i class="material-icons">exit_to_app</i>Cerrar Sesión</a></li>
   </ul>
 
   <header class="top-header">
@@ -892,7 +891,7 @@
   function cerrarSesion(e) {
     e.preventDefault();
     signOut(auth).then(() => {
-      window.location.href = "loginU.html";
+      window.location.href = "index.html";
     }).catch((error) => {
       console.error("Error al cerrar sesión:", error);
     });
