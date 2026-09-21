@@ -158,19 +158,62 @@
       color: #d32f2f;
     }
 
-    /* SECCIÓN DE REPORTES (TARJETAS) */
+    /* SECCIÓN DE REPORTES (TARJETAS Y BÚSQUEDA) */
     .reports-section {
       margin-top: 25px;
+    }
+
+    .reports-header-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 20px;
     }
 
     .section-title {
       font-size: 1.25rem;
       font-weight: 700;
       color: #0f172a;
-      margin-bottom: 20px;
+      margin: 0;
       display: flex;
       align-items: center;
       gap: 10px;
+    }
+
+    .search-box {
+      position: relative;
+      max-width: 340px;
+      width: 100%;
+    }
+
+    .search-box input[type="text"] {
+      background-color: #ffffff !important;
+      border: 1px solid #cbd5e1 !important;
+      border-radius: 10px !important;
+      padding: 0 16px 0 42px !important;
+      height: 42px !important;
+      margin: 0 !important;
+      box-sizing: border-box !important;
+      font-size: 0.9rem !important;
+      color: #1e293b !important;
+      transition: all 0.2s ease !important;
+    }
+
+    .search-box input[type="text"]:focus {
+      border-color: #2563eb !important;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15) !important;
+    }
+
+    .search-box .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #64748b;
+      font-size: 20px;
+      pointer-events: none;
     }
 
     .report-card {
@@ -207,7 +250,21 @@
       font-size: 1.05rem;
       font-weight: 700;
       color: #1e293b;
+      margin: 0 0 5px 0;
+    }
+
+    .report-card .student-name {
+      font-size: 0.9rem;
+      color: #64748b;
       margin: 0 0 15px 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .report-card .student-name i {
+      font-size: 16px;
+      color: #0f172a;
     }
 
     .report-card .card-actions {
@@ -342,6 +399,13 @@
         width: 95% !important;
         height: 90% !important;
       }
+      .reports-header-wrapper {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .search-box {
+        max-width: 100%;
+      }
     }
   </style>
 </head>
@@ -421,9 +485,17 @@
 
     <!-- APARTADO DE REPORTES DE LA SESIÓN -->
     <section class="reports-section">
-      <div class="section-title">
-        <i class="material-icons color-primary">folder_shared</i>
-        <span>Reportes de la Institución</span>
+      <div class="reports-header-wrapper">
+        <div class="section-title">
+          <i class="material-icons color-primary">folder_shared</i>
+          <span>Reportes de la Institución</span>
+        </div>
+
+        <!-- Buscador de reportes por estudiante -->
+        <div class="search-box">
+          <i class="material-icons search-icon">search</i>
+          <input type="text" id="search-input" placeholder="Buscar por estudiante..." autocomplete="off">
+        </div>
       </div>
 
       <!-- Spinner de Carga -->
@@ -495,6 +567,8 @@
       getFirestore, 
       collection, 
       getDocs, 
+      doc,
+      getDoc,
       query, 
       where 
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -513,6 +587,7 @@
     const db = getFirestore(app);
 
     let modalPreviewInstance = null;
+    let todosLosReportes = []; // Variable global para el filtro en tiempo real
 
     setPersistence(auth, browserLocalPersistence).catch((error) => {
       console.error("Error ajustando persistencia:", error);
@@ -533,12 +608,19 @@
       var elemsModal = document.querySelectorAll('.modal');
       var instancesModal = M.Modal.init(elemsModal, {
         onCloseEnd: function() {
-          // Limpiar iframe al cerrar para no consumir memoria
           document.getElementById('pdf-frame').src = '';
         }
       });
       if(instancesModal.length > 0) {
         modalPreviewInstance = instancesModal[0];
+      }
+
+      // Evento de búsqueda
+      const searchInput = document.getElementById('search-input');
+      if (searchInput) {
+        searchInput.addEventListener('input', function(e) {
+          filtrarReportes(e.target.value);
+        });
       }
     });
 
@@ -586,7 +668,7 @@
       if (sidenavInst && institucion) sidenavInst.textContent = institucion;
     }
 
-    /* OBTENER REPORTES Y REGISTRAR EVENTO DE PREVISUALIZACIÓN EN MODAL */
+    /* OBTENER REPORTES Y NOMBRE DEL ESTUDIANTE POR USERID */
     async function obtenerReportesPorSesion(uid) {
       const grid = document.getElementById("reports-grid");
       const loader = document.getElementById("loading-reports");
@@ -600,7 +682,6 @@
         const snapshot = await getDocs(q);
         loader.style.display = "none";
         grid.style.display = "flex";
-        grid.innerHTML = "";
 
         if (snapshot.empty) {
           grid.innerHTML = `
@@ -612,56 +693,43 @@
         }
 
         window.reportesData = {};
+        todosLosReportes = [];
 
-        snapshot.forEach((docSnap) => {
+        // Mapear promesas para consultar el nombre de cada estudiante de manera eficiente
+        const promesasReportes = snapshot.docs.map(async (docSnap) => {
           const data = docSnap.data();
           const docId = docSnap.id;
           const pdfBase64 = data.pdf || "";
-
-          // Almacenar el base64 temporalmente
-          window.reportesData[docId] = pdfBase64;
+          const userIdEstudiante = data.userId || "";
           
-          const col = document.createElement("div");
-          col.className = "col s12 m6 l4";
+          let nombreEstudiante = "Estudiante no especificado";
 
-          col.innerHTML = `
-            <div class="report-card">
-              <div>
-                <div class="card-icon">
-                  <i class="material-icons">picture_as_pdf</i>
-                </div>
-                <h2 class="card-title">Reporte Docente</h2>
-              </div>
-              <div class="card-actions">
-                ${pdfBase64 ? `
-                  <button class="btn btn-pdf waves-effect btn-preview-pdf" data-id="${docId}">
-                    <i class="material-icons" style="font-size:16px;">visibility</i> Ver PDF
-                  </button>
-                  <a href="${pdfBase64}" download="Reporte_Docente.pdf" class="btn btn-pdf waves-effect" style="background-color: #334155;">
-                    <i class="material-icons" style="font-size:16px;">file_download</i>
-                  </a>
-                ` : `<span style="color:#ef4444; font-size:0.85rem;">Documento no disponible</span>`}
-              </div>
-            </div>
-          `;
-
-          grid.appendChild(col);
-        });
-
-        // Listener para abrir el preview en el modal
-        document.querySelectorAll('.btn-preview-pdf').forEach(btn => {
-          btn.addEventListener('click', function() {
-            const id = this.getAttribute('data-id');
-            const pdfUrl = window.reportesData[id];
-            
-            if (pdfUrl) {
-              document.getElementById('pdf-frame').src = pdfUrl;
-              if (modalPreviewInstance) {
-                modalPreviewInstance.open();
+          // Consulta en la colección Estudiantes utilizando el userId
+          if (userIdEstudiante) {
+            try {
+              const estudianteRef = doc(db, "Estudiantes", userIdEstudiante);
+              const estudianteSnap = await getDoc(estudianteRef);
+              
+              if (estudianteSnap.exists()) {
+                const estData = estudianteSnap.data();
+                nombreEstudiante = estData.NameEst || estData.nombre || estData.Nombre || "Estudiante sin nombre";
               }
+            } catch (err) {
+              console.error("Error obteniendo datos del estudiante:", err);
             }
-          });
+          }
+
+          window.reportesData[docId] = pdfBase64;
+
+          return {
+            id: docId,
+            nombreEstudiante: nombreEstudiante,
+            pdfBase64: pdfBase64
+          };
         });
+
+        todosLosReportes = await Promise.all(promesasReportes);
+        renderizarReportes(todosLosReportes);
 
       } catch (error) {
         console.error("Error consultando reportes:", error);
@@ -672,6 +740,76 @@
             <p style="color: #ef4444;">Error al cargar los reportes. Revisa los permisos de lectura de Firestore.</p>
           </div>`;
       }
+    }
+
+    /* RENDERIZAR LAS TARJETAS */
+    function renderizarReportes(listaReportes) {
+      const grid = document.getElementById("reports-grid");
+      grid.innerHTML = "";
+
+      if (listaReportes.length === 0) {
+        grid.innerHTML = `
+          <div class="col s12 center-align" style="padding: 30px 0;">
+            <p style="color: #64748b; font-weight: 500;">No se encontraron resultados para la búsqueda.</p>
+          </div>`;
+        return;
+      }
+
+      listaReportes.forEach((rep) => {
+        const col = document.createElement("div");
+        col.className = "col s12 m6 l4";
+
+        col.innerHTML = `
+          <div class="report-card">
+            <div>
+              <div class="card-icon">
+                <i class="material-icons">picture_as_pdf</i>
+              </div>
+              <h2 class="card-title">Reporte Docente</h2>
+              <div class="student-name">
+                <i class="material-icons">person_outline</i>
+                <span>${rep.nombreEstudiante}</span>
+              </div>
+            </div>
+            <div class="card-actions">
+              ${rep.pdfBase64 ? `
+                <button class="btn btn-pdf waves-effect btn-preview-pdf" data-id="${rep.id}">
+                  <i class="material-icons" style="font-size:16px;">visibility</i> Ver PDF
+                </button>
+                <a href="${rep.pdfBase64}" download="Reporte_${rep.nombreEstudiante.replace(/\s+/g, '_')}.pdf" class="btn btn-pdf waves-effect" style="background-color: #334155;">
+                  <i class="material-icons" style="font-size:16px;">file_download</i>
+                </a>
+              ` : `<span style="color:#ef4444; font-size:0.85rem;">Documento no disponible</span>`}
+            </div>
+          </div>
+        `;
+
+        grid.appendChild(col);
+      });
+
+      // Listener para previsualizar PDF
+      document.querySelectorAll('.btn-preview-pdf').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const id = this.getAttribute('data-id');
+          const pdfUrl = window.reportesData[id];
+          
+          if (pdfUrl) {
+            document.getElementById('pdf-frame').src = pdfUrl;
+            if (modalPreviewInstance) {
+              modalPreviewInstance.open();
+            }
+          }
+        });
+      });
+    }
+
+    /* FILTRAR REPORTES EN TIEMPO REAL */
+    function filtrarReportes(texto) {
+      const busqueda = texto.toLowerCase().trim();
+      const reportesFiltrados = todosLosReportes.filter(rep => 
+        rep.nombreEstudiante.toLowerCase().includes(busqueda)
+      );
+      renderizarReportes(reportesFiltrados);
     }
 
     /* CIERRE DE SESIÓN */
