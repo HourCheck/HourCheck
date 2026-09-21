@@ -385,27 +385,28 @@
           return;
         }
 
-        let idInstitucion = docData.Institucion || docData.institucion || docData.institucionId || docData.InstitucionId || docData.nombreInstitucion || docData.NombreInstitucion || "";
+        // 2. Extraer el valor de la institución contemplando NameInst y otras variables
+        let idInstitucion = docData.NameInst || docData.nameInst || docData.Institucion || docData.institucion || docData.institucionId || docData.InstitucionId || docData.nombreInstitucion || docData.NombreInstitucion || "";
 
         if (!idInstitucion) {
           document.getElementById("repNombreInstitucion").textContent = "INSTITUCIÓN EDUCATIVA";
           return;
         }
 
-        // Si ya viene escrito el nombre directamente
-        if (typeof idInstitucion === 'string' && idInstitucion.includes(" ")) {
+        // Si ya viene escrito el nombre directamente (con espacios)
+        if (typeof idInstitucion === 'string' && idInstitucion.trim().includes(" ")) {
           idInstitucionGlobal = idInstitucion;
           document.getElementById("repNombreInstitucion").textContent = idInstitucion;
           return;
         }
 
-        // Si es una referencia de Firestore DocumentReference
+        // Si es un objeto DocumentReference
         if (typeof idInstitucion === 'object' && idInstitucion.path) {
           idInstitucionGlobal = idInstitucion.id; 
           const instSnap = await getDoc(idInstitucion);
           if (instSnap.exists()) {
             const dataInst = instSnap.data();
-            const nombre = dataInst.nombre || dataInst.Nombre || dataInst.nombreInstitucion || dataInst.institucion || "";
+            const nombre = extraerNombreDinamico(dataInst);
             document.getElementById("repNombreInstitucion").textContent = nombre || idInstitucion.id;
           }
           return;
@@ -414,7 +415,7 @@
         const idLimpio = String(idInstitucion).trim();
         idInstitucionGlobal = idLimpio;
         
-        const coleccionesAProbar = ["Institucion", "Instituciones", "Colegios", "Escuelas", "instituciones", "institucion"];
+        const coleccionesAProbar = ["Institucion", "Instituciones", "Colegios", "Escuelas", "instituciones", "institucion", "colegios", "escuelas"];
         let encontrada = false;
 
         // Búsqueda 1: Por ID exacto de documento
@@ -425,7 +426,7 @@
 
             if (instSnap.exists()) {
               const dataInst = instSnap.data();
-              const nombre = dataInst.nombre || dataInst.Nombre || dataInst.nombreInstitucion || dataInst.institucion || "";
+              const nombre = extraerNombreDinamico(dataInst);
               
               if (nombre) {
                 document.getElementById("repNombreInstitucion").textContent = nombre;
@@ -438,7 +439,7 @@
           }
         }
 
-        // Búsqueda 2: Por atributo 'id' en los documentos de la colección
+        // Búsqueda 2: Por atributo 'id' o 'NameInst' en los documentos
         if (!encontrada) {
           for (const colNombre of coleccionesAProbar) {
             try {
@@ -447,7 +448,7 @@
 
               if (!qSnap.empty) {
                 const dataInst = qSnap.docs[0].data();
-                const nombre = dataInst.nombre || dataInst.Nombre || dataInst.nombreInstitucion || dataInst.institucion || "";
+                const nombre = extraerNombreDinamico(dataInst);
                 if (nombre) {
                   document.getElementById("repNombreInstitucion").textContent = nombre;
                   encontrada = true;
@@ -470,6 +471,32 @@
       }
     }
 
+    // Función auxiliar que extrae NameInst directamente
+    function extraerNombreDinamico(data) {
+      if (!data) return null;
+      
+      if (data.NameInst) return data.NameInst;
+      if (data.nameInst) return data.nameInst;
+      if (data.nombre) return data.nombre;
+      if (data.Nombre) return data.Nombre;
+      if (data.nombreInstitucion) return data.nombreInstitucion;
+      if (data.NombreInstitucion) return data.NombreInstitucion;
+      if (data.institucion) return data.institucion;
+      if (data.Institucion) return data.Institucion;
+
+      const keys = Object.keys(data);
+      for (const k of keys) {
+        const keyLower = k.toLowerCase();
+        if (keyLower.includes("name") || keyLower.includes("inst") || keyLower.includes("nombre")) {
+          if (typeof data[k] === 'string' && data[k].length > 0) {
+            return data[k];
+          }
+        }
+      }
+
+      return null;
+    }
+
     async function cargarEstudiantes() {
       const select = document.getElementById("selectEstudiante");
 
@@ -488,9 +515,9 @@
           const nombre = data.nombre || data.Nombre || data.nombreCompleto || data.name || "Estudiante sin nombre";
           const correo = (data.correo || data.email || data.Correo || "").toLowerCase().trim();
           
-          const instEstudiante = String(data.Institucion || data.institucion || data.institucionId || data.InstitucionId || "").trim();
+          const instEstudiante = String(data.NameInst || data.nameInst || data.Institucion || data.institucion || data.institucionId || data.InstitucionId || "").trim();
 
-          // Filtro: Coincide el ID de institución o posee el correo institucional @clases.edu.sv
+          // Filtro: Coincide la institución o posee correo con dominio institucional @clases.edu.sv
           const perteneceAInstitucion = 
             (idInstitucionGlobal && instEstudiante === idInstitucionGlobal) || 
             correo.endsWith("@clases.edu.sv");
