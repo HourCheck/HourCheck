@@ -3,312 +3,599 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Historial de Reportes - HourCheck</title>
+  <title>Generar Reporte - HourCheck</title>
+  <link rel="icon" type="image/png" href="logo.png">
   
   <!-- Materialize CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-  <!-- Material Icons -->
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   
+  <!-- Librería HTML2PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
   <style>
-    :root {
-      --primary-color: #2563eb;
-      --primary-dark: #1d4ed8;
-      --bg-light: #f8fafc;
-      --text-dark: #1e293b;
-      --text-muted: #64748b;
-      --border-color: #e2e8f0;
-    }
-
     body {
-      background-color: var(--bg-light);
-      color: var(--text-dark);
-      font-family: 'Segoe UI', Roboto, sans-serif;
+      background-color: #f4f6f9;
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
     }
 
-    /* Navbar y Header */
-    nav.custom-nav {
+    /* Estilos del Header / Navbar Superior */
+    .top-header {
       background-color: #ffffff;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-      padding: 0 1.5rem;
-      height: 64px;
-      line-height: 64px;
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      margin-bottom: 25px;
     }
 
-    .brand-logo-custom {
-      font-weight: 700;
-      color: var(--primary-color) !important;
-      font-size: 1.4rem;
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .back-btn {
+      color: #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      transition: transform 0.2s;
+    }
+
+    .back-btn:hover {
+      transform: translateX(-3px);
+      color: #1557d0;
+    }
+
+    .back-btn i {
+      font-size: 30px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo-container {
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
-    .sidenav-trigger-custom {
-      color: var(--text-dark) !important;
-      margin: 0 !important;
-      cursor: pointer;
+    .logo-img {
+      height: 38px;
+      width: auto;
+      object-fit: contain;
     }
 
-    /* Banner Institucional */
-    .banner-institucion {
-      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-      color: #ffffff;
-      padding: 2.5rem 2rem;
-      border-radius: 12px;
-      margin-top: 1.5rem;
-      margin-bottom: 2rem;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+    /* Contenedor Principal */
+    .container-reporte {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 20px 40px 20px;
     }
 
-    .banner-institucion h4 {
-      margin: 0;
-      font-weight: 700;
-      font-size: 1.8rem;
+    .card-panel {
+      border-radius: 20px;
+      padding: 25px;
     }
 
-    .banner-institucion p {
-      margin: 6px 0 0 0;
-      opacity: 0.9;
-      font-size: 1rem;
-    }
-
-    /* Contenedor de Tabla de Reportes */
-    .reports-card {
+    /* Estilos del Documento PDF */
+    #hojaReporte {
       background: #ffffff;
-      border-radius: 12px;
-      border: 1px solid var(--border-color);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-      padding: 1.5rem;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      color: #333;
     }
 
-    .table-header-title {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--text-dark);
-      margin-bottom: 1.5rem;
+    .report-header {
+      border-bottom: 2px solid #1557d0;
+      padding-bottom: 15px;
+      margin-bottom: 25px;
       display: flex;
-      align-items: center;
-      gap: 10px;
+      justify-content: space-between;
+      align-items: flex-start;
     }
 
-    table.custom-table {
-      border-collapse: separate;
-      border-spacing: 0;
+    .institution-info h3 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #1a202c;
+      margin: 0 0 5px 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
-    table.custom-table thead th {
-      color: var(--text-muted);
-      font-weight: 600;
-      border-bottom: 2px solid var(--border-color);
-      padding: 12px 16px;
+    .report-title-sub {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #1557d0;
+      margin: 0;
+      text-transform: uppercase;
     }
 
-    table.custom-table tbody td {
-      padding: 14px 16px;
-      border-bottom: 1px solid var(--border-color);
+    .report-subtitle {
+      font-size: 0.9rem;
+      color: #666;
+      margin: 2px 0 0 0;
     }
 
-    /* Estilos del Sidenav */
-    .sidenav {
-      width: 280px;
+    .brand-corner {
+      text-align: right;
     }
 
-    .sidenav .user-view {
-      background-color: var(--primary-color);
-      padding: 24px 24px 12px 24px;
+    .pdf-logo-small {
+      height: 35px;
+      width: auto;
+      object-fit: contain;
     }
 
-    .sidenav .user-view .name,
-    .sidenav .user-view .email {
-      color: #ffffff;
+    .pdf-meta-date {
+      font-size: 0.8rem;
+      color: #777;
+      margin-top: 5px;
     }
 
-    .btn-download {
-      background-color: #eff6ff;
-      color: var(--primary-color);
-      box-shadow: none;
-      font-weight: 600;
-      border-radius: 6px;
+    .student-info-box {
+      background-color: #f8fafc;
+      border-left: 4px solid #1557d0;
+      padding: 15px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+
+    .student-info-box p {
+      margin: 3px 0;
+    }
+
+    .table-report {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    .table-report th {
+      background-color: #1557d0;
+      color: white;
+      padding: 10px;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    .table-report td {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+      font-size: 0.88rem;
+    }
+
+    .signatures {
+      margin-top: 60px;
+      display: flex;
+      justify-content: space-between;
+      text-align: center;
+    }
+
+    .signature-line {
+      border-top: 1px solid #333;
+      width: 220px;
+      margin-top: 40px;
+      padding-top: 5px;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+
+    .btn-orange {
+      background-color: #ff5500 !important;
+      border-radius: 10px;
+      font-weight: 700;
       text-transform: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
     }
 
-    .btn-download:hover {
-      background-color: #dbeafe;
-      box-shadow: none;
+    .btn-orange:hover {
+      background-color: #e04b00 !important;
     }
   </style>
 </head>
 <body>
 
-  <!-- BARRA SUPERIOR DE NAVEGACIÓN -->
-  <nav class="custom-nav">
-    <div class="nav-wrapper display-flex" style="display: flex; justify-content: space-between; align-items: center;">
-      <!-- Izquierda: Botón para abrir Menú Desplegable -->
-      <a href="#" data-target="slide-out" class="sidenav-trigger sidenav-trigger-custom show-on-large">
-        <i class="material-icons" style="font-size: 28px;">menu</i>
-      </a>
+<header class="top-header">
+  <div class="header-left">
+    <a href="mainPD.html" class="back-btn" title="Volver al Inicio">
+      <i class="material-icons">arrow_back</i>
+    </a>
+  </div>
 
-      <!-- Derecha: Logo de HourCheck -->
-      <a href="#" class="brand-logo-custom">
-        <i class="material-icons left" style="font-size: 26px; margin-right: 4px;">schedule</i>
-        HourCheck
-      </a>
+  <div class="header-right">
+    <div class="logo-container">
+      <img src="logo.png" alt="HourCheck Logo" class="logo-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x40?text=HourCheck';">
     </div>
-  </nav>
-
-  <!-- SIDEVAR DESPLEGABLE (MENÚ LATERAL) -->
-  <ul id="slide-out" class="sidenav">
-    <li>
-      <div class="user-view">
-        <span class="white-text name" style="font-weight: 700; font-size: 1.1rem;">Panel del Docente</span>
-        <span class="white-text email">docente@institucion.edu.sv</span>
-      </div>
-    </li>
-    <li><a href="inicioM.html"><i class="material-icons">dashboard</i>Inicio</a></li>
-    <li><a href="notiM.html"><i class="material-icons">notifications</i>Notificaciones</a></li>
-    <li><a href="estudiantesM.html"><i class="material-icons">people</i>Lista de Estudiantes</a></li>
-    <li class="active"><a href="reportesM.html"><i class="material-icons">assessment</i>Historial de Reportes</a></li>
-    <li><div class="divider"></div></li>
-    <li><a href="login.html" class="red-text"><i class="material-icons red-text">exit_to_app</i>Cerrar Sesión</a></li>
-  </ul>
+  </div>
+</header>
 
   <!-- CONTENIDO PRINCIPAL -->
-  <div class="container" style="width: 90%; max-width: 1200px;">
+  <div class="container-reporte">
     
-    <!-- BANNER DE LA INSTITUCIÓN -->
-    <div class="banner-institucion">
-      <div class="row style-margin-0" style="margin: 0;">
-        <div class="col s12 m9">
-          <h4 id="nombre-institucion">Instituto Nacional Dr. Manuel Luis Escamilla</h4>
-          <p>Módulo de Generación e Historial de Reportes de Servicio Social</p>
+    <!-- Filtro de Estudiantes -->
+    <div class="card-panel white z-depth-1">
+      <div class="row" style="margin-bottom: 0;">
+        <div class="col s12 m8 input-field">
+          <select id="selectEstudiante">
+            <option value="" disabled selected>Cargando estudiantes...</option>
+          </select>
+          <label>Selecciona un estudiante</label>
         </div>
-        <div class="col s12 m3 right-align hide-on-small-only" style="margin-top: 10px;">
-          <i class="material-icons" style="font-size: 64px; opacity: 0.3;">school</i>
+        <div class="col s12 m4 center-align" style="padding-top: 15px;">
+          <button id="btnDescargarPDF" class="btn btn-orange waves-effect waves-light" disabled>
+            <i class="material-icons left">picture_as_pdf</i> Descargar PDF
+          </button>
         </div>
       </div>
     </div>
 
-    <!-- SECCIÓN DE HISTORIAL DE REPORTES -->
-    <div class="reports-card">
-      <div class="table-header-title">
-        <i class="material-icons blue-text">history</i>
-        Historial de Reportes Generados por Maestros
+    <!-- DOCUMENTO A GENERAR EN PDF -->
+    <div id="hojaReporte">
+      <div class="report-header">
+        <div class="institution-info">
+          <h3 id="repNombreInstitucion">Cargando Institución...</h3>
+          <h4 class="report-title-sub">Reporte de Horas Sociales</h4>
+          <p class="report-subtitle">Programa de Servicio Social Estudiantil</p>
+        </div>
+        <div class="brand-corner">
+          <img src="logo.png" alt="HourCheck Logo" class="pdf-logo-small" onerror="this.onerror=null; this.src='https://via.placeholder.com/100x30?text=HourCheck';">
+          <div class="pdf-meta-date" id="pdfFechaEmision">Fecha: --/--/----</div>
+        </div>
       </div>
 
-      <div class="responsive-table">
-        <table class="custom-table highlight">
-          <thead>
-            <tr>
-              <th>Docente</th>
-              <th>Título del Reporte</th>
-              <th>Sección / Grado</th>
-              <th>Fecha de Generación</th>
-              <th>Acción</th>
-            </tr>
-          </thead>
-          <tbody id="tabla-reportes-body">
-            <!-- Datos de ejemplo vacíos o precargados -->
-            <tr>
-              <td><strong>Prof. Carlos Mendoza</strong></td>
-              <td>Reporte Trimestral de Servicio Social</td>
-              <td>1° Bachillerato General "A"</td>
-              <td>18/09/2026</td>
-              <td>
-                <a href="#" class="btn waves-effect btn-download btn-small">
-                  <i class="material-icons" style="font-size: 16px;">file_download</i> PDF
-                </a>
-              </td>
-            </tr>
-            <tr>
-              <td><strong>Profa. María López</strong></td>
-              <td>Aprobación de Horas - Módulo 2</td>
-              <td>2° Bachillerato Técnico "B"</td>
-              <td>12/09/2026</td>
-              <td>
-                <a href="#" class="btn waves-effect btn-download btn-small">
-                  <i class="material-icons" style="font-size: 16px;">file_download</i> PDF
-                </a>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="student-info-box">
+        <div class="row" style="margin-bottom: 0;">
+          <div class="col s12 m7">
+            <p><strong>Estudiante:</strong> <span id="repNombreEstudiante">Seleccione un alumno</span></p>
+            <p><strong>Correo Electrónico:</strong> <span id="repCorreoEstudiante">---</span></p>
+          </div>
+          <div class="col s12 m5">
+            <p><strong>Meta Requerida:</strong> 150 horas</p>
+            <p><strong>Estado del Proceso:</strong> En curso</p>
+          </div>
+        </div>
+      </div>
+
+      <table class="table-report">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Categoría</th>
+            <th>Lugar</th>
+            <th>Descripción</th>
+            <th style="text-align: right;">Horas</th>
+          </tr>
+        </thead>
+        <tbody id="repTablaCuerpo">
+          <tr>
+            <td colspan="5" class="center-align grey-text">Selecciona un estudiante para desplegar sus actividades.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="text-align: right; margin-top: 25px;">
+        <h5><strong>Total Horas Acumuladas: <span id="repTotalHoras" style="color: #1557d0;">0</span> / 150 hrs</strong></h5>
+      </div>
+
+      <div class="signatures">
+        <div>
+          <div class="signature-line" id="repNombreDocente">Docente / Supervisor</div>
+          <p style="margin: 0; font-size: 0.85rem; color: #666;">Firma de Validación</p>
+        </div>
+        <div>
+          <div class="signature-line">Sello Institucional</div>
+        </div>
       </div>
     </div>
 
   </div>
 
-  <!-- Materialize JavaScript -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.js"></script>
-  
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Inicializar Sidebar Desplegable (Sidenav)
-      var elemsSidenav = document.querySelectorAll('.sidenav');
-      M.Sidenav.init(elemsSidenav, {
-        edge: 'left',
-        draggable: true
-      });
-    });
-  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
-  <!-- Firebase Script para cargar los reportes de Firestore en tiempo real -->
-  <script type="module">
+<script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { 
+      getFirestore, 
+      collection, 
+      getDocs, 
+      getDoc,
+      doc,
+      query, 
+      where,
+      addDoc 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-    // Reemplaza con tu configuración de Firebase
     const firebaseConfig = {
-      apiKey: "TU_API_KEY",
-      authDomain: "TU_PROJECT.firebaseapp.com",
-      projectId: "TU_PROJECT_ID",
-      storageBucket: "TU_PROJECT.appspot.com",
-      messagingSenderId: "TU_SENDER_ID",
-      appId: "TU_APP_ID"
+      apiKey: "AIzaSyAPNHT5Ot5gJpi6y65yrSNwOu9ESYQF4II",
+      authDomain: "hourcheckt.firebaseapp.com",
+      projectId: "hourcheckt",
+      messagingSenderId: "83459752453",
+      appId: "1:83459752453:web:1b81724c28973bf567126c"
     };
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const auth = getAuth(app);
 
-    // Cargar reportes desde Firestore
-    function cargarReportesMaestros() {
-      const q = query(collection(db, "ReportesGenerados"), orderBy("fecha", "desc"));
+    let listaEstudiantes = [];
+    let idInstitucionGlobal = ""; // Variable global para almacenar el ID de la institución
 
-      onSnapshot(q, (snapshot) => {
-        const tbody = document.getElementById("tabla-reportes-body");
-        tbody.innerHTML = "";
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById("pdfFechaEmision").textContent = `Fecha: ${new Date().toLocaleDateString('es-ES')}`;
+    });
 
-        if (snapshot.empty) {
-          tbody.innerHTML = `<tr><td colspan="5" class="center-align grey-text">No hay reportes generados aún.</td></tr>`;
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "loginU.html";
+        return;
+      }
+
+      const nombreUsuario = user.displayName || "Docente / Supervisor";
+      document.getElementById("repNombreDocente").textContent = nombreUsuario;
+
+      // Primero obtenemos los datos de la institución del docente
+      await cargarDatosDocente(user.uid);
+      // Luego cargamos los estudiantes ya filtrados por la institución
+      await cargarEstudiantes();
+    });
+
+    async function cargarDatosDocente(uid) {
+      try {
+        let docData = null;
+
+        let docRef = doc(db, "Docentes", uid);
+        let docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          docData = docSnap.data();
+        } else {
+          let docRefSingular = doc(db, "Docente", uid);
+          let docSnapSingular = await getDoc(docRefSingular);
+
+          if (docSnapSingular.exists()) {
+            docData = docSnapSingular.data();
+          } else if (auth.currentUser && auth.currentUser.email) {
+            const emailUser = auth.currentUser.email.toLowerCase().trim();
+            const qDocente = query(collection(db, "Docentes"), where("email", "==", emailUser));
+            const querySnap = await getDocs(qDocente);
+
+            if (!querySnap.empty) {
+              docData = querySnap.docs[0].data();
+            } else {
+              const qDocenteSingular = query(collection(db, "Docente"), where("email", "==", emailUser));
+              const querySnapSingular = await getDocs(qDocenteSingular);
+              if (!querySnapSingular.empty) {
+                docData = querySnapSingular.docs[0].data();
+              }
+            }
+          }
+        }
+
+        if (!docData) {
+          document.getElementById("repNombreInstitucion").textContent = "INSTITUCIÓN EDUCATIVA";
           return;
         }
 
-        snapshot.forEach((docSnap) => {
-          const reporte = docSnap.data();
-          const fechaTexto = reporte.fecha ? new Date(reporte.fecha.seconds * 1000).toLocaleDateString() : 'Reciente';
+        let idInstitucion = docData.Institucion || docData.institucion || docData.institucionId || docData.InstitucionId || "";
 
-          tbody.innerHTML += `
-            <tr>
-              <td><strong>${reporte.nombreDocente || 'Docente'}</strong></td>
-              <td>${reporte.titulo || 'Reporte General'}</td>
-              <td>${reporte.seccion || 'N/A'}</td>
-              <td style="color: var(--text-muted);">${fechaTexto}</td>
-              <td>
-                <a href="${reporte.urlPdf || '#'}" target="_blank" class="btn waves-effect btn-download btn-small">
-                  <i class="material-icons" style="font-size: 16px;">file_download</i> PDF
-                </a>
-              </td>
-            </tr>
-          `;
-        });
-      });
+        if (!idInstitucion) {
+          document.getElementById("repNombreInstitucion").textContent = "INSTITUCIÓN EDUCATIVA";
+          return;
+        }
+
+        if (typeof idInstitucion === 'object' && idInstitucion.path) {
+          idInstitucionGlobal = idInstitucion.id; 
+          const instSnap = await getDoc(idInstitucion);
+          if (instSnap.exists()) {
+            const dataInst = instSnap.data();
+            const nombre = dataInst.nombre || dataInst.Nombre || dataInst.nombreInstitucion || dataInst.institucion || "";
+            document.getElementById("repNombreInstitucion").textContent = nombre || "INSTITUCIÓN EDUCATIVA";
+          }
+          return;
+        }
+
+        const idLimpio = String(idInstitucion).trim();
+        idInstitucionGlobal = idLimpio;
+        
+        const coleccionesAProbar = ["Institucion", "Instituciones", "Colegios", "Escuelas"];
+        let encontrada = false;
+
+        for (const colNombre of coleccionesAProbar) {
+          try {
+            const instRef = doc(db, colNombre, idLimpio);
+            const instSnap = await getDoc(instRef);
+
+            if (instSnap.exists()) {
+              const dataInst = instSnap.data();
+              const nombre = dataInst.nombre || dataInst.Nombre || dataInst.nombreInstitucion || dataInst.institucion || "";
+              
+              if (nombre) {
+                document.getElementById("repNombreInstitucion").textContent = nombre;
+                encontrada = true;
+                break;
+              }
+            }
+          } catch (e) {
+            console.warn(`Error al consultar colección '${colNombre}':`, e);
+          }
+        }
+
+        if (!encontrada) {
+          document.getElementById("repNombreInstitucion").textContent = idLimpio.length > 20 ? "INSTITUCIÓN EDUCATIVA" : idLimpio;
+        }
+
+      } catch (error) {
+        console.error("❌ Error en cargarDatosDocente:", error);
+        document.getElementById("repNombreInstitucion").textContent = "INSTITUCIÓN EDUCATIVA";
+      }
     }
 
-    // Ejecutar al cargar la vista
-    // cargarReportesMaestros();
-  </script>
+    async function cargarEstudiantes() {
+      const select = document.getElementById("selectEstudiante");
+
+      try {
+        const querySnapshot = await getDocs(collection(db, "Estudiantes"));
+        listaEstudiantes = [];
+
+        if (querySnapshot.empty) {
+          select.innerHTML = '<option value="" disabled selected>No hay estudiantes registrados</option>';
+          M.FormSelect.init(select);
+          return;
+        }
+
+        querySnapshot.forEach((docSnap) => {
+          const data = docSnap.data();
+          const nombre = data.nombre || data.Nombre || data.nombreCompleto || data.name || "Estudiante sin nombre";
+          const correo = (data.correo || data.email || data.Correo || "").toLowerCase().trim();
+          
+          // ID o referencia de institución guardada en el estudiante
+          const instEstudiante = String(data.Institucion || data.institucion || data.institucionId || data.InstitucionId || "").trim();
+
+          // FILTRO: Se incluye si coincide la institución del docente O si usa el correo institucional @clases.edu.sv
+          const perteneceAInstitucion = 
+            (idInstitucionGlobal && instEstudiante === idInstitucionGlobal) || 
+            correo.endsWith("@clases.edu.sv");
+
+          if (correo && perteneceAInstitucion) {
+            listaEstudiantes.push({
+              id: docSnap.id,
+              nombre: nombre,
+              correo: correo
+            });
+          }
+        });
+
+        if (listaEstudiantes.length === 0) {
+          select.innerHTML = '<option value="" disabled selected>No hay estudiantes registrados para esta institución</option>';
+          M.FormSelect.init(select);
+          return;
+        }
+
+        listaEstudiantes.sort((a, b) => a.nombre.localeCompare(b.nombre));
+
+        select.innerHTML = '<option value="" disabled selected>Selecciona un estudiante</option>';
+        listaEstudiantes.forEach((est, idx) => {
+          const option = document.createElement("option");
+          option.value = idx;
+          option.textContent = `${est.nombre} (${est.correo})`;
+          select.appendChild(option);
+        });
+
+        M.FormSelect.init(select);
+
+      } catch (error) {
+        console.error("Error al cargar lista de estudiantes:", error);
+        select.innerHTML = '<option value="" disabled selected>Error de permisos o conexión</option>';
+        M.FormSelect.init(select);
+      }
+    }
+
+    document.getElementById("selectEstudiante").addEventListener("change", async (e) => {
+      const index = e.target.value;
+      const estudianteSeleccionado = listaEstudiantes[index];
+
+      if (!estudianteSeleccionado) return;
+
+      document.getElementById("repNombreEstudiante").textContent = estudianteSeleccionado.nombre;
+      document.getElementById("repCorreoEstudiante").textContent = estudianteSeleccionado.correo;
+
+      const tbody = document.getElementById("repTablaCuerpo");
+      tbody.innerHTML = '<tr><td colspan="5" class="center-align grey-text">Buscando actividades en la base de datos...</td></tr>';
+      
+      let totalHoras = 0;
+
+      try {
+        const q = query(
+          collection(db, "HorasSociales"),
+          where("email", "==", estudianteSeleccionado.correo)
+        );
+
+        const querySnapshot = await getDocs(q);
+        tbody.innerHTML = "";
+
+        if (querySnapshot.empty) {
+          tbody.innerHTML = '<tr><td colspan="5" class="center-align grey-text">El estudiante no tiene horas de servicio social registradas.</td></tr>';
+          document.getElementById("repTotalHoras").textContent = "0";
+          document.getElementById("btnDescargarPDF").disabled = true;
+          return;
+        }
+
+        querySnapshot.forEach((docSnap) => {
+          const data = docSnap.data();
+          const horas = Number(data.Horas) || 0;
+          totalHoras += horas;
+
+          let fechaFormateada = "---";
+          if (data.fechaCreacion && data.fechaCreacion.toDate) {
+            fechaFormateada = data.fechaCreacion.toDate().toLocaleDateString('es-ES');
+          }
+
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${fechaFormateada}</td>
+            <td>${data.Categoria || "General"}</td>
+            <td>${data.Lugar || "N/A"}</td>
+            <td>${data.Descripcion || "Sin descripción"}</td>
+            <td style="text-align: right;"><strong>${horas}</strong> hrs</td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        document.getElementById("repTotalHoras").textContent = totalHoras;
+        document.getElementById("btnDescargarPDF").disabled = false;
+
+      } catch (error) {
+        console.error("Error al obtener actividades:", error);
+        tbody.innerHTML = '<tr><td colspan="5" class="center-align red-text">Error al cargar registros de Firestore.</td></tr>';
+      }
+    });
+
+    // Evento para generar, descargar PDF y guardar en la colección 'reportesDocentes'
+    document.getElementById("btnDescargarPDF").addEventListener("click", async () => {
+      const elemento = document.getElementById("hojaReporte");
+      const nombreAlumno = document.getElementById("repNombreEstudiante").textContent.trim().replace(/\s+/g, "_");
+
+      const opciones = {
+        margin:      10,
+        filename:    `Reporte_Horas_${nombreAlumno}.pdf`,
+        image:       { type: 'jpeg', quality: 0.85 },
+        html2canvas:  { scale: 1.5, useCORS: true },
+        jsPDF:       { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      try {
+        M.toast({html: 'Generando reporte...'});
+
+        // 1. Obtener el PDF en formato base64
+        const pdfBase64 = await html2pdf().set(opciones).from(elemento).outputPdf('datauristring');
+
+        // 2. Guardar en Firestore dentro de la colección 'reportesDocentes'
+        await addDoc(collection(db, "reportesDocentes"), {
+          institucion: idInstitucionGlobal || "Sin ID",
+          pdf: pdfBase64
+        });
+
+        console.log("✅ Reporte guardado exitosamente con ID de institución:", idInstitucionGlobal);
+        M.toast({html: '¡Reporte guardado y descargado con éxito!'});
+
+        // 3. Descargar el archivo localmente
+        html2pdf().set(opciones).from(elemento).save();
+
+      } catch (error) {
+        console.error("❌ Error al generar o guardar el PDF en Firestore:", error);
+        M.toast({html: 'Error al guardar en la base de datos.'});
+      }
+    });
+</script>
 </body>
 </html>
