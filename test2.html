@@ -328,7 +328,7 @@
     const auth = getAuth(app);
 
     let listaEstudiantes = [];
-    let idInstitucionGlobal = ""; // Variable global para almacenar el ID de la institución
+    let idInstitucionGlobal = "";
 
     document.addEventListener('DOMContentLoaded', () => {
       document.getElementById("pdfFechaEmision").textContent = `Fecha: ${new Date().toLocaleDateString('es-ES')}`;
@@ -343,9 +343,7 @@
       const nombreUsuario = user.displayName || "Docente / Supervisor";
       document.getElementById("repNombreDocente").textContent = nombreUsuario;
 
-      // Primero obtenemos los datos de la institución del docente
       await cargarDatosDocente(user.uid);
-      // Luego cargamos los estudiantes ya filtrados por la institución
       await cargarEstudiantes();
     });
 
@@ -382,24 +380,33 @@
         }
 
         if (!docData) {
+          console.warn("⚠️ No se encontraron datos para el docente.");
           document.getElementById("repNombreInstitucion").textContent = "INSTITUCIÓN EDUCATIVA";
           return;
         }
 
-        let idInstitucion = docData.Institucion || docData.institucion || docData.institucionId || docData.InstitucionId || "";
+        let idInstitucion = docData.Institucion || docData.institucion || docData.institucionId || docData.InstitucionId || docData.nombreInstitucion || docData.NombreInstitucion || "";
 
         if (!idInstitucion) {
           document.getElementById("repNombreInstitucion").textContent = "INSTITUCIÓN EDUCATIVA";
           return;
         }
 
+        // Si ya viene escrito el nombre directamente
+        if (typeof idInstitucion === 'string' && idInstitucion.includes(" ")) {
+          idInstitucionGlobal = idInstitucion;
+          document.getElementById("repNombreInstitucion").textContent = idInstitucion;
+          return;
+        }
+
+        // Si es una referencia de Firestore DocumentReference
         if (typeof idInstitucion === 'object' && idInstitucion.path) {
           idInstitucionGlobal = idInstitucion.id; 
           const instSnap = await getDoc(idInstitucion);
           if (instSnap.exists()) {
             const dataInst = instSnap.data();
             const nombre = dataInst.nombre || dataInst.Nombre || dataInst.nombreInstitucion || dataInst.institucion || "";
-            document.getElementById("repNombreInstitucion").textContent = nombre || "INSTITUCIÓN EDUCATIVA";
+            document.getElementById("repNombreInstitucion").textContent = nombre || idInstitucion.id;
           }
           return;
         }
@@ -407,9 +414,10 @@
         const idLimpio = String(idInstitucion).trim();
         idInstitucionGlobal = idLimpio;
         
-        const coleccionesAProbar = ["Institucion", "Instituciones", "Colegios", "Escuelas"];
+        const coleccionesAProbar = ["Institucion", "Instituciones", "Colegios", "Escuelas", "instituciones", "institucion"];
         let encontrada = false;
 
+        // Búsqueda 1: Por ID exacto de documento
         for (const colNombre of coleccionesAProbar) {
           try {
             const instRef = doc(db, colNombre, idLimpio);
@@ -426,12 +434,34 @@
               }
             }
           } catch (e) {
-            console.warn(`Error al consultar colección '${colNombre}':`, e);
+            console.warn(`Error al consultar colección '${colNombre}' por ID:`, e);
+          }
+        }
+
+        // Búsqueda 2: Por atributo 'id' en los documentos de la colección
+        if (!encontrada) {
+          for (const colNombre of coleccionesAProbar) {
+            try {
+              const qInst = query(collection(db, colNombre), where("id", "==", idLimpio));
+              const qSnap = await getDocs(qInst);
+
+              if (!qSnap.empty) {
+                const dataInst = qSnap.docs[0].data();
+                const nombre = dataInst.nombre || dataInst.Nombre || dataInst.nombreInstitucion || dataInst.institucion || "";
+                if (nombre) {
+                  document.getElementById("repNombreInstitucion").textContent = nombre;
+                  encontrada = true;
+                  break;
+                }
+              }
+            } catch (e) {
+              console.warn(`Error al consultar colección '${colNombre}' por query:`, e);
+            }
           }
         }
 
         if (!encontrada) {
-          document.getElementById("repNombreInstitucion").textContent = idLimpio.length > 20 ? "INSTITUCIÓN EDUCATIVA" : idLimpio;
+          document.getElementById("repNombreInstitucion").textContent = idLimpio;
         }
 
       } catch (error) {
@@ -458,10 +488,9 @@
           const nombre = data.nombre || data.Nombre || data.nombreCompleto || data.name || "Estudiante sin nombre";
           const correo = (data.correo || data.email || data.Correo || "").toLowerCase().trim();
           
-          // ID o referencia de institución guardada en el estudiante
           const instEstudiante = String(data.Institucion || data.institucion || data.institucionId || data.InstitucionId || "").trim();
 
-          // FILTRO: Se incluye si coincide la institución del docente O si usa el correo institucional @clases.edu.sv
+          // Filtro: Coincide el ID de institución o posee el correo institucional @clases.edu.sv
           const perteneceAInstitucion = 
             (idInstitucionGlobal && instEstudiante === idInstitucionGlobal) || 
             correo.endsWith("@clases.edu.sv");
@@ -560,7 +589,6 @@
       }
     });
 
-    // Evento para generar, descargar PDF y guardar en la colección 'reportesDocentes'
     document.getElementById("btnDescargarPDF").addEventListener("click", async () => {
       const elemento = document.getElementById("hojaReporte");
       const nombreAlumno = document.getElementById("repNombreEstudiante").textContent.trim().replace(/\s+/g, "_");
@@ -576,10 +604,8 @@
       try {
         M.toast({html: 'Generando reporte...'});
 
-        // 1. Obtener el PDF en formato base64
         const pdfBase64 = await html2pdf().set(opciones).from(elemento).outputPdf('datauristring');
 
-        // 2. Guardar en Firestore dentro de la colección 'reportesDocentes'
         await addDoc(collection(db, "reportesDocentes"), {
           institucion: idInstitucionGlobal || "Sin ID",
           pdf: pdfBase64
@@ -588,7 +614,6 @@
         console.log("✅ Reporte guardado exitosamente con ID de institución:", idInstitucionGlobal);
         M.toast({html: '¡Reporte guardado y descargado con éxito!'});
 
-        // 3. Descargar el archivo localmente
         html2pdf().set(opciones).from(elemento).save();
 
       } catch (error) {
