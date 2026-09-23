@@ -283,7 +283,7 @@
       </table>
 
       <div style="text-align: right; margin-top: 25px;">
-        <h5><strong>Total Horas Acumuladas: <span id="repTotalHoras" style="color: #1557d0;">0</span> / 150 hrs</strong></h5>
+        <h5><strong>Total Horas Acumuladas: <span id="repTotalHoras" style="color: #1557d0;">0.00</span> / 150 hrs</strong></h5>
       </div>
 
       <div class="signatures">
@@ -556,7 +556,7 @@ async function cargarEstudiantes() {
     listaEstudiantes.forEach((est, idx) => {
       const option = document.createElement("option");
       option.value = idx;
-      option.textContent = `${est.nombre} (${est.totalHoras} hrs)`;
+      option.textContent = `${est.nombre} (${est.totalHoras.toFixed(2)} hrs)`;
       select.appendChild(option);
     });
 
@@ -596,7 +596,7 @@ document.getElementById("selectEstudiante").addEventListener("change", async (e)
 
     if (querySnapshot.empty) {
       tbody.innerHTML = '<tr><td colspan="5" class="center-align grey-text">El estudiante no tiene horas de servicio social registradas.</td></tr>';
-      document.getElementById("repTotalHoras").textContent = "0";
+      document.getElementById("repTotalHoras").textContent = "0.00";
       document.getElementById("btnDescargarPDF").disabled = true;
       return;
     }
@@ -622,12 +622,12 @@ document.getElementById("selectEstudiante").addEventListener("change", async (e)
         <td>${data.Categoria || "General"}</td>
         <td>${data.Lugar || "N/A"}</td>
         <td>${data.Descripcion || "Sin descripción"}</td>
-        <td style="text-align: right;"><strong>${horas}</strong> hrs</td>
+        <td style="text-align: right;"><strong>${horas.toFixed(2)}</strong> hrs</td>
       `;
       tbody.appendChild(tr);
     });
 
-    document.getElementById("repTotalHoras").textContent = totalHoras;
+    document.getElementById("repTotalHoras").textContent = totalHoras.toFixed(2);
     document.getElementById("btnDescargarPDF").disabled = false;
 
   } catch (error) {
