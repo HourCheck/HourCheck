@@ -332,6 +332,11 @@
       margin-top: 10px;
     }
 
+  
+    
+   /* ==========================================
+       FOOTER INTEGRADO - HOURCHECK (OSCURO SLATE)
+       ========================================== */
     .hourcheck-footer {
       background-color: #0f172a;
       color: #f8fafc;
@@ -356,21 +361,20 @@
     .footer-logo {
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: 1.25rem;
-      font-weight: 800;
-      color: #ffffff;
     }
 
-    .footer-logo-icon {
-      color: #38bdf8;
-      font-size: 26px;
+    /* Estilo optimizado para la imagen del logo */
+    .footer-logo-img {
+      height: 38px;
+      width: auto;
+      object-fit: contain;
+      display: block;
     }
 
     .footer-description {
       color: #94a3b8;
       font-size: 0.88rem;
-      margin: 8px 0 0 0;
+      margin: 12px 0 0 0;
       line-height: 1.5;
       max-width: 480px;
     }
@@ -424,6 +428,8 @@
         justify-content: flex-start;
       }
     }
+
+  
   </style>
 </head>
 <body>
@@ -530,13 +536,13 @@
     </div>
   </div>
 
+<!-- Footer HourCheck (Opción 4: Oscuro Slate) -->
   <footer class="hourcheck-footer">
     <div class="footer-container">
       <div class="footer-grid">
         <div class="footer-brand-col">
           <div class="footer-logo">
-            <i class="material-icons footer-logo-icon">schedule</i>
-            <span>HourCheck</span>
+            <img src="logo.png" alt="HourCheck Logo" class="footer-logo-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/140x40?text=HourCheck';">
           </div>
           <p class="footer-description">
             Plataforma web para el registro, gestión y validación transparente del Servicio Social Estudiantil.
