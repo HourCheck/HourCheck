@@ -337,7 +337,39 @@
   </style>
 </head>
 <body>
-
+  <!-- SIDENAV -->
+  <ul id="slide-out" class="sidenav">
+    <li>
+      <div class="user-view">
+        <div class="background" style="background-color: #1557d0;"></div>  
+        <a href="#user">
+          <div class="avatar"><i class="material-icons">person</i></div>
+        </a>
+        <a href="#name">
+          <span id="user-name" class="white-text name" style="font-weight:700;">Cargando...</span>
+        </a>
+        <a href="#email">
+          <span id="user-email" class="white-text email">Cargando...</span>
+        </a>
+        <a href="#institution">
+          <span id="user-inst" class="white-text institution" style="font-size: 13px; opacity: 0.9;">Cargando...</span>
+        </a>
+      </div>
+    </li>
+    
+    <li><a href="reportDI.html" class="waves-effect"><i class="material-icons">assignment</i>Reporte docente</a></li>
+    <li><a href="horasDeProgreso.html" class="waves-effect"><i class="material-icons">trending_up</i>Horas progresadas</a></li>
+    <li><a href="#" class="waves-effect"><i class="material-icons">group</i>Docentes</a></li>
+    <li><a href="Estudiantes.html" class="waves-effect"><i class="material-icons">group</i>Estudiantes</a></li>
+    
+    <li><div class="divider"></div></li>
+    <li>
+      <a href="#" id="btn-logout-sidebar" class="waves-effect logout-sidebar">
+        <i class="material-icons">exit_to_app</i>Cerrar sesión
+      </a>
+    </li>
+  </ul>
+  
   <!-- DROPDOWN DEL PERFIL -->
   <ul id="user-dropdown" class="dropdown-content">
     <li>
@@ -361,8 +393,6 @@
     </a>
   </div>
     <header class="top-header">
-      <div class="header-left">
-        <a href="#" data-target="slide-out" class="sidenav-trigger btn-menu-trigger">
           <i class="material-icons">menu</i>
         </a>
         <h1 class="header-title">Inicio</h1>

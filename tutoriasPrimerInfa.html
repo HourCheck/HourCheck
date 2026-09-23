@@ -90,7 +90,7 @@
       letter-spacing: -0.5px;
     }
 
-    .banner-subtitle {
+    .banner-sub {
       font-size: 1.1rem;
       font-weight: 700;
       color: #222;
@@ -235,29 +235,6 @@
       margin: 0;
     }
 
-    .btn-reporte {
-      background-color: #1557d0;
-      color: white;
-      border-radius: 10px;
-      padding: 0 16px;
-      height: 38px;
-      line-height: 38px;
-      text-transform: none;
-      font-weight: 700;
-      font-size: 0.9rem;
-      box-shadow: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-      border: none;
-      transition: background-color 0.2s;
-    }
-
-    .btn-reporte:hover {
-      background-color: #0d47a1;
-    }
-
     .student-row {
       display: flex;
       justify-content: space-between;
@@ -369,7 +346,6 @@
       <a href="mainPD.html" class="back-btn" title="Volver al Inicio">
         <i class="material-icons">arrow_back</i>
       </a>
-      
     </div>
 
     <div class="header-right">
@@ -436,7 +412,6 @@
     <div class="students-table-container">
       <div class="table-header-box">
         <span class="table-header-title">Estudiantes en Tutorías en primera infancia</span>
-      
       </div>
 
       <div id="studentsContainer">
@@ -472,8 +447,8 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, getDocs, doc, getDoc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-    import { getAuth, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getFirestore, collection, getDocs, doc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     let modalInstance = null;
 
@@ -500,30 +475,16 @@
 
     const CATEGORIA_ACTIVA = "Tutorías en primera infancia";
 
-    const docenteNombreEl = document.getElementById("docenteNombre");
     const totalEstudiantesTextoEl = document.getElementById("totalEstudiantesTexto");
     const totalRegistrosTextoEl = document.getElementById("totalRegistrosTexto");
     const gaugeChartEl = document.getElementById("gaugeChart");
     const studentsContainer = document.getElementById("studentsContainer");
-    const btnGenerarReporte = document.getElementById("btnGenerarReporte");
     const inputBuscadorEstudiante = document.getElementById("inputBuscadorEstudiante");
 
     let registrosCache = [];
 
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        try {
-          const docRef = doc(db, "Docentes", user.uid);
-          const docSnap = await getDoc(docRef);
-          if (docSnap.exists() && docSnap.data().nombre) {
-            docenteNombreEl.textContent = docSnap.data().nombre;
-          } else {
-            docenteNombreEl.textContent = user.displayName || user.email.split('@')[0];
-          }
-        } catch (e) {
-          docenteNombreEl.textContent = user.email ? user.email.split('@')[0] : "Docente";
-        }
-
         await cargarMetricas();
       } else {
         window.location.href = "loginU.html";
@@ -637,7 +598,6 @@
       });
     }
 
-    // Actualiza la propiedad 'estado' en Firestore
     window.actualizarEstadoHoras = async function(registroId, nuevoEstado) {
       try {
         const registroRef = doc(db, "HorasSociales", registroId);
@@ -704,44 +664,6 @@
 
       modalInstance.open();
     };
-
-    btnGenerarReporte.addEventListener("click", () => {
-      if (registrosCache.length === 0) {
-        M.toast({html: 'No hay datos disponibles para generar el reporte.', classes: 'orange rounded'});
-        return;
-      }
-
-      let csvContent = "\uFEFF";
-      csvContent += "Estudiante / Email,Categoría,Lugar,Docente Encargado,Horas Reportadas,Estado,Descripción\n";
-
-      registrosCache.forEach((item) => {
-        const estudiante = `"${item.nombre || item.email || item.userId || 'N/A'}"`;
-        const categoria = `"${item.Categoria || CATEGORIA_ACTIVA}"`;
-        const lugar = `"${item.Lugar || 'N/A'}"`;
-        const docente = `"${item['Docente encargado'] || 'N/A'}"`;
-        const horas = item.Horas || 0;
-        
-        let estadoStr = "Pendiente";
-        if (item.estado === true) estadoStr = "Aprobado";
-        if (item.estado === false) estadoStr = "Denegado";
-
-        const descripcion = `"${(item.Descripcion || '').replace(/"/g, '""')}"`;
-
-        csvContent += `${estudiante},${categoria},${lugar},${docente},${horas},${estadoStr},${descripcion}\n`;
-      });
-
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const enlaceDescarga = document.createElement("a");
-      enlaceDescarga.setAttribute("href", url);
-      enlaceDescarga.setAttribute("download", `Reporte_Tutorias_Primera_Infancia_${new Date().toISOString().slice(0,10)}.csv`);
-      document.body.appendChild(enlaceDescarga);
-      
-      enlaceDescarga.click();
-      document.body.removeChild(enlaceDescarga);
-
-      M.toast({html: 'Reporte descargado exitosamente.', classes: 'green rounded'});
-    });
   </script>
 </body>
 </html>

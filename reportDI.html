@@ -318,8 +318,7 @@
       margin-top: 10px;
     }
 
-    /* FOOTER HOURCHECK */
-    .hourcheck-footer {
+.hourcheck-footer {
       background-color: #0f172a;
       color: #f8fafc;
       padding: 36px 20px 20px 20px;
@@ -338,6 +337,18 @@
       grid-template-columns: 2fr 1fr;
       gap: 24px;
       align-items: center;
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+    }
+
+    .footer-logo-img {
+      height: 38px;
+      width: auto;
+      object-fit: contain;
+      display: block;
     }
 
     .footer-description {
@@ -392,57 +403,17 @@
         grid-template-columns: 1fr;
         gap: 20px;
       }
+      
       .footer-action-col {
         justify-content: flex-start;
       }
-      #modal-preview {
-        width: 95% !important;
-        height: 90% !important;
-      }
-      .reports-header-wrapper {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .search-box {
-        max-width: 100%;
-      }
     }
+
   </style>
 </head>
 <body>
 
-  <!-- SIDENAV -->
-  <ul id="slide-out" class="sidenav">
-    <li>
-      <div class="user-view">
-        <div class="background" style="background-color: #1557d0;"></div>  
-        <a href="#user">
-          <div class="avatar"><i class="material-icons">person</i></div>
-        </a>
-        <a href="#name">
-          <span id="user-name" class="white-text name" style="font-weight:700;">Cargando...</span>
-        </a>
-        <a href="#email">
-          <span id="user-email" class="white-text email">Cargando...</span>
-        </a>
-        <a href="#institution">
-          <span id="user-inst" class="white-text institution" style="font-size: 13px; opacity: 0.9;">Cargando...</span>
-        </a>
-      </div>
-    </li>
-    
-    <li><a href="reportDI.html" class="waves-effect"><i class="material-icons">assignment</i>Reporte docente</a></li>
-    <li><a href="horasDeProgreso.html" class="waves-effect"><i class="material-icons">trending_up</i>Horas progresadas</a></li>
-    <li><a href="#" class="waves-effect"><i class="material-icons">group</i>Docentes</a></li>
-    <li><a href="Estudiantes.html" class="waves-effect"><i class="material-icons">group</i>Estudiantes</a></li>
-    
-    <li><div class="divider"></div></li>
-    <li>
-      <a href="#" id="btn-logout-sidebar" class="waves-effect logout-sidebar">
-        <i class="material-icons">exit_to_app</i>Cerrar sesión
-      </a>
-    </li>
-  </ul>
+
 
   <!-- DROPDOWN DEL PERFIL -->
   <ul id="user-dropdown" class="dropdown-content">
@@ -464,8 +435,8 @@
     
     <header class="top-header">
       <div class="header-left">
-        <a href="#" data-target="slide-out" class="sidenav-trigger btn-menu-trigger">
-          <i class="material-icons">menu</i>
+        <a href="mainPI.html" class="btn-back waves-effect waves-light">
+          <i class="material-icons">arrow_back</i>
         </a>
         <h1 class="header-title">Inicio</h1>
       </div>
