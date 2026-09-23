@@ -840,7 +840,7 @@
       if (kpiEvidencias) kpiEvidencias.innerText = `${totalEvidencias} enviadas`;
       
       if (donutHoras) {
-        const porcentajeHoras = Math.min((totalHoras / 150) * 100, 100);
+        const porcentajeHoras = Math.min((totalHoras / 150) * 100, 100).toFixed(2);
         donutHoras.style.background = `conic-gradient(#2563eb ${porcentajeHoras}%, #e2e8f0 ${porcentajeHoras}%)`;
       }
 
