@@ -317,22 +317,19 @@
       border-radius: 8px;
       margin-top: 10px;
     }
-    .back-btn {
-      color: #333;
+.btn-back {
       display: flex;
       align-items: center;
       justify-content: center;
+      width: 45px;
+      height: 45px;
+      border: 2px solid #000000;
+      border-radius: 50%;
+      color: #000000;
       text-decoration: none;
-      transition: transform 0.2s;
-    }
-
-    .back-btn:hover {
-      transform: translateX(-3px);
-      color: #1557d0;
-    }
-
-    .back-btn i {
-      font-size: 30px;
+      transition: background-color 0.2s, transform 0.2s;
+      margin-right: 20px;
+      flex-shrink: 0;
     }
 .hourcheck-footer {
       background-color: #0f172a;
@@ -451,7 +448,7 @@
     
     <header class="top-header">
       <div class="header-left">
-        <a href="mainPI.html" class="btn-back waves-effect waves-light">
+        <a href="mainPI.html" class="btn-back waves-effect waves-light btn-back">
           <i class="material-icons">arrow_back</i>
         </a>
         <h1 class="header-title">Inicio</h1>
